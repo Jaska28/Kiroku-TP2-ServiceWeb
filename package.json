@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^7.8.3",
+    "@prisma/adapter-neon": "7.x",
+    "@prisma/client": "7.x",
     "next": "16.3.3",
     "react": "19.2.8",
     "react-dom": "19.2.8"
@@ -20,9 +22,12 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "daisyui": "^5.7.22",
+    "dotenv": "^17.4.2",
     "eslint": "^9",
     "eslint-config-next": "16.3.3",
+    "prisma": "^7.10.0",
     "tailwindcss": "^4",
+    "tsx": "^4.23.13",
     "typescript": "^5"
   }
 }
