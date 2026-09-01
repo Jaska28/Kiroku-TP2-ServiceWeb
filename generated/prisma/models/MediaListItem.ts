@@ -28,21 +28,24 @@ export type MediaListItemMinAggregateOutputType = {
   id: string | null
   mediaListId: string | null
   mediaId: string | null
-  addedAt: Date | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type MediaListItemMaxAggregateOutputType = {
   id: string | null
   mediaListId: string | null
   mediaId: string | null
-  addedAt: Date | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type MediaListItemCountAggregateOutputType = {
   id: number
   mediaListId: number
   mediaId: number
-  addedAt: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -51,21 +54,24 @@ export type MediaListItemMinAggregateInputType = {
   id?: true
   mediaListId?: true
   mediaId?: true
-  addedAt?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type MediaListItemMaxAggregateInputType = {
   id?: true
   mediaListId?: true
   mediaId?: true
-  addedAt?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type MediaListItemCountAggregateInputType = {
   id?: true
   mediaListId?: true
   mediaId?: true
-  addedAt?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -145,7 +151,8 @@ export type MediaListItemGroupByOutputType = {
   id: string
   mediaListId: string
   mediaId: string
-  addedAt: Date
+  createdAt: Date
+  updatedAt: Date
   _count: MediaListItemCountAggregateOutputType | null
   _min: MediaListItemMinAggregateOutputType | null
   _max: MediaListItemMaxAggregateOutputType | null
@@ -173,7 +180,8 @@ export type MediaListItemWhereInput = {
   id?: Prisma.UuidFilter<"MediaListItem"> | string
   mediaListId?: Prisma.UuidFilter<"MediaListItem"> | string
   mediaId?: Prisma.UuidFilter<"MediaListItem"> | string
-  addedAt?: Prisma.DateTimeFilter<"MediaListItem"> | Date | string
+  createdAt?: Prisma.DateTimeFilter<"MediaListItem"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"MediaListItem"> | Date | string
   mediaList?: Prisma.XOR<Prisma.MediaListScalarRelationFilter, Prisma.MediaListWhereInput>
   media?: Prisma.XOR<Prisma.MediaScalarRelationFilter, Prisma.MediaWhereInput>
 }
@@ -182,7 +190,8 @@ export type MediaListItemOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   mediaListId?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
-  addedAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   mediaList?: Prisma.MediaListOrderByWithRelationInput
   media?: Prisma.MediaOrderByWithRelationInput
 }
@@ -195,7 +204,8 @@ export type MediaListItemWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.MediaListItemWhereInput | Prisma.MediaListItemWhereInput[]
   mediaListId?: Prisma.UuidFilter<"MediaListItem"> | string
   mediaId?: Prisma.UuidFilter<"MediaListItem"> | string
-  addedAt?: Prisma.DateTimeFilter<"MediaListItem"> | Date | string
+  createdAt?: Prisma.DateTimeFilter<"MediaListItem"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"MediaListItem"> | Date | string
   mediaList?: Prisma.XOR<Prisma.MediaListScalarRelationFilter, Prisma.MediaListWhereInput>
   media?: Prisma.XOR<Prisma.MediaScalarRelationFilter, Prisma.MediaWhereInput>
 }, "id" | "mediaListId_mediaId">
@@ -204,7 +214,8 @@ export type MediaListItemOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   mediaListId?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
-  addedAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.MediaListItemCountOrderByAggregateInput
   _max?: Prisma.MediaListItemMaxOrderByAggregateInput
   _min?: Prisma.MediaListItemMinOrderByAggregateInput
@@ -217,12 +228,14 @@ export type MediaListItemScalarWhereWithAggregatesInput = {
   id?: Prisma.UuidWithAggregatesFilter<"MediaListItem"> | string
   mediaListId?: Prisma.UuidWithAggregatesFilter<"MediaListItem"> | string
   mediaId?: Prisma.UuidWithAggregatesFilter<"MediaListItem"> | string
-  addedAt?: Prisma.DateTimeWithAggregatesFilter<"MediaListItem"> | Date | string
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"MediaListItem"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"MediaListItem"> | Date | string
 }
 
 export type MediaListItemCreateInput = {
   id?: string
-  addedAt?: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   mediaList: Prisma.MediaListCreateNestedOneWithoutMediaListItemsInput
   media: Prisma.MediaCreateNestedOneWithoutMediaListItemsInput
 }
@@ -231,12 +244,14 @@ export type MediaListItemUncheckedCreateInput = {
   id?: string
   mediaListId: string
   mediaId: string
-  addedAt?: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type MediaListItemUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  addedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mediaList?: Prisma.MediaListUpdateOneRequiredWithoutMediaListItemsNestedInput
   media?: Prisma.MediaUpdateOneRequiredWithoutMediaListItemsNestedInput
 }
@@ -245,26 +260,30 @@ export type MediaListItemUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   mediaListId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
-  addedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type MediaListItemCreateManyInput = {
   id?: string
   mediaListId: string
   mediaId: string
-  addedAt?: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type MediaListItemUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  addedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type MediaListItemUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   mediaListId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
-  addedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type MediaListItemListRelationFilter = {
@@ -286,21 +305,24 @@ export type MediaListItemCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   mediaListId?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
-  addedAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type MediaListItemMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   mediaListId?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
-  addedAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type MediaListItemMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   mediaListId?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
-  addedAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type MediaListItemCreateNestedManyWithoutMediaListInput = {
@@ -389,14 +411,16 @@ export type MediaListItemUncheckedUpdateManyWithoutMediaNestedInput = {
 
 export type MediaListItemCreateWithoutMediaListInput = {
   id?: string
-  addedAt?: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   media: Prisma.MediaCreateNestedOneWithoutMediaListItemsInput
 }
 
 export type MediaListItemUncheckedCreateWithoutMediaListInput = {
   id?: string
   mediaId: string
-  addedAt?: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type MediaListItemCreateOrConnectWithoutMediaListInput = {
@@ -432,19 +456,22 @@ export type MediaListItemScalarWhereInput = {
   id?: Prisma.UuidFilter<"MediaListItem"> | string
   mediaListId?: Prisma.UuidFilter<"MediaListItem"> | string
   mediaId?: Prisma.UuidFilter<"MediaListItem"> | string
-  addedAt?: Prisma.DateTimeFilter<"MediaListItem"> | Date | string
+  createdAt?: Prisma.DateTimeFilter<"MediaListItem"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"MediaListItem"> | Date | string
 }
 
 export type MediaListItemCreateWithoutMediaInput = {
   id?: string
-  addedAt?: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   mediaList: Prisma.MediaListCreateNestedOneWithoutMediaListItemsInput
 }
 
 export type MediaListItemUncheckedCreateWithoutMediaInput = {
   id?: string
   mediaListId: string
-  addedAt?: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type MediaListItemCreateOrConnectWithoutMediaInput = {
@@ -476,49 +503,57 @@ export type MediaListItemUpdateManyWithWhereWithoutMediaInput = {
 export type MediaListItemCreateManyMediaListInput = {
   id?: string
   mediaId: string
-  addedAt?: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type MediaListItemUpdateWithoutMediaListInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  addedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   media?: Prisma.MediaUpdateOneRequiredWithoutMediaListItemsNestedInput
 }
 
 export type MediaListItemUncheckedUpdateWithoutMediaListInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
-  addedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type MediaListItemUncheckedUpdateManyWithoutMediaListInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
-  addedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type MediaListItemCreateManyMediaInput = {
   id?: string
   mediaListId: string
-  addedAt?: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type MediaListItemUpdateWithoutMediaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  addedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mediaList?: Prisma.MediaListUpdateOneRequiredWithoutMediaListItemsNestedInput
 }
 
 export type MediaListItemUncheckedUpdateWithoutMediaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   mediaListId?: Prisma.StringFieldUpdateOperationsInput | string
-  addedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type MediaListItemUncheckedUpdateManyWithoutMediaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   mediaListId?: Prisma.StringFieldUpdateOperationsInput | string
-  addedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -527,7 +562,8 @@ export type MediaListItemSelect<ExtArgs extends runtime.Types.Extensions.Interna
   id?: boolean
   mediaListId?: boolean
   mediaId?: boolean
-  addedAt?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   mediaList?: boolean | Prisma.MediaListDefaultArgs<ExtArgs>
   media?: boolean | Prisma.MediaDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["mediaListItem"]>
@@ -536,7 +572,8 @@ export type MediaListItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   id?: boolean
   mediaListId?: boolean
   mediaId?: boolean
-  addedAt?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   mediaList?: boolean | Prisma.MediaListDefaultArgs<ExtArgs>
   media?: boolean | Prisma.MediaDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["mediaListItem"]>
@@ -545,7 +582,8 @@ export type MediaListItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   id?: boolean
   mediaListId?: boolean
   mediaId?: boolean
-  addedAt?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   mediaList?: boolean | Prisma.MediaListDefaultArgs<ExtArgs>
   media?: boolean | Prisma.MediaDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["mediaListItem"]>
@@ -554,10 +592,11 @@ export type MediaListItemSelectScalar = {
   id?: boolean
   mediaListId?: boolean
   mediaId?: boolean
-  addedAt?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type MediaListItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "mediaListId" | "mediaId" | "addedAt", ExtArgs["result"]["mediaListItem"]>
+export type MediaListItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "mediaListId" | "mediaId" | "createdAt" | "updatedAt", ExtArgs["result"]["mediaListItem"]>
 export type MediaListItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   mediaList?: boolean | Prisma.MediaListDefaultArgs<ExtArgs>
   media?: boolean | Prisma.MediaDefaultArgs<ExtArgs>
@@ -581,7 +620,8 @@ export type $MediaListItemPayload<ExtArgs extends runtime.Types.Extensions.Inter
     id: string
     mediaListId: string
     mediaId: string
-    addedAt: Date
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["mediaListItem"]>
   composites: {}
 }
@@ -1010,7 +1050,8 @@ export interface MediaListItemFieldRefs {
   readonly id: Prisma.FieldRef<"MediaListItem", 'String'>
   readonly mediaListId: Prisma.FieldRef<"MediaListItem", 'String'>
   readonly mediaId: Prisma.FieldRef<"MediaListItem", 'String'>
-  readonly addedAt: Prisma.FieldRef<"MediaListItem", 'DateTime'>
+  readonly createdAt: Prisma.FieldRef<"MediaListItem", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"MediaListItem", 'DateTime'>
 }
     
 

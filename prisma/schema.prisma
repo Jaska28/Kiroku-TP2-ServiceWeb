@@ -66,32 +66,39 @@ enum Genre {
 
 // --- MODELES ---
 model User {
-  id         String      @id @default(uuid()) @db.Uuid
-  username   String      @unique
-  password   String // HASH w/ bcrypt
-  role       Role        @default(USER)
-  createdAt  DateTime    @default(now())
+  id       String @id @default(uuid()) @db.Uuid
+  clerkId  String @unique
+  username String @unique
+  role     Role   @default(USER)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   mediaLists MediaList[]
   reviews    Review[]
 }
 
 model MediaList {
-  id          String   @id @default(uuid()) @db.Uuid
-  userId      String   @db.Uuid
+  id          String  @id @default(uuid()) @db.Uuid
+  userId      String  @db.Uuid
   name        String
   description String?
-  isPublic    Boolean  @default(true)
-  createdAt   DateTime @default(now())
+  isPublic    Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   user           User            @relation(fields: [userId], references: [id])
   mediaListItems MediaListItem[]
 }
 
 model MediaListItem {
-  id          String   @id @default(uuid()) @db.Uuid
-  mediaListId String   @db.Uuid
-  mediaId     String   @db.Uuid
-  addedAt     DateTime @default(now())
+  id          String @id @default(uuid()) @db.Uuid
+  mediaListId String @db.Uuid
+  mediaId     String @db.Uuid
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   mediaList MediaList @relation(fields: [mediaListId], references: [id])
   media     Media     @relation(fields: [mediaId], references: [id])
@@ -100,30 +107,35 @@ model MediaListItem {
 }
 
 model Media {
-  id             String          @id @default(uuid()) @db.Uuid
-  malId          Int // Id from MyAnimeList
-  title          String
-  description    String?
-  type           MediaType       @default(ANIME)
-  format         MediaFormat     @default(TV)
-  status         MediaStatus     @default(RELEASING)
-  bannerImgURL   String?
-  avgScore       Float?
-  malAvgScore    Float?
-  releaseYear    Int
-  genre          String[]
-  createAt       DateTime        @default(now())
+  id           String      @id @default(uuid()) @db.Uuid
+  malId        Int // Id from MyAnimeList
+  title        String
+  description  String?
+  type         MediaType   @default(ANIME)
+  format       MediaFormat @default(TV)
+  status       MediaStatus @default(RELEASING)
+  bannerImgURL String?
+  avgScore     Float?
+  malAvgScore  Float?
+  releaseYear  Int
+  genre        Genre[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   mediaListItems MediaListItem[]
   reviews        Review[]
 }
 
 model Review {
-  id        String   @id @default(uuid()) @db.Uuid
-  userId    String   @db.Uuid
-  mediaId   String   @db.Uuid
-  rating    Float // in between 0 and 10
-  comments  String?
+  id       String  @id @default(uuid()) @db.Uuid
+  userId   String  @db.Uuid
+  mediaId  String  @db.Uuid
+  rating   Float // in between 0 and 10
+  comments String?
+
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   user  User  @relation(fields: [userId], references: [id])
   media Media @relation(fields: [mediaId], references: [id])

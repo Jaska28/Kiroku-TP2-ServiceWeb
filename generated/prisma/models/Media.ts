@@ -52,7 +52,8 @@ export type MediaMinAggregateOutputType = {
   avgScore: number | null
   malAvgScore: number | null
   releaseYear: number | null
-  createAt: Date | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type MediaMaxAggregateOutputType = {
@@ -67,7 +68,8 @@ export type MediaMaxAggregateOutputType = {
   avgScore: number | null
   malAvgScore: number | null
   releaseYear: number | null
-  createAt: Date | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type MediaCountAggregateOutputType = {
@@ -83,7 +85,8 @@ export type MediaCountAggregateOutputType = {
   malAvgScore: number
   releaseYear: number
   genre: number
-  createAt: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -114,7 +117,8 @@ export type MediaMinAggregateInputType = {
   avgScore?: true
   malAvgScore?: true
   releaseYear?: true
-  createAt?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type MediaMaxAggregateInputType = {
@@ -129,7 +133,8 @@ export type MediaMaxAggregateInputType = {
   avgScore?: true
   malAvgScore?: true
   releaseYear?: true
-  createAt?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type MediaCountAggregateInputType = {
@@ -145,7 +150,8 @@ export type MediaCountAggregateInputType = {
   malAvgScore?: true
   releaseYear?: true
   genre?: true
-  createAt?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -247,8 +253,9 @@ export type MediaGroupByOutputType = {
   avgScore: number | null
   malAvgScore: number | null
   releaseYear: number
-  genre: string[]
-  createAt: Date
+  genre: $Enums.Genre[]
+  createdAt: Date
+  updatedAt: Date
   _count: MediaCountAggregateOutputType | null
   _avg: MediaAvgAggregateOutputType | null
   _sum: MediaSumAggregateOutputType | null
@@ -286,8 +293,9 @@ export type MediaWhereInput = {
   avgScore?: Prisma.FloatNullableFilter<"Media"> | number | null
   malAvgScore?: Prisma.FloatNullableFilter<"Media"> | number | null
   releaseYear?: Prisma.IntFilter<"Media"> | number
-  genre?: Prisma.StringNullableListFilter<"Media">
-  createAt?: Prisma.DateTimeFilter<"Media"> | Date | string
+  genre?: Prisma.EnumGenreNullableListFilter<"Media">
+  createdAt?: Prisma.DateTimeFilter<"Media"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Media"> | Date | string
   mediaListItems?: Prisma.MediaListItemListRelationFilter
   reviews?: Prisma.ReviewListRelationFilter
 }
@@ -305,7 +313,8 @@ export type MediaOrderByWithRelationInput = {
   malAvgScore?: Prisma.SortOrderInput | Prisma.SortOrder
   releaseYear?: Prisma.SortOrder
   genre?: Prisma.SortOrder
-  createAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   mediaListItems?: Prisma.MediaListItemOrderByRelationAggregateInput
   reviews?: Prisma.ReviewOrderByRelationAggregateInput
 }
@@ -325,8 +334,9 @@ export type MediaWhereUniqueInput = Prisma.AtLeast<{
   avgScore?: Prisma.FloatNullableFilter<"Media"> | number | null
   malAvgScore?: Prisma.FloatNullableFilter<"Media"> | number | null
   releaseYear?: Prisma.IntFilter<"Media"> | number
-  genre?: Prisma.StringNullableListFilter<"Media">
-  createAt?: Prisma.DateTimeFilter<"Media"> | Date | string
+  genre?: Prisma.EnumGenreNullableListFilter<"Media">
+  createdAt?: Prisma.DateTimeFilter<"Media"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Media"> | Date | string
   mediaListItems?: Prisma.MediaListItemListRelationFilter
   reviews?: Prisma.ReviewListRelationFilter
 }, "id">
@@ -344,7 +354,8 @@ export type MediaOrderByWithAggregationInput = {
   malAvgScore?: Prisma.SortOrderInput | Prisma.SortOrder
   releaseYear?: Prisma.SortOrder
   genre?: Prisma.SortOrder
-  createAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.MediaCountOrderByAggregateInput
   _avg?: Prisma.MediaAvgOrderByAggregateInput
   _max?: Prisma.MediaMaxOrderByAggregateInput
@@ -367,8 +378,9 @@ export type MediaScalarWhereWithAggregatesInput = {
   avgScore?: Prisma.FloatNullableWithAggregatesFilter<"Media"> | number | null
   malAvgScore?: Prisma.FloatNullableWithAggregatesFilter<"Media"> | number | null
   releaseYear?: Prisma.IntWithAggregatesFilter<"Media"> | number
-  genre?: Prisma.StringNullableListFilter<"Media">
-  createAt?: Prisma.DateTimeWithAggregatesFilter<"Media"> | Date | string
+  genre?: Prisma.EnumGenreNullableListFilter<"Media">
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Media"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Media"> | Date | string
 }
 
 export type MediaCreateInput = {
@@ -383,8 +395,9 @@ export type MediaCreateInput = {
   avgScore?: number | null
   malAvgScore?: number | null
   releaseYear: number
-  genre?: Prisma.MediaCreategenreInput | string[]
-  createAt?: Date | string
+  genre?: Prisma.MediaCreategenreInput | $Enums.Genre[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
   mediaListItems?: Prisma.MediaListItemCreateNestedManyWithoutMediaInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutMediaInput
 }
@@ -401,8 +414,9 @@ export type MediaUncheckedCreateInput = {
   avgScore?: number | null
   malAvgScore?: number | null
   releaseYear: number
-  genre?: Prisma.MediaCreategenreInput | string[]
-  createAt?: Date | string
+  genre?: Prisma.MediaCreategenreInput | $Enums.Genre[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
   mediaListItems?: Prisma.MediaListItemUncheckedCreateNestedManyWithoutMediaInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutMediaInput
 }
@@ -419,8 +433,9 @@ export type MediaUpdateInput = {
   avgScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   malAvgScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   releaseYear?: Prisma.IntFieldUpdateOperationsInput | number
-  genre?: Prisma.MediaUpdategenreInput | string[]
-  createAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  genre?: Prisma.MediaUpdategenreInput | $Enums.Genre[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mediaListItems?: Prisma.MediaListItemUpdateManyWithoutMediaNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutMediaNestedInput
 }
@@ -437,8 +452,9 @@ export type MediaUncheckedUpdateInput = {
   avgScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   malAvgScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   releaseYear?: Prisma.IntFieldUpdateOperationsInput | number
-  genre?: Prisma.MediaUpdategenreInput | string[]
-  createAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  genre?: Prisma.MediaUpdategenreInput | $Enums.Genre[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mediaListItems?: Prisma.MediaListItemUncheckedUpdateManyWithoutMediaNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutMediaNestedInput
 }
@@ -455,8 +471,9 @@ export type MediaCreateManyInput = {
   avgScore?: number | null
   malAvgScore?: number | null
   releaseYear: number
-  genre?: Prisma.MediaCreategenreInput | string[]
-  createAt?: Date | string
+  genre?: Prisma.MediaCreategenreInput | $Enums.Genre[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type MediaUpdateManyMutationInput = {
@@ -471,8 +488,9 @@ export type MediaUpdateManyMutationInput = {
   avgScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   malAvgScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   releaseYear?: Prisma.IntFieldUpdateOperationsInput | number
-  genre?: Prisma.MediaUpdategenreInput | string[]
-  createAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  genre?: Prisma.MediaUpdategenreInput | $Enums.Genre[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type MediaUncheckedUpdateManyInput = {
@@ -487,8 +505,9 @@ export type MediaUncheckedUpdateManyInput = {
   avgScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   malAvgScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   releaseYear?: Prisma.IntFieldUpdateOperationsInput | number
-  genre?: Prisma.MediaUpdategenreInput | string[]
-  createAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  genre?: Prisma.MediaUpdategenreInput | $Enums.Genre[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type MediaScalarRelationFilter = {
@@ -496,11 +515,11 @@ export type MediaScalarRelationFilter = {
   isNot?: Prisma.MediaWhereInput
 }
 
-export type StringNullableListFilter<$PrismaModel = never> = {
-  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
-  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
-  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
-  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+export type EnumGenreNullableListFilter<$PrismaModel = never> = {
+  equals?: $Enums.Genre[] | Prisma.ListEnumGenreFieldRefInput<$PrismaModel> | null
+  has?: $Enums.Genre | Prisma.EnumGenreFieldRefInput<$PrismaModel> | null
+  hasEvery?: $Enums.Genre[] | Prisma.ListEnumGenreFieldRefInput<$PrismaModel>
+  hasSome?: $Enums.Genre[] | Prisma.ListEnumGenreFieldRefInput<$PrismaModel>
   isEmpty?: boolean
 }
 
@@ -517,7 +536,8 @@ export type MediaCountOrderByAggregateInput = {
   malAvgScore?: Prisma.SortOrder
   releaseYear?: Prisma.SortOrder
   genre?: Prisma.SortOrder
-  createAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type MediaAvgOrderByAggregateInput = {
@@ -539,7 +559,8 @@ export type MediaMaxOrderByAggregateInput = {
   avgScore?: Prisma.SortOrder
   malAvgScore?: Prisma.SortOrder
   releaseYear?: Prisma.SortOrder
-  createAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type MediaMinOrderByAggregateInput = {
@@ -554,7 +575,8 @@ export type MediaMinOrderByAggregateInput = {
   avgScore?: Prisma.SortOrder
   malAvgScore?: Prisma.SortOrder
   releaseYear?: Prisma.SortOrder
-  createAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type MediaSumOrderByAggregateInput = {
@@ -579,7 +601,7 @@ export type MediaUpdateOneRequiredWithoutMediaListItemsNestedInput = {
 }
 
 export type MediaCreategenreInput = {
-  set: string[]
+  set: $Enums.Genre[]
 }
 
 export type IntFieldUpdateOperationsInput = {
@@ -611,8 +633,8 @@ export type NullableFloatFieldUpdateOperationsInput = {
 }
 
 export type MediaUpdategenreInput = {
-  set?: string[]
-  push?: string | string[]
+  set?: $Enums.Genre[]
+  push?: $Enums.Genre | $Enums.Genre[]
 }
 
 export type MediaCreateNestedOneWithoutReviewsInput = {
@@ -641,8 +663,9 @@ export type MediaCreateWithoutMediaListItemsInput = {
   avgScore?: number | null
   malAvgScore?: number | null
   releaseYear: number
-  genre?: Prisma.MediaCreategenreInput | string[]
-  createAt?: Date | string
+  genre?: Prisma.MediaCreategenreInput | $Enums.Genre[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
   reviews?: Prisma.ReviewCreateNestedManyWithoutMediaInput
 }
 
@@ -658,8 +681,9 @@ export type MediaUncheckedCreateWithoutMediaListItemsInput = {
   avgScore?: number | null
   malAvgScore?: number | null
   releaseYear: number
-  genre?: Prisma.MediaCreategenreInput | string[]
-  createAt?: Date | string
+  genre?: Prisma.MediaCreategenreInput | $Enums.Genre[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutMediaInput
 }
 
@@ -691,8 +715,9 @@ export type MediaUpdateWithoutMediaListItemsInput = {
   avgScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   malAvgScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   releaseYear?: Prisma.IntFieldUpdateOperationsInput | number
-  genre?: Prisma.MediaUpdategenreInput | string[]
-  createAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  genre?: Prisma.MediaUpdategenreInput | $Enums.Genre[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reviews?: Prisma.ReviewUpdateManyWithoutMediaNestedInput
 }
 
@@ -708,8 +733,9 @@ export type MediaUncheckedUpdateWithoutMediaListItemsInput = {
   avgScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   malAvgScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   releaseYear?: Prisma.IntFieldUpdateOperationsInput | number
-  genre?: Prisma.MediaUpdategenreInput | string[]
-  createAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  genre?: Prisma.MediaUpdategenreInput | $Enums.Genre[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutMediaNestedInput
 }
 
@@ -725,8 +751,9 @@ export type MediaCreateWithoutReviewsInput = {
   avgScore?: number | null
   malAvgScore?: number | null
   releaseYear: number
-  genre?: Prisma.MediaCreategenreInput | string[]
-  createAt?: Date | string
+  genre?: Prisma.MediaCreategenreInput | $Enums.Genre[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
   mediaListItems?: Prisma.MediaListItemCreateNestedManyWithoutMediaInput
 }
 
@@ -742,8 +769,9 @@ export type MediaUncheckedCreateWithoutReviewsInput = {
   avgScore?: number | null
   malAvgScore?: number | null
   releaseYear: number
-  genre?: Prisma.MediaCreategenreInput | string[]
-  createAt?: Date | string
+  genre?: Prisma.MediaCreategenreInput | $Enums.Genre[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
   mediaListItems?: Prisma.MediaListItemUncheckedCreateNestedManyWithoutMediaInput
 }
 
@@ -775,8 +803,9 @@ export type MediaUpdateWithoutReviewsInput = {
   avgScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   malAvgScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   releaseYear?: Prisma.IntFieldUpdateOperationsInput | number
-  genre?: Prisma.MediaUpdategenreInput | string[]
-  createAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  genre?: Prisma.MediaUpdategenreInput | $Enums.Genre[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mediaListItems?: Prisma.MediaListItemUpdateManyWithoutMediaNestedInput
 }
 
@@ -792,8 +821,9 @@ export type MediaUncheckedUpdateWithoutReviewsInput = {
   avgScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   malAvgScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   releaseYear?: Prisma.IntFieldUpdateOperationsInput | number
-  genre?: Prisma.MediaUpdategenreInput | string[]
-  createAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  genre?: Prisma.MediaUpdategenreInput | $Enums.Genre[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mediaListItems?: Prisma.MediaListItemUncheckedUpdateManyWithoutMediaNestedInput
 }
 
@@ -850,7 +880,8 @@ export type MediaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   malAvgScore?: boolean
   releaseYear?: boolean
   genre?: boolean
-  createAt?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   mediaListItems?: boolean | Prisma.Media$mediaListItemsArgs<ExtArgs>
   reviews?: boolean | Prisma.Media$reviewsArgs<ExtArgs>
   _count?: boolean | Prisma.MediaCountOutputTypeDefaultArgs<ExtArgs>
@@ -869,7 +900,8 @@ export type MediaSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   malAvgScore?: boolean
   releaseYear?: boolean
   genre?: boolean
-  createAt?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }, ExtArgs["result"]["media"]>
 
 export type MediaSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -885,7 +917,8 @@ export type MediaSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   malAvgScore?: boolean
   releaseYear?: boolean
   genre?: boolean
-  createAt?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }, ExtArgs["result"]["media"]>
 
 export type MediaSelectScalar = {
@@ -901,10 +934,11 @@ export type MediaSelectScalar = {
   malAvgScore?: boolean
   releaseYear?: boolean
   genre?: boolean
-  createAt?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type MediaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "malId" | "title" | "description" | "type" | "format" | "status" | "bannerImgURL" | "avgScore" | "malAvgScore" | "releaseYear" | "genre" | "createAt", ExtArgs["result"]["media"]>
+export type MediaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "malId" | "title" | "description" | "type" | "format" | "status" | "bannerImgURL" | "avgScore" | "malAvgScore" | "releaseYear" | "genre" | "createdAt" | "updatedAt", ExtArgs["result"]["media"]>
 export type MediaInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   mediaListItems?: boolean | Prisma.Media$mediaListItemsArgs<ExtArgs>
   reviews?: boolean | Prisma.Media$reviewsArgs<ExtArgs>
@@ -931,8 +965,9 @@ export type $MediaPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     avgScore: number | null
     malAvgScore: number | null
     releaseYear: number
-    genre: string[]
-    createAt: Date
+    genre: $Enums.Genre[]
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["media"]>
   composites: {}
 }
@@ -1369,8 +1404,9 @@ export interface MediaFieldRefs {
   readonly avgScore: Prisma.FieldRef<"Media", 'Float'>
   readonly malAvgScore: Prisma.FieldRef<"Media", 'Float'>
   readonly releaseYear: Prisma.FieldRef<"Media", 'Int'>
-  readonly genre: Prisma.FieldRef<"Media", 'String[]'>
-  readonly createAt: Prisma.FieldRef<"Media", 'DateTime'>
+  readonly genre: Prisma.FieldRef<"Media", 'Genre[]'>
+  readonly createdAt: Prisma.FieldRef<"Media", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Media", 'DateTime'>
 }
     
 
