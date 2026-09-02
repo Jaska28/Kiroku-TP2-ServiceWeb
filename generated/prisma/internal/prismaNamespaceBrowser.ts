@@ -129,6 +129,7 @@ export type MediaScalarFieldEnum = (typeof MediaScalarFieldEnum)[keyof typeof Me
 export const ReviewScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  mediaId: 'mediaId',
   rating: 'rating',
   comments: 'comments',
   createdAt: 'createdAt'

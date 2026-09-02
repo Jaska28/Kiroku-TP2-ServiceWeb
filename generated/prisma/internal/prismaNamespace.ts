@@ -885,6 +885,7 @@ export type MediaScalarFieldEnum = (typeof MediaScalarFieldEnum)[keyof typeof Me
 export const ReviewScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  mediaId: 'mediaId',
   rating: 'rating',
   comments: 'comments',
   createdAt: 'createdAt'
@@ -1039,20 +1040,6 @@ export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
  * Reference to a field of type 'Float[]'
  */
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
-    
-
-
-/**
- * Reference to a field of type 'Genre'
- */
-export type EnumGenreFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Genre'>
-    
-
-
-/**
- * Reference to a field of type 'Genre[]'
- */
-export type ListEnumGenreFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Genre[]'>
     
 
 /**

@@ -4,19 +4,19 @@
 
 ## 👥 Équipe
 
-| Nom complet | Matricule | (Optionnel) rôle |
-|-------------|-----------|------------------|
-| Prénom Nom  | 0000000   | Backend          |
-| Prénom Nom  | 0000000   | Frontend         |
-| Prénom Nom  | 0000000   | Full-stack       |
+| Nom complet    | Matricule | (Optionnel) rôle |
+|----------------|-----------|------------------|
+| Jean-Simon Cyr | 0000000   | Frontend         |
+| Émile Valade   | 0000000   | Backend          |
+
 
 ## 🎯 Sujet (choisi au Laboratoire 1)
 
-Sujet : _E-Learning / Gestion de dépenses / Touristique / Évaluation d'œuvres / RPG_
+Sujet : _Évaluation d'œuvres_
 
 ## 🔗 Dépôt GitHub
 
-Lien : https://github.com/UTILISATEUR/NOM-DU-DEPOT
+Lien : [https://github.com/UTILISATEUR/NOM-DU-DEPOT](https://github.com/Jaska28/Kiroku-TP2-ServiceWeb)
 
 ## ▶️ Lancer le projet
 
