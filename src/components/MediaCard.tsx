@@ -30,6 +30,7 @@ export function MediaCard({media}: Props) {
             </figure>
             <div className="card-body">
                 <h2 className="card-title">{media.title}</h2>
+                <h3>{media.type}</h3>
 
                 <div className={"flex flex-col gap-2"}>
                     <span className={"text-lg font-bold"}>

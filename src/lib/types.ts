@@ -1,6 +1,6 @@
 enum MediaType {
-    ANIME,
-    MANGA,
+    ANIME = "Anime",
+    MANGA = "Manga",
 }
 
 enum MediaFormat {
