@@ -3,6 +3,7 @@
 import {Media} from "@/src/lib/types";
 import {useState} from "react";
 import {MediaRating} from "@/src/components/MediaRating";
+import Link from "next/link";
 
 type Props = {
     media: Media;
@@ -14,12 +15,18 @@ export function MediaCard({media}: Props) {
 
     return (
         <div className="card card-side bg-base-100 shadow-sm bg-gradient-to-r from-purple-100 to-purple-600">
-            <figure className={"relative h-80 w-auto"}>
-                <img
-                    src={media.bannerImgURL}
-                    alt="Media banner"
-                    className={"shadow-xl rounded"}
-                />
+            <figure>
+                <Link
+                    href={`/media/${media.id}`}
+                    aria-label={`Voir les détails de ${media.title}`}
+                    className={"block"}
+                >
+                    <img
+                        src={media.bannerImgURL}
+                        alt="Media banner"
+                        className={"shadow-xl rounded relative h-80 w-auto"}
+                    />
+                </Link>
             </figure>
             <div className="card-body">
                 <h2 className="card-title">{media.title}</h2>
