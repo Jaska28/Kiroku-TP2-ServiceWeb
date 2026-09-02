@@ -108,7 +108,8 @@ model MediaListItem {
 
 model Media {
   id           String      @id @default(uuid()) @db.Uuid
-  malId        Int // Id from MyAnimeList
+  anilistId    Int         @unique
+  malId        Int? // Id from MyAnimeList
   title        String
   description  String?
   type         MediaType   @default(ANIME)
@@ -139,4 +140,6 @@ model Review {
 
   user  User  @relation(fields: [userId], references: [id])
   media Media @relation(fields: [mediaId], references: [id])
+
+  @@unique([userId, mediaId])
 }
