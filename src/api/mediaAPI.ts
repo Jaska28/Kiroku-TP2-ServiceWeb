@@ -1,0 +1,135 @@
+import axios from "axios";
+import dotenv from "dotenv";
+
+import type { Genre, MediaFormat } from "@/generated/prisma/enums";
+import { Prisma } from "@/generated/prisma/client";
+
+dotenv.config();
+
+export const anilist = axios.create({
+  baseURL: process.env.ANIME_API || "https://graphql.anilist.co",
+  timeout: 10_000,
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
+});
+
+export enum MediaType {
+  ANIME = "ANIME",
+  MANGA = "MANGA",
+}
+
+export type MediaAPI = {
+  id: number;
+  title: {
+    english?: string | null;
+    romaji?: string | null;
+    native?: string | null;
+  };
+  format: MediaFormat;
+  description: string;
+  coverImage: {
+    large?: string | null;
+  };
+  genres: Genre[];
+  averageScore: number;
+  startDate: {
+    year?: number | null;
+  };
+};
+
+/**
+ * Generates a GraphQL query string for fetching media data from AniList.
+ * @param searchField - The field to search by ('id' or 'search').
+ * @param searchFieldType - The GraphQL type of the search field ('Int' or 'String').
+ * @param mediaType - The media type, either MediaType. ANIME or MediaType.MANGA.
+ * @returns A GraphQL query string.
+ */
+function getMediaQuery(
+  searchField: string,
+  searchFieldType: string,
+  mediaType: MediaType,
+): string {
+  return `query ($${searchField}: ${searchFieldType}) {
+    Media(${searchField}: $${searchField}, type: ${mediaType}) {
+        id
+        title {
+            english
+            romaji
+            native
+        }
+        format
+        description
+        coverImage {
+            large
+        }
+        status
+        genres
+        averageScore
+        startDate {
+            year
+        }
+    }
+}`;
+}
+
+// Can't use a return of MediaPrisma. It would need the id and all the attributes.
+function mediaAnilistToPrisma(
+  media: MediaAPI,
+  type: MediaType,
+): Prisma.MediaCreateInput | null {
+  if (!media) return null;
+
+  return {
+    malId: media.id,
+    title:
+      media.title.english ||
+      media.title.romaji ||
+      media.title.native ||
+      `AniList #${media.id}`,
+    type,
+    format: media.format,
+    description: media.description,
+    bannerImgURL: media.coverImage.large ?? null,
+    genre: Array.isArray(media.genres) ? media.genres : [],
+    malAvgScore: media.averageScore,
+    releaseYear: media.startDate.year || new Date().getFullYear(),
+  };
+}
+
+/**
+ * Retreives an Anime or Manga from AniList API by ID or search term.
+ * @param value - The ID (number) or search (string) to query.
+ * @param searchField - Whether to search by 'id' or 'search' (default: 'id').
+ * @param type - The media type, either MediaType. ANIME or MediaType.MANGA.
+ * @returns A Promise resolving to the Media object.
+ */
+// GraphQL requests use POST with { query, variables }.
+export async function getDataAnilist(
+  /// TODO - add a way to have a list of searched name. Exemple, there is multiple Dragon Ball series. Will be used so user select witch one with front end.
+  value: number | string,
+  searchField: "id" | "search" = "id",
+  type: MediaType,
+): Promise<Prisma.MediaCreateInput | null> {
+  try {
+    const { data } = await anilist.post("", {
+      query: getMediaQuery(
+        searchField,
+        searchField === "id" ? "Int" : "String",
+        type,
+      ),
+      variables: { [searchField]: value },
+    });
+
+    const media = data.data.Media;
+    return mediaAnilistToPrisma(media, type);
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      console.log("Status HTTP: ", error.response.status);
+    } else {
+      console.log("Network Error or timeout");
+    }
+    return null;
+  }
+}
