@@ -13,11 +13,13 @@ export function MediaCard({media}: Props) {
     const [rating, setRating] = useState(0);
 
     return (
-        <div className="card card-side bg-base-100 shadow-sm">
-            <figure>
+        <div className="card card-side bg-base-100 shadow-sm bg-gradient-to-r from-purple-100 to-purple-600">
+            <figure className={"relative h-80 w-auto"}>
                 <img
                     src={media.bannerImgURL}
-                    alt="Media banner"/>
+                    alt="Media banner"
+                    className={"shadow-xl rounded"}
+                />
             </figure>
             <div className="card-body">
                 <h2 className="card-title">{media.title}</h2>
@@ -34,11 +36,16 @@ export function MediaCard({media}: Props) {
                     onRatingChange={setRating}
                 />
 
-                {media.genre.map((genre) => (
-                    <div className="badge badge-info" key={genre}>
-                        {genre}
-                    </div>
-                ))}
+                <div className={"flex flex row flex-wrap gap-2"}>
+                    {media.genre.map((genre) => (
+                        <div className="badge badge-info" key={genre}>
+                            {genre}
+                        </div>
+                    ))}
+                </div>
+
+                <button className={"btn btn-accent"}>Ajouter à une liste</button>
+
             </div>
         </div>
     )
