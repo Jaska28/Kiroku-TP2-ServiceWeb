@@ -84,3 +84,13 @@ type User = {
     mediaLists: MediaList[];
     reviews: Review[];
 }
+export type MediaCardData = {
+    id: string;
+    title: string;
+    description: string | null;
+    imageUrl: string;
+    score: number | null;
+    releaseYear: number | null;
+    genres: string[];
+    type: "Anime" | "Manga";
+};

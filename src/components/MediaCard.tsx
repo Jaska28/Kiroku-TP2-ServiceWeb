@@ -1,12 +1,12 @@
 "use client"
 
-import {Media} from "@/src/lib/types";
+import {MediaCardData} from "@/src/lib/types";
 import {useState} from "react";
 import {MediaRating} from "@/src/components/MediaRating";
 import Link from "next/link";
 
 type Props = {
-    media: Media;
+    media: MediaCardData;
 }
 
 export function MediaCard({media}: Props) {
@@ -22,7 +22,7 @@ export function MediaCard({media}: Props) {
                     className={"block"}
                 >
                     <img
-                        src={media.bannerImgURL}
+                        src={media.imageUrl}
                         alt="Media banner"
                         className={"shadow-xl rounded relative h-80 w-auto"}
                     />
@@ -34,7 +34,7 @@ export function MediaCard({media}: Props) {
 
                 <div className={"flex flex-col gap-2"}>
                     <span className={"text-lg font-bold"}>
-                        Moyenne: {media.avgScore?.toFixed(1) ?? "-"}
+                        Moyenne: {media.score?.toFixed(1) ?? "-"}
                     </span>
                 </div>
 
@@ -45,7 +45,7 @@ export function MediaCard({media}: Props) {
                 />
 
                 <div className={"flex flex row flex-wrap gap-2"}>
-                    {media.genre.map((genre) => (
+                    {media.genres.map((genre) => (
                         <div className="badge badge-info" key={genre}>
                             {genre}
                         </div>

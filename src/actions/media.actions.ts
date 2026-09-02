@@ -1,8 +1,8 @@
 "use server";
 
 import { MediaType } from "@/generated/prisma/enums";
-import prisma from "@/lib/prisma";
-import { getMediaFromAnilist, mediaAnilistToPrisma } from "@/lib/anilist";
+import prisma from "../lib/prisma";
+import { getMediaFromAnilist, mediaAnilistToPrisma } from "../lib/anilist";
 
 // Retrieves a media item from Anilist and creates it in our database
 export async function createMediaFromAnilist(
