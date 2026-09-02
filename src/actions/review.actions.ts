@@ -15,7 +15,7 @@ export async function createReview(
   const user = await getCurrentUser();
 
   if (!user) {
-    throw new Error("Connectez vous pour reagir!");
+    throw new Error("Connectez vous pour creer un review!");
   }
 
   if (rating < 0 || rating > 10) {
@@ -89,7 +89,7 @@ export async function updateReview(
       }
 
       // updates the review
-      await prisma.review.update({
+      await tx.review.update({
         where: {
           id: reviewId,
         },
@@ -119,7 +119,7 @@ export async function deleteReview(reviewId: string) {
   const user = await getCurrentUser();
 
   if (!user) {
-    throw new Error("Connectez vous pour reagir!");
+    throw new Error("Connectez vous pour delete une review!");
   }
 
   const results = await prisma.$transaction(async (tx) => {

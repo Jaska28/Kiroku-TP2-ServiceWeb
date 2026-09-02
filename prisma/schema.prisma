@@ -90,6 +90,8 @@ model MediaList {
 
   user           User            @relation(fields: [userId], references: [id])
   mediaListItems MediaListItem[]
+
+  @@unique([userId, name])
 }
 
 model MediaListItem {

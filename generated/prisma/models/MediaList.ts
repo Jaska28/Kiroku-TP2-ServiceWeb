@@ -216,6 +216,7 @@ export type MediaListOrderByWithRelationInput = {
 
 export type MediaListWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  userId_name?: Prisma.MediaListUserIdNameCompoundUniqueInput
   AND?: Prisma.MediaListWhereInput | Prisma.MediaListWhereInput[]
   OR?: Prisma.MediaListWhereInput[]
   NOT?: Prisma.MediaListWhereInput | Prisma.MediaListWhereInput[]
@@ -227,7 +228,7 @@ export type MediaListWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"MediaList"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   mediaListItems?: Prisma.MediaListItemListRelationFilter
-}, "id">
+}, "id" | "userId_name">
 
 export type MediaListOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -336,6 +337,11 @@ export type MediaListListRelationFilter = {
 
 export type MediaListOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type MediaListUserIdNameCompoundUniqueInput = {
+  userId: string
+  name: string
 }
 
 export type MediaListCountOrderByAggregateInput = {

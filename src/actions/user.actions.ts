@@ -16,6 +16,7 @@ export async function syncUser() {
 
   if (existingUser) return existingUser;
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const newUser = await prisma.user.create({
     data: {
       clerkId: clerkUser.id,
