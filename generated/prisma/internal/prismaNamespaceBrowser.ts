@@ -112,6 +112,7 @@ export type MediaListItemScalarFieldEnum = (typeof MediaListItemScalarFieldEnum)
 
 export const MediaScalarFieldEnum = {
   id: 'id',
+  anilistId: 'anilistId',
   malId: 'malId',
   title: 'title',
   description: 'description',

@@ -27,6 +27,7 @@ export type AggregateMedia = {
 }
 
 export type MediaAvgAggregateOutputType = {
+  anilistId: number | null
   malId: number | null
   avgScore: number | null
   malAvgScore: number | null
@@ -34,6 +35,7 @@ export type MediaAvgAggregateOutputType = {
 }
 
 export type MediaSumAggregateOutputType = {
+  anilistId: number | null
   malId: number | null
   avgScore: number | null
   malAvgScore: number | null
@@ -42,6 +44,7 @@ export type MediaSumAggregateOutputType = {
 
 export type MediaMinAggregateOutputType = {
   id: string | null
+  anilistId: number | null
   malId: number | null
   title: string | null
   description: string | null
@@ -58,6 +61,7 @@ export type MediaMinAggregateOutputType = {
 
 export type MediaMaxAggregateOutputType = {
   id: string | null
+  anilistId: number | null
   malId: number | null
   title: string | null
   description: string | null
@@ -74,6 +78,7 @@ export type MediaMaxAggregateOutputType = {
 
 export type MediaCountAggregateOutputType = {
   id: number
+  anilistId: number
   malId: number
   title: number
   description: number
@@ -92,6 +97,7 @@ export type MediaCountAggregateOutputType = {
 
 
 export type MediaAvgAggregateInputType = {
+  anilistId?: true
   malId?: true
   avgScore?: true
   malAvgScore?: true
@@ -99,6 +105,7 @@ export type MediaAvgAggregateInputType = {
 }
 
 export type MediaSumAggregateInputType = {
+  anilistId?: true
   malId?: true
   avgScore?: true
   malAvgScore?: true
@@ -107,6 +114,7 @@ export type MediaSumAggregateInputType = {
 
 export type MediaMinAggregateInputType = {
   id?: true
+  anilistId?: true
   malId?: true
   title?: true
   description?: true
@@ -123,6 +131,7 @@ export type MediaMinAggregateInputType = {
 
 export type MediaMaxAggregateInputType = {
   id?: true
+  anilistId?: true
   malId?: true
   title?: true
   description?: true
@@ -139,6 +148,7 @@ export type MediaMaxAggregateInputType = {
 
 export type MediaCountAggregateInputType = {
   id?: true
+  anilistId?: true
   malId?: true
   title?: true
   description?: true
@@ -243,7 +253,8 @@ export type MediaGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 
 export type MediaGroupByOutputType = {
   id: string
-  malId: number
+  anilistId: number
+  malId: number | null
   title: string
   description: string | null
   type: $Enums.MediaType
@@ -283,7 +294,8 @@ export type MediaWhereInput = {
   OR?: Prisma.MediaWhereInput[]
   NOT?: Prisma.MediaWhereInput | Prisma.MediaWhereInput[]
   id?: Prisma.UuidFilter<"Media"> | string
-  malId?: Prisma.IntFilter<"Media"> | number
+  anilistId?: Prisma.IntFilter<"Media"> | number
+  malId?: Prisma.IntNullableFilter<"Media"> | number | null
   title?: Prisma.StringFilter<"Media"> | string
   description?: Prisma.StringNullableFilter<"Media"> | string | null
   type?: Prisma.EnumMediaTypeFilter<"Media"> | $Enums.MediaType
@@ -302,7 +314,8 @@ export type MediaWhereInput = {
 
 export type MediaOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  malId?: Prisma.SortOrder
+  anilistId?: Prisma.SortOrder
+  malId?: Prisma.SortOrderInput | Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrder
@@ -321,10 +334,11 @@ export type MediaOrderByWithRelationInput = {
 
 export type MediaWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  anilistId?: number
   AND?: Prisma.MediaWhereInput | Prisma.MediaWhereInput[]
   OR?: Prisma.MediaWhereInput[]
   NOT?: Prisma.MediaWhereInput | Prisma.MediaWhereInput[]
-  malId?: Prisma.IntFilter<"Media"> | number
+  malId?: Prisma.IntNullableFilter<"Media"> | number | null
   title?: Prisma.StringFilter<"Media"> | string
   description?: Prisma.StringNullableFilter<"Media"> | string | null
   type?: Prisma.EnumMediaTypeFilter<"Media"> | $Enums.MediaType
@@ -339,11 +353,12 @@ export type MediaWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Media"> | Date | string
   mediaListItems?: Prisma.MediaListItemListRelationFilter
   reviews?: Prisma.ReviewListRelationFilter
-}, "id">
+}, "id" | "anilistId">
 
 export type MediaOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  malId?: Prisma.SortOrder
+  anilistId?: Prisma.SortOrder
+  malId?: Prisma.SortOrderInput | Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrder
@@ -368,7 +383,8 @@ export type MediaScalarWhereWithAggregatesInput = {
   OR?: Prisma.MediaScalarWhereWithAggregatesInput[]
   NOT?: Prisma.MediaScalarWhereWithAggregatesInput | Prisma.MediaScalarWhereWithAggregatesInput[]
   id?: Prisma.UuidWithAggregatesFilter<"Media"> | string
-  malId?: Prisma.IntWithAggregatesFilter<"Media"> | number
+  anilistId?: Prisma.IntWithAggregatesFilter<"Media"> | number
+  malId?: Prisma.IntNullableWithAggregatesFilter<"Media"> | number | null
   title?: Prisma.StringWithAggregatesFilter<"Media"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Media"> | string | null
   type?: Prisma.EnumMediaTypeWithAggregatesFilter<"Media"> | $Enums.MediaType
@@ -385,7 +401,8 @@ export type MediaScalarWhereWithAggregatesInput = {
 
 export type MediaCreateInput = {
   id?: string
-  malId: number
+  anilistId: number
+  malId?: number | null
   title: string
   description?: string | null
   type?: $Enums.MediaType
@@ -404,7 +421,8 @@ export type MediaCreateInput = {
 
 export type MediaUncheckedCreateInput = {
   id?: string
-  malId: number
+  anilistId: number
+  malId?: number | null
   title: string
   description?: string | null
   type?: $Enums.MediaType
@@ -423,7 +441,8 @@ export type MediaUncheckedCreateInput = {
 
 export type MediaUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  malId?: Prisma.IntFieldUpdateOperationsInput | number
+  anilistId?: Prisma.IntFieldUpdateOperationsInput | number
+  malId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
@@ -442,7 +461,8 @@ export type MediaUpdateInput = {
 
 export type MediaUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  malId?: Prisma.IntFieldUpdateOperationsInput | number
+  anilistId?: Prisma.IntFieldUpdateOperationsInput | number
+  malId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
@@ -461,7 +481,8 @@ export type MediaUncheckedUpdateInput = {
 
 export type MediaCreateManyInput = {
   id?: string
-  malId: number
+  anilistId: number
+  malId?: number | null
   title: string
   description?: string | null
   type?: $Enums.MediaType
@@ -478,7 +499,8 @@ export type MediaCreateManyInput = {
 
 export type MediaUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  malId?: Prisma.IntFieldUpdateOperationsInput | number
+  anilistId?: Prisma.IntFieldUpdateOperationsInput | number
+  malId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
@@ -495,7 +517,8 @@ export type MediaUpdateManyMutationInput = {
 
 export type MediaUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  malId?: Prisma.IntFieldUpdateOperationsInput | number
+  anilistId?: Prisma.IntFieldUpdateOperationsInput | number
+  malId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
@@ -525,6 +548,7 @@ export type EnumGenreNullableListFilter<$PrismaModel = never> = {
 
 export type MediaCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  anilistId?: Prisma.SortOrder
   malId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -541,6 +565,7 @@ export type MediaCountOrderByAggregateInput = {
 }
 
 export type MediaAvgOrderByAggregateInput = {
+  anilistId?: Prisma.SortOrder
   malId?: Prisma.SortOrder
   avgScore?: Prisma.SortOrder
   malAvgScore?: Prisma.SortOrder
@@ -549,6 +574,7 @@ export type MediaAvgOrderByAggregateInput = {
 
 export type MediaMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  anilistId?: Prisma.SortOrder
   malId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -565,6 +591,7 @@ export type MediaMaxOrderByAggregateInput = {
 
 export type MediaMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  anilistId?: Prisma.SortOrder
   malId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -580,6 +607,7 @@ export type MediaMinOrderByAggregateInput = {
 }
 
 export type MediaSumOrderByAggregateInput = {
+  anilistId?: Prisma.SortOrder
   malId?: Prisma.SortOrder
   avgScore?: Prisma.SortOrder
   malAvgScore?: Prisma.SortOrder
@@ -606,6 +634,14 @@ export type MediaCreategenreInput = {
 
 export type IntFieldUpdateOperationsInput = {
   set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
   increment?: number
   decrement?: number
   multiply?: number
@@ -653,7 +689,8 @@ export type MediaUpdateOneRequiredWithoutReviewsNestedInput = {
 
 export type MediaCreateWithoutMediaListItemsInput = {
   id?: string
-  malId: number
+  anilistId: number
+  malId?: number | null
   title: string
   description?: string | null
   type?: $Enums.MediaType
@@ -671,7 +708,8 @@ export type MediaCreateWithoutMediaListItemsInput = {
 
 export type MediaUncheckedCreateWithoutMediaListItemsInput = {
   id?: string
-  malId: number
+  anilistId: number
+  malId?: number | null
   title: string
   description?: string | null
   type?: $Enums.MediaType
@@ -705,7 +743,8 @@ export type MediaUpdateToOneWithWhereWithoutMediaListItemsInput = {
 
 export type MediaUpdateWithoutMediaListItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  malId?: Prisma.IntFieldUpdateOperationsInput | number
+  anilistId?: Prisma.IntFieldUpdateOperationsInput | number
+  malId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
@@ -723,7 +762,8 @@ export type MediaUpdateWithoutMediaListItemsInput = {
 
 export type MediaUncheckedUpdateWithoutMediaListItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  malId?: Prisma.IntFieldUpdateOperationsInput | number
+  anilistId?: Prisma.IntFieldUpdateOperationsInput | number
+  malId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
@@ -741,7 +781,8 @@ export type MediaUncheckedUpdateWithoutMediaListItemsInput = {
 
 export type MediaCreateWithoutReviewsInput = {
   id?: string
-  malId: number
+  anilistId: number
+  malId?: number | null
   title: string
   description?: string | null
   type?: $Enums.MediaType
@@ -759,7 +800,8 @@ export type MediaCreateWithoutReviewsInput = {
 
 export type MediaUncheckedCreateWithoutReviewsInput = {
   id?: string
-  malId: number
+  anilistId: number
+  malId?: number | null
   title: string
   description?: string | null
   type?: $Enums.MediaType
@@ -793,7 +835,8 @@ export type MediaUpdateToOneWithWhereWithoutReviewsInput = {
 
 export type MediaUpdateWithoutReviewsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  malId?: Prisma.IntFieldUpdateOperationsInput | number
+  anilistId?: Prisma.IntFieldUpdateOperationsInput | number
+  malId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
@@ -811,7 +854,8 @@ export type MediaUpdateWithoutReviewsInput = {
 
 export type MediaUncheckedUpdateWithoutReviewsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  malId?: Prisma.IntFieldUpdateOperationsInput | number
+  anilistId?: Prisma.IntFieldUpdateOperationsInput | number
+  malId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
@@ -869,6 +913,7 @@ export type MediaCountOutputTypeCountReviewsArgs<ExtArgs extends runtime.Types.E
 
 export type MediaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  anilistId?: boolean
   malId?: boolean
   title?: boolean
   description?: boolean
@@ -889,6 +934,7 @@ export type MediaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 
 export type MediaSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  anilistId?: boolean
   malId?: boolean
   title?: boolean
   description?: boolean
@@ -906,6 +952,7 @@ export type MediaSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 
 export type MediaSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  anilistId?: boolean
   malId?: boolean
   title?: boolean
   description?: boolean
@@ -923,6 +970,7 @@ export type MediaSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 
 export type MediaSelectScalar = {
   id?: boolean
+  anilistId?: boolean
   malId?: boolean
   title?: boolean
   description?: boolean
@@ -938,7 +986,7 @@ export type MediaSelectScalar = {
   updatedAt?: boolean
 }
 
-export type MediaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "malId" | "title" | "description" | "type" | "format" | "status" | "bannerImgURL" | "avgScore" | "malAvgScore" | "releaseYear" | "genre" | "createdAt" | "updatedAt", ExtArgs["result"]["media"]>
+export type MediaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "anilistId" | "malId" | "title" | "description" | "type" | "format" | "status" | "bannerImgURL" | "avgScore" | "malAvgScore" | "releaseYear" | "genre" | "createdAt" | "updatedAt", ExtArgs["result"]["media"]>
 export type MediaInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   mediaListItems?: boolean | Prisma.Media$mediaListItemsArgs<ExtArgs>
   reviews?: boolean | Prisma.Media$reviewsArgs<ExtArgs>
@@ -955,7 +1003,8 @@ export type $MediaPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    malId: number
+    anilistId: number
+    malId: number | null
     title: string
     description: string | null
     type: $Enums.MediaType
@@ -1394,6 +1443,7 @@ export interface Prisma__MediaClient<T, Null = never, ExtArgs extends runtime.Ty
  */
 export interface MediaFieldRefs {
   readonly id: Prisma.FieldRef<"Media", 'String'>
+  readonly anilistId: Prisma.FieldRef<"Media", 'Int'>
   readonly malId: Prisma.FieldRef<"Media", 'Int'>
   readonly title: Prisma.FieldRef<"Media", 'String'>
   readonly description: Prisma.FieldRef<"Media", 'String'>

@@ -1,43 +1,91 @@
 "use server";
 
-import prisma from "@/src/lib/prisma";
-import { getCurrentUser } from "./user.actions";
-import { revalidatePath } from "next/cache";
-import { MediaType } from "@/src/lib/api/mediaAPI";
-import { getDataAnilist } from "@/src/lib/api/mediaAPI";
+import { MediaType } from "@/generated/prisma/enums";
+import prisma from "@/lib/prisma";
+import { getMediaFromAnilist, mediaAnilistToPrisma } from "@/lib/anilist";
 
-export async function registerMedia(
+// Retrieves a media item from Anilist and creates it in our database
+export async function createMediaFromAnilist(
   value: number | string,
   searchField: "id" | "search",
   type: MediaType,
 ) {
-  const user = await getCurrentUser();
+  const media = await getMediaFromAnilist(value, searchField, type);
 
-  if (!user) {
-    throw new Error("utilisateur non authentifie");
+  if (!media) {
+    return null;
   }
 
-  const mediaData = await getDataAnilist(value, searchField, type);
+  const data = mediaAnilistToPrisma(media, type);
 
-  if (!mediaData) {
-    throw new Error("Aucun media trouve");
-  }
-
-  const existingMedia = await prisma.media.findFirst({
+  const existingMedia = await prisma.media.findUnique({
     where: {
-      malId: mediaData.malId,
+      anilistId: media.id,
     },
   });
 
   if (existingMedia) {
-    throw new Error("Le mdeia existe deja");
+    return existingMedia;
   }
 
-  const media = await prisma.media.create({
-    data: mediaData,
+  return prisma.media.create({
+    data,
   });
+}
 
-  revalidatePath("/media");
+// Retrieves a media item from anilist and updates the existing db entry
+export async function updateMediaFromAnilist(
+  anilistId: number,
+  type: MediaType,
+) {
+  const media = await getMediaFromAnilist(anilistId, "id", type);
 
-  return media;
+  if (!media) {
+    return null;
+  }
+
+  const data = mediaAnilistToPrisma(media, type);
+
+  return prisma.media.update({
+    where: {
+      anilistId,
+    },
+    data,
+  });
+}
+
+// gets a media item from our local db
+export async function getMediaById(id: string) {
+  return prisma.media.findUnique({
+    where: {
+      id,
+    },
+  });
+}
+
+// gets a media item using its anilist ID
+export async function getMediaByAnilistId(anilistId: number) {
+  return prisma.media.findUnique({
+    where: {
+      anilistId,
+    },
+  });
+}
+
+// gets all media in the database.
+export async function getAllMedia() {
+  return prisma.media.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+}
+
+// deletes a media item
+export async function deleteMedia(id: string) {
+  return prisma.media.delete({
+    where: {
+      id,
+    },
+  });
 }
