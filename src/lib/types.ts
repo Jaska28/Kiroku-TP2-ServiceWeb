@@ -24,26 +24,6 @@ enum MediaStatus {
     HIATUS,
 }
 
-enum Genre {
-    ACTION,
-    ADVENTURE,
-    COMEDY,
-    DRAMA,
-    FANTASY,
-    HORROR,
-    MAGICAL_GIRL,
-    MECHA,
-    MUSIC,
-    MYSTERY,
-    PSYCHOLOGICAL,
-    ROMANCE,
-    SCI_FI,
-    SLICE_OF_LIFE,
-    SPORTS,
-    SUPERNATURAL,
-    THRILLER,
-}
-
 enum Role {
     USER,
     ADMIN,
@@ -61,7 +41,7 @@ export type Media = {
     avgScore: number;
     malAvgScore: number;
     releaseYear: number;
-    genre: Genre[];
+    genre: string[];
     createAt: Date;
     mediaListItems: MediaListItem[];
     reviews: Review[];
