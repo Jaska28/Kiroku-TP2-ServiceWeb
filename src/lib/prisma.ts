@@ -1,7 +1,7 @@
 import "server-only";
 
 import { PrismaNeon } from "@prisma/adapter-neon";
-import { Prisma, PrismaClient } from "@/generated/prisma/client.js";
+import { PrismaClient } from "@/generated/prisma/client.js";
 
 const adapter = new PrismaNeon({
   connectionString: process.env.DATABASE_URL,
@@ -9,7 +9,7 @@ const adapter = new PrismaNeon({
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
-export const prisma =
+const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
     adapter,
@@ -17,3 +17,5 @@ export const prisma =
   });
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+
+export default prisma;

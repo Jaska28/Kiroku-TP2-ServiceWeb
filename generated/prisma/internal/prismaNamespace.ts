@@ -832,10 +832,11 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const UserScalarFieldEnum = {
   id: 'id',
+  clerkId: 'clerkId',
   username: 'username',
-  password: 'password',
   role: 'role',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -847,7 +848,8 @@ export const MediaListScalarFieldEnum = {
   name: 'name',
   description: 'description',
   isPublic: 'isPublic',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type MediaListScalarFieldEnum = (typeof MediaListScalarFieldEnum)[keyof typeof MediaListScalarFieldEnum]
@@ -857,7 +859,8 @@ export const MediaListItemScalarFieldEnum = {
   id: 'id',
   mediaListId: 'mediaListId',
   mediaId: 'mediaId',
-  addedAt: 'addedAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type MediaListItemScalarFieldEnum = (typeof MediaListItemScalarFieldEnum)[keyof typeof MediaListItemScalarFieldEnum]
@@ -865,6 +868,7 @@ export type MediaListItemScalarFieldEnum = (typeof MediaListItemScalarFieldEnum)
 
 export const MediaScalarFieldEnum = {
   id: 'id',
+  anilistId: 'anilistId',
   malId: 'malId',
   title: 'title',
   description: 'description',
@@ -876,7 +880,8 @@ export const MediaScalarFieldEnum = {
   malAvgScore: 'malAvgScore',
   releaseYear: 'releaseYear',
   genre: 'genre',
-  createAt: 'createAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type MediaScalarFieldEnum = (typeof MediaScalarFieldEnum)[keyof typeof MediaScalarFieldEnum]
@@ -888,7 +893,8 @@ export const ReviewScalarFieldEnum = {
   mediaId: 'mediaId',
   rating: 'rating',
   comments: 'comments',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]
@@ -1040,6 +1046,20 @@ export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
  * Reference to a field of type 'Float[]'
  */
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Genre[]'
+ */
+export type ListEnumGenreFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Genre[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Genre'
+ */
+export type EnumGenreFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Genre'>
     
 
 /**
