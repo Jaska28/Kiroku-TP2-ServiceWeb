@@ -23,8 +23,7 @@ export async function createMediaListFromForm(
   formData: FormData,
 ): Promise<CreateMediaListFormState> {
   const name = String(formData.get("name") ?? "").trim();
-  const description =
-    String(formData.get("description") ?? "").trim() || null;
+  const description = String(formData.get("description") ?? "").trim() || null;
   const isPublic = formData.get("isPublic") === "on";
 
   if (!name) {
@@ -43,7 +42,7 @@ export async function createMediaListFromForm(
 
     await prisma.mediaList.create({
       data: {
-        userId: user.id,
+        userId: user.userId,
         name,
         description,
         isPublic,
@@ -437,7 +436,6 @@ export async function removeMediaFromMediaList(
 
   return results;
 }
-
 
 export async function getDemoUserMediaLists() {
   return prisma.mediaList.findMany({
