@@ -26,7 +26,7 @@ export async function createReview(
     const existingReview = await tx.review.findUnique({
       where: {
         userId_mediaId: {
-          userId: user.id,
+          userId: user.userId,
           mediaId,
         },
       },
@@ -41,7 +41,7 @@ export async function createReview(
     if (!existingReview) {
       await tx.review.create({
         data: {
-          userId: user.id,
+          userId: user.userId,
           mediaId,
           rating,
           comments,
@@ -77,21 +77,21 @@ export async function updateReview(
   const results = await prisma.$transaction(async (tx) => {
     const existingReview = await tx.review.findUnique({
       where: {
-        id: reviewId,
+        reviewId,
       },
     });
 
     // cas 1: review existe
     if (existingReview) {
       // check if user owns review
-      if (existingReview.userId !== user.id) {
+      if (existingReview.userId !== user.userId) {
         throw new Error("You do not have ownership of this review");
       }
 
       // updates the review
       await tx.review.update({
         where: {
-          id: reviewId,
+          reviewId,
         },
         data: {
           rating,
@@ -125,18 +125,18 @@ export async function deleteReview(reviewId: string) {
   const results = await prisma.$transaction(async (tx) => {
     const existingReview = await tx.review.findUnique({
       where: {
-        id: reviewId,
+        reviewId,
       },
     });
 
     // cas 1: review existe
     if (existingReview) {
       // check if user owns review or if admnin user is the one makinf the request
-      if (existingReview.userId === user.id || user.role === Role.ADMIN) {
+      if (existingReview.userId === user.userId || user.role === Role.ADMIN) {
         // deletes the review
         await tx.review.delete({
           where: {
-            id: reviewId,
+            reviewId,
           },
         });
 
@@ -163,7 +163,7 @@ export async function deleteReview(reviewId: string) {
 export async function getReviews(page: number = 1, limit: number = 5) {
   const skip = (page - 1) * limit;
 
-  const [reviews, total] = await await Promise.all([
+  const [reviews, total] = await Promise.all([
     prisma.review.findMany({
       select: {
         userId: true,
@@ -192,7 +192,7 @@ export async function getReviews(page: number = 1, limit: number = 5) {
 export async function getReviewById(reviewId: string) {
   const review = await prisma.review.findUnique({
     where: {
-      id: reviewId,
+      reviewId,
     },
   });
 
