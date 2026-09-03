@@ -109,6 +109,44 @@ export async function addMediaToListFromForm(
   }
 }
 
+export async function deleteMediaListItemFromForm(
+  formData: FormData,
+): Promise<void> {
+  const mediaListId = String(formData.get("mediaListId") ?? "");
+  const mediaId = String(formData.get("mediaId") ?? "");
+
+  if (!mediaListId || !mediaId) {
+    throw new Error("La liste ou le média est invalide.");
+  }
+
+  await prisma.$transaction(async (tx) => {
+    const mediaList = await tx.mediaList.findFirst({
+      where: {
+        id: mediaListId,
+        user: {
+          clerkId: SEED_USER_CLERK_ID,
+        },
+      },
+      select: {id: true},
+    });
+
+    if (!mediaList) {
+      throw new Error("La liste est introuvable.");
+    }
+
+    await tx.mediaListItem.delete({
+      where: {
+        mediaListId_mediaId: {
+          mediaListId,
+          mediaId,
+        },
+      },
+    });
+  });
+
+  revalidatePath("/my-lists");
+}
+
 export async function createMediaListItem(
   mediaListId: string,
   mediaId: string,

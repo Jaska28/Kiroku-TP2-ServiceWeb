@@ -227,6 +227,43 @@ export async function deleteMediaList(mediaListId: string) {
   return results;
 }
 
+export async function deleteMediaListFromForm(
+  formData: FormData,
+): Promise<void> {
+  const mediaListId = String(formData.get("mediaListId") ?? "");
+
+  if (!mediaListId) {
+    throw new Error("La liste est invalide.");
+  }
+
+  await prisma.$transaction(async (tx) => {
+    const mediaList = await tx.mediaList.findFirst({
+      where: {
+        id: mediaListId,
+        user: {
+          clerkId: SEED_USER_CLERK_ID,
+        },
+      },
+      select: {id: true},
+    });
+
+    if (!mediaList) {
+      throw new Error("La liste est introuvable.");
+    }
+
+    await tx.mediaListItem.deleteMany({
+      where: {mediaListId},
+    });
+
+    await tx.mediaList.delete({
+      where: {id: mediaListId},
+    });
+  });
+
+  revalidatePath("/my-lists");
+  revalidatePath("/catalog");
+}
+
 export async function getMediaListById(mediaListId: string) {
   const user = await getCurrentUser();
 
