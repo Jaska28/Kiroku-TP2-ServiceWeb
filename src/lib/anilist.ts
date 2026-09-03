@@ -215,6 +215,22 @@ export async function getMediaPageFromAnilist(
   }
 }
 
+// Converts anilist media data into suitable data for prisma
+// DOESNT WRITE TO DB
+export function mediaAnilistToPrisma(media: AnilistMedia) {
+  const title =
+    media.title.english ??
+    media.title.romaji ??
+    media.title.native ??
+    `AniList #${media.anilistId}`;
+
+  return {
+    anilistId: media.anilistId,
+    idMal: media.idMal ?? null,
+    title,
+  };
+}
+
 export function anilistToMediaCard(
   media: AnilistMedia,
   type: string,
