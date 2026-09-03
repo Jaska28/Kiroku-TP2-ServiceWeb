@@ -1,6 +1,5 @@
 "use server";
 
-import { MediaType } from "@/generated/prisma/enums";
 import prisma from "../lib/prisma";
 import { getMediaFromAnilist, mediaAnilistToPrisma } from "../lib/anilist";
 
@@ -8,19 +7,18 @@ import { getMediaFromAnilist, mediaAnilistToPrisma } from "../lib/anilist";
 export async function createMediaFromAnilist(
   value: number | string,
   searchField: "id" | "search",
-  type: MediaType,
 ) {
-  const media = await getMediaFromAnilist(value, searchField, type);
+  const media = await getMediaFromAnilist(value, searchField);
 
   if (!media) {
     return null;
   }
 
-  const data = mediaAnilistToPrisma(media, type);
+  const data = mediaAnilistToPrisma(media);
 
   const existingMedia = await prisma.media.findUnique({
     where: {
-      anilistId: media.id,
+      anilistId: media.anilistId,
     },
   });
 
@@ -34,17 +32,14 @@ export async function createMediaFromAnilist(
 }
 
 // Retrieves a media item from anilist and updates the existing db entry
-export async function updateMediaFromAnilist(
-  anilistId: number,
-  type: MediaType,
-) {
-  const media = await getMediaFromAnilist(anilistId, "id", type);
+export async function updateMediaFromAnilist(anilistId: number) {
+  const media = await getMediaFromAnilist(anilistId, "id");
 
   if (!media) {
     return null;
   }
 
-  const data = mediaAnilistToPrisma(media, type);
+  const data = mediaAnilistToPrisma(media);
 
   return prisma.media.update({
     where: {
@@ -55,10 +50,10 @@ export async function updateMediaFromAnilist(
 }
 
 // gets a media item from our local db
-export async function getMediaById(id: string) {
+export async function getMediaById(mediaId: string) {
   return prisma.media.findUnique({
     where: {
-      id,
+      mediaId,
     },
   });
 }
@@ -82,10 +77,10 @@ export async function getAllMedia() {
 }
 
 // deletes a media item
-export async function deleteMedia(id: string) {
+export async function deleteMedia(mediaId: string) {
   return prisma.media.delete({
     where: {
-      id,
+      mediaId,
     },
   });
 }
