@@ -27,60 +27,30 @@ export const anilist = axios.create({
 // Data returned by Anilist
 // represents anilist's API
 export type AnilistMedia = {
-    id: number;
-    idMal?: number | null;
-    title: {
-        english?: string | null;
-        romaji?: string | null;
-        native?: string | null;
-    };
-    format?: string | null;
-    status?: string | null;
-    description?: string | null;
-    coverImage?: {
-        large?: string | null;
-    };
-    genres?: string[];
-    averageScore?: number | null;
-    startDate?: {
-        year?: number | null;
-    };
+  anilistId: number;
+  idMal?: number | null;
+  title: {
+    english?: string | null;
+    romaji?: string | null;
+    native?: string | null;
+  };
 };
 
 // GraphQl query used to retrieve media from AniList.
 // Supports both: id, title
 // unused variable is ignored by Anilist
 const MEDIA_QUERY = `
-  query ($id: Int, $search: String, $type: MediaType) {
+  query ($id: Int, $search: String) {
     Media(
       id: $id
       search: $search
-      type: $type
     ) {
       id
       idMal
-
       title {
         english
         romaji
         native
-      }
-
-      format
-      status
-
-      description
-
-      coverImage {
-        large
-      }
-
-      genres
-
-      averageScore
-
-      startDate {
-        year
       }
     }
   }
@@ -163,25 +133,33 @@ function toMediaStatus(value?: string | null): MediaStatus {
  * Retrieves an Anime or Manga from AniList.
  *
  * @param value - The AniList ID or search term.
- * @param searchField - Whether to search by "id" or "search".
- * @param type - ANIME or MANGA.
+ * @param searchField - Whether to search by "id" or "title".
+ *
  */
 export async function getMediaFromAnilist(
-    value: number | string,
-    searchField: "id" | "search",
-    type: MediaType,
+  value: number | string,
+  searchField: "id" | "search",
 ): Promise<AnilistMedia | null> {
-    try {
-        const variables =
-            searchField === "id"
-                ? {
-                    id: Number(value),
-                    type,
-                }
-                : {
-                    search: String(value),
-                    type,
-                };
+  try {
+    const variables =
+      searchField === "id"
+        ? {
+            id: Number(value),
+          }
+        : {
+            search: String(value),
+          };
+
+    const { data } = await anilist.post("", {
+      query: MEDIA_QUERY,
+      variables,
+    });
+
+    const media = data?.data?.Media as AnilistMedia | null;
+
+    if (!media) {
+      return null;
+    }
 
         const {data} = await anilist.post("", {
             query: MEDIA_QUERY,
@@ -250,28 +228,18 @@ export async function getMediaPageFromAnilist(
 
 // Converts anilist media data into suitable data for prisma
 // DOESNT WRITE TO DB
-export function mediaAnilistToPrisma(media: AnilistMedia, type: MediaType) {
-    const title =
-        media.title.english ??
-        media.title.romaji ??
-        media.title.native ??
-        `AniList #${media.id}`;
+export function mediaAnilistToPrisma(media: AnilistMedia) {
+  const title =
+    media.title.english ??
+    media.title.romaji ??
+    media.title.native ??
+    `AniList #${media.anilistId}`;
 
-    return {
-        anilistId: media.id,
-        idMal: media.idMal ?? null,
-        title,
-        description: media.description ?? null,
-        type,
-        format: toMediaFormat(media.format),
-        status: toMediaStatus(media.status),
-        bannerImgURL: media.coverImage?.large ?? null,
-        malAvgScore: media.averageScore != null ? media.averageScore / 10 : null,
-        releaseYear: media.startDate?.year ?? new Date().getFullYear(),
-        genre: mapGenres(media.genres ?? []),
-    };
-}
-
+  return {
+    anilistId: media.anilistId,
+    idMal: media.idMal ?? null,
+    title,
+  };
 
 export function anilistToMediaCard(
     media: AnilistMedia,

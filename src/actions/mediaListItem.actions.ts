@@ -136,7 +136,7 @@ export async function createMediaListItem(
       throw new Error("List doesnt exist");
     }
 
-    if (mediaList.userId !== user.id || user.role !== Role.ADMIN) {
+    if (mediaList.userId !== user.userId || user.role !== Role.ADMIN) {
       throw new Error("You cant add media to a list you dont own");
     }
 
@@ -168,7 +168,7 @@ export async function deleteMediaListItem(
   mediaListId: string,
   mediaId: string,
 ) {
-  // Only authentified user can create new medialistitems
+  // Only authentified user can delete medialistitems
   const user = await getCurrentUser();
 
   if (!user) {
@@ -191,7 +191,7 @@ export async function deleteMediaListItem(
       throw new Error("List doesnt exist");
     }
 
-    if (mediaList.userId !== user.id || user.role !== Role.ADMIN) {
+    if (mediaList.userId !== user.userId || user.role !== Role.ADMIN) {
       throw new Error("You cant remove media to a list you dont own");
     }
 

@@ -5,7 +5,10 @@ import prisma from "../lib/prisma";
 import { getCurrentUser } from "./user.actions";
 import { revalidatePath } from "next/cache";
 import { getMediaById } from "./media.actions";
-import { createMediaListItem, deleteMediaListItem } from "./mediaListItem.actions";
+import {
+  createMediaListItem,
+  deleteMediaListItem,
+} from "./mediaListItem.actions";
 import { MediaList } from "@/generated/prisma/client";
 
 const SEED_USER_CLERK_ID = "seed-user-kiroku";
@@ -80,7 +83,7 @@ export async function getMediaListChoices() {
 
 export async function createMediaList(
   name: string,
-  description: string | null,
+  desc: string | null,
   isPublic: boolean | true,
 ) {
   // only a user can create a list
@@ -94,7 +97,7 @@ export async function createMediaList(
     const existingList = await tx.mediaList.findUnique({
       where: {
         userId_name: {
-          userId: user.id,
+          userId: user.userId,
           name: name,
         },
       },
@@ -109,9 +112,9 @@ export async function createMediaList(
     if (!existingList) {
       await tx.mediaList.create({
         data: {
-          userId: user.id,
+          userId: user.userId,
           name,
-          description,
+          desc,
           isPublic,
         },
       });
@@ -128,8 +131,8 @@ export async function createMediaList(
 
 export async function updateMediaList(
   mediaListId: string,
-  name: string,
-  description: string | null,
+  name: string | null,
+  desc: string | null,
   isPublic: boolean | null,
 ) {
   // only a user can create a list
@@ -139,35 +142,38 @@ export async function updateMediaList(
     throw new Error("Connectez vous pour update une liste");
   }
 
+  // if nothing was provided just do nothing
+  if ([name, desc, isPublic].every((val) => val === null)) {
+    return null;
+  }
   const results = await prisma.$transaction(async (tx) => {
     const existingList = await tx.mediaList.findUnique({
       where: {
-        userId_name: {
-          userId: user.id,
-          name: name,
-        },
+        mediaListId,
       },
     });
 
     // cas 1 : list exists
     if (existingList) {
       // check if user owns list
-      if (existingList.userId !== user.id) {
+      if (existingList.userId !== user.userId) {
         throw new Error("You do not have ownership of this list");
       }
 
-      // allows keeping the old value instead of blindly updating to default of true
-      const publicIs = isPublic != null ? isPublic : existingList.isPublic;
+      // if a null value is provided uses the current value instead of setting it to null blindly
+      const nameVal = name === null ? existingList.name : name;
+      const descriptionVal = desc === null ? existingList.desc : desc;
+      const isPublicVal = isPublic === null ? existingList.isPublic : isPublic;
 
       // updates the list
       await tx.mediaList.update({
         where: {
-          id: mediaListId,
+          mediaListId,
         },
         data: {
-          name,
-          description,
-          isPublic: publicIs,
+          name: nameVal,
+          desc: descriptionVal,
+          isPublic: isPublicVal,
         },
       });
 
@@ -182,6 +188,8 @@ export async function updateMediaList(
 
   revalidatePath("/");
   revalidatePath("/MediaList");
+
+  return results;
 }
 
 export async function deleteMediaList(mediaListId: string) {
@@ -194,18 +202,18 @@ export async function deleteMediaList(mediaListId: string) {
   const results = await prisma.$transaction(async (tx) => {
     const existingList = await tx.mediaList.findUnique({
       where: {
-        id: mediaListId,
+        mediaListId,
       },
     });
 
     // cas 1: liste exists
     if (existingList) {
       // check if user owns list or is admin
-      if (existingList.userId === user.id || user.role === Role.ADMIN) {
+      if (existingList.userId === user.userId || user.role === Role.ADMIN) {
         // deletes the list
         await tx.mediaList.delete({
           where: {
-            id: mediaListId,
+            mediaListId,
           },
         });
 
@@ -236,7 +244,7 @@ export async function getMediaListById(mediaListId: string) {
 
   const mediaList = await prisma.mediaList.findUnique({
     where: {
-      id: mediaListId,
+      mediaListId,
     },
   });
 
@@ -244,24 +252,97 @@ export async function getMediaListById(mediaListId: string) {
     return null;
   }
 
-  if (mediaList?.userId === user.id || user.role === Role.ADMIN) {
+  // if user owns the list, is admin or the list is public, user can see the list
+  if (
+    mediaList?.userId === user.userId ||
+    user.role === Role.ADMIN ||
+    mediaList.isPublic
+  ) {
     return mediaList as MediaList;
   }
 
   return null;
 }
 
-// only public ones
-export async function getAllMediaList() {}
+// returns a paginated list of all users mediaList
+// any user can see mediaLists; therefore no auth needed
+// however only public lists are returned
+export async function getAllMediaList(page: number = 1, limit: number = 5) {
+  const skip = (page - 1) * limit;
 
-// return all the user's lists
-export async function getAllUserMediaList(userId: string) {}
+  const [mediaLists, total] = await Promise.all([
+    prisma.mediaList.findMany({
+      where: {
+        isPublic: true,
+      },
+      select: {
+        mediaListId: true,
+        userId: true,
+        name: true,
+        desc: true,
+        isPublic: true,
+      },
+      orderBy: { createdAt: "asc" },
+      skip,
+      take: limit,
+    }),
+    prisma.mediaList.count({
+      where: {
+        isPublic: true,
+      },
+    }),
+  ]);
+
+  return {
+    mediaLists,
+    totalPages: Math.ceil(total / limit),
+    currentPage: page,
+  };
+}
+
+// return all of a users lists
+// only the public ones unless the user making the request is the owner
+export async function getAllUserMediaList(
+  page: number = 1,
+  limit: number = 5,
+  userId: string,
+) {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    throw new Error("Connectez vous pour delete une liste");
+  }
+  // if user making the request is the owner set to true, else false
+  const owner = true ? user.userId === userId : false;
+  // if user doesnt own a list only show the public lists
+  const where = owner ? { userId } : { userId, isPublic: true };
+
+  const skip = (page - 1) * limit;
+
+  const [userMediaLists, total] = await Promise.all([
+    prisma.mediaList.findMany({
+      where,
+      orderBy: { createdAt: "asc" },
+      skip,
+      take: limit,
+    }),
+    prisma.mediaList.count({
+      where,
+    }),
+  ]);
+
+  return {
+    userMediaLists,
+    totalPages: Math.ceil(total / limit),
+    currentPage: page,
+  };
+}
 
 export async function addMediaToMediaList(
   mediaId: string,
   mediaListId: string,
 ) {
-  // only a user can create a list
+  // only a user can add media to a list
   const user = await getCurrentUser();
 
   if (!user) {
@@ -271,14 +352,14 @@ export async function addMediaToMediaList(
   const results = await prisma.$transaction(async (tx) => {
     const existingList = await tx.mediaList.findUnique({
       where: {
-        id: mediaListId,
+        mediaListId,
       },
     });
 
     // cas 1 : liste existe
     if (existingList) {
       // check if the user owns the list
-      if (existingList.userId !== user.id) {
+      if (existingList.userId !== user.userId) {
         throw new Error("You dont own this list");
       }
 
@@ -321,14 +402,14 @@ export async function removeMediaFromMediaList(
   const results = await prisma.$transaction(async (tx) => {
     const existingList = await tx.mediaList.findUnique({
       where: {
-        id: mediaListId,
+        mediaListId,
       },
     });
 
     // cas 1 : liste existe
     if (existingList) {
       // check if the user owns the list
-      if (existingList.userId !== user.id) {
+      if (existingList.userId !== user.userId) {
         throw new Error("You dont own this list");
       }
 
