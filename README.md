@@ -122,3 +122,9 @@ erDiagram
         dateTime updatedAt
     }
 ```
+
+### Test users
+
+| username | email          | first_name | last_name | passwd    | comments                  |
+| -------- | -------------- | ---------- | --------- | --------- | ------------------------- |
+| admin    | user@admin.com | User       | Admin     | admin1234 | to test admin role checks |
