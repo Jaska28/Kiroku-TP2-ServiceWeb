@@ -1,11 +1,11 @@
 "use server";
 
 import prisma from "../lib/prisma";
-import { MediaType, Role } from "@/generated/prisma/enums";
+import { Role } from "@/generated/prisma/enums";
 import { getCurrentUser } from "./user.actions";
 import { getMediaListById } from "./mediaList.actions";
 import { revalidatePath } from "next/cache";
-import {getMediaFromAnilist, mediaAnilistToPrisma} from "@/src/lib/anilist";
+import { getMediaFromAnilist, mediaAnilistToPrisma } from "@/src/lib/anilist";
 
 const SEED_USER_CLERK_ID = "seed-user-kiroku";
 
@@ -20,9 +20,8 @@ export async function addMediaToListFromForm(
 ): Promise<AddMediaToListState> {
   const mediaListId = String(formData.get("mediaListId") ?? "");
   const anilistId = Number(formData.get("anilistId"));
-  const type = formData.get("mediaType") === "Manga"
-    ? MediaType.MANGA
-    : MediaType.ANIME;
+  const type =
+    formData.get("mediaType") === "Manga" ? MediaType.MANGA : MediaType.ANIME;
 
   if (!mediaListId || !Number.isInteger(anilistId) || anilistId <= 0) {
     return {
@@ -51,7 +50,7 @@ export async function addMediaToListFromForm(
             clerkId: SEED_USER_CLERK_ID,
           },
         },
-        select: {id: true},
+        select: { id: true },
       });
 
       if (!mediaList) {
@@ -59,7 +58,7 @@ export async function addMediaToListFromForm(
       }
 
       const media = await tx.media.upsert({
-        where: {anilistId},
+        where: { anilistId },
         update: mediaData,
         create: mediaData,
       });
@@ -71,7 +70,7 @@ export async function addMediaToListFromForm(
             mediaId: media.id,
           },
         },
-        select: {id: true},
+        select: { id: true },
       });
 
       if (existingItem) {
