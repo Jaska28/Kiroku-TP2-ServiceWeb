@@ -10,8 +10,6 @@ import {
   deleteMediaListItem,
 } from "./mediaListItem.actions";
 import { MediaList } from "@/generated/prisma/client";
-import { tr } from "zod/locales";
-import { currentUser } from "@clerk/nextjs/server";
 
 export async function createMediaList(
   name: string,
