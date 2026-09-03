@@ -57,3 +57,56 @@ npm run build  # Create a production build
 npm run start  # Start the production server
 npm run lint   # Run ESLint
 ```
+
+### ERD Diagram of DB
+
+```mermaid
+erDiagram
+    User ||--o{ MediaList: "Owns"
+    MediaList ||--o{ MediaListItem: "Has"
+    Media ||--o{ MediaListItem: "is"
+
+
+    User {
+        string userId
+        string clerkId
+        string username
+        string? firstName
+        string? lastName
+        Role role
+
+        dateTime createdAt
+        dateTime updatedAt
+    }
+
+    Media {
+        string mediaId
+        string anilistId
+        string? idMal
+        string title
+        float? avgScore
+
+        dateTime createdAt
+        dateTime updatedAt
+    }
+
+    MediaList {
+        string mediaListId
+        string userId
+        string name
+        string? desc
+        boolean? isPublic
+
+        dateTime createdAt
+        dateTime updatedAt
+    }
+
+    MediaListItem {
+        string mediaListItemId
+        string mediaListId
+        string mediaId
+
+        dateTime createdAt
+        dateTime updatedAt
+    }
+```
