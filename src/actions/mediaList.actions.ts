@@ -1,7 +1,7 @@
 "use server";
 
 import { Role } from "@/generated/prisma/enums";
-import prisma from "@/lib/prisma";
+import prisma from "../lib/prisma";
 import { getCurrentUser } from "./user.actions";
 import { revalidatePath } from "next/cache";
 import { getMediaById } from "./media.actions";
