@@ -65,7 +65,8 @@ erDiagram
     User ||--o{ MediaList: "Owns"
     MediaList ||--o{ MediaListItem: "Has"
     Media ||--o{ MediaListItem: "is"
-
+    User ||--o{ Review: "Writes"
+    Media || --o{ Review: "Has"
 
     User {
         string userId
@@ -105,6 +106,17 @@ erDiagram
         string mediaListItemId
         string mediaListId
         string mediaId
+
+        dateTime createdAt
+        dateTime updatedAt
+    }
+
+    Review {
+        string reviewId
+        string userId
+        string mediaId
+        float rating
+        string? comment
 
         dateTime createdAt
         dateTime updatedAt
