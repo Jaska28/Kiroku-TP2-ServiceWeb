@@ -82,8 +82,8 @@ erDiagram
 
     Media {
         string mediaId
-        string anilistId
-        string? idMal
+        int anilistId
+        int? idMal
         string title
         float? avgScore
 

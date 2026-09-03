@@ -37,7 +37,7 @@ model User {
 model Media {
   mediaId   String @id @default(uuid()) @db.Uuid
   anilistId Int    @unique
-  idMal     Int? // Id from MyAnimeList not neccesserally present
+  idMal     Int? // Id from MyAnimeList not necessarily present
   title     String
   avgScore  Float? // score calculated by our own app
 
