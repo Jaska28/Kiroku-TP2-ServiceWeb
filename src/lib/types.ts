@@ -47,7 +47,7 @@ export type Media = {
     reviews: Review[];
 }
 
-type MediaList = {
+export type MediaList = {
     id: string;
     userId: string;
     name: string;
@@ -93,4 +93,16 @@ export type MediaCardData = {
     releaseYear: number | null;
     genres: string[];
     type: "Anime" | "Manga";
+};
+
+export type MediaListPreview = {
+    id: string;
+    name: string;
+    description: string;
+    isPublic: boolean;
+    media: {
+        id: number;
+        title: string;
+        type: "Anime" | "Manga";
+    }[];
 };

@@ -8,6 +8,59 @@ import { getMediaById } from "./media.actions";
 import { createMediaListItem, deleteMediaListItem } from "./mediaListItem.actions";
 import { MediaList } from "@/generated/prisma/client";
 
+const SEED_USER_CLERK_ID = "seed-user-kiroku";
+
+export type CreateMediaListFormState = {
+  success: boolean;
+  message: string;
+};
+
+export async function createMediaListFromForm(
+  _previousState: CreateMediaListFormState,
+  formData: FormData,
+): Promise<CreateMediaListFormState> {
+  const name = String(formData.get("name") ?? "").trim();
+  const description =
+    String(formData.get("description") ?? "").trim() || null;
+  const isPublic = formData.get("isPublic") === "on";
+
+  if (!name) {
+    return {
+      success: false,
+      message: "Le nom de la liste est obligatoire.",
+    };
+  }
+
+  try {
+    const user = await prisma.user.findUniqueOrThrow({
+      where: {
+        clerkId: SEED_USER_CLERK_ID,
+      },
+    });
+
+    await prisma.mediaList.create({
+      data: {
+        userId: user.id,
+        name,
+        description,
+        isPublic,
+      },
+    });
+
+    revalidatePath("/my-lists");
+
+    return {
+      success: true,
+      message: "La liste a été créée avec succès.",
+    };
+  } catch {
+    return {
+      success: false,
+      message: "Impossible de créer la liste. Vérifie si ce nom existe déjà.",
+    };
+  }
+}
+
 export async function createMediaList(
   name: string,
   description: string | null,
@@ -86,7 +139,7 @@ export async function updateMediaList(
         throw new Error("You do not have ownership of this list");
       }
 
-      // allows to keep the old value instead of blindly updating to default of true
+      // allows keeping the old value instead of blindly updating to default of true
       const publicIs = isPublic != null ? isPublic : existingList.isPublic;
 
       // updates the list
@@ -184,7 +237,7 @@ export async function getMediaListById(mediaListId: string) {
 // only public ones
 export async function getAllMediaList() {}
 
-// return all of a users lists
+// return all the user's lists
 export async function getAllUserMediaList(userId: string) {}
 
 export async function addMediaToMediaList(
@@ -285,4 +338,25 @@ export async function removeMediaFromMediaList(
   revalidatePath("/medialist");
 
   return results;
+}
+
+
+export async function getDemoUserMediaLists() {
+  return prisma.mediaList.findMany({
+    where: {
+      user: {
+        clerkId: SEED_USER_CLERK_ID,
+      },
+    },
+    include: {
+      mediaListItems: {
+        include: {
+          media: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
 }

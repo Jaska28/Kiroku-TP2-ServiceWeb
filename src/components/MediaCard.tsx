@@ -53,7 +53,6 @@ export function MediaCard({media}: Props) {
                 </div>
 
                 <button className={"btn btn-accent"}>Ajouter à une liste</button>
-
             </div>
         </div>
     )
