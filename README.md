@@ -116,7 +116,7 @@ erDiagram
         string userId
         string mediaId
         float rating
-        string? comment
+        string? comments
 
         dateTime createdAt
         dateTime updatedAt
