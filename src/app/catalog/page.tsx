@@ -2,6 +2,7 @@ import {MediaCard} from "@/src/components/MediaCard";
 import {anilistToMediaCard, getMediaPageFromAnilist} from "@/src/lib/anilist";
 import {MediaType} from "@/generated/prisma/enums";
 import Link from "next/link";
+import {getMediaListChoices} from "@/src/actions/mediaList.actions";
 
 type Props = {
     searchParams: Promise<{
@@ -15,7 +16,10 @@ export default async function CatalogPage({searchParams}: Props) {
         ? MediaType.MANGA
         : MediaType.ANIME;
     const isManga = selectedType === MediaType.MANGA;
-    const mediaPage = await getMediaPageFromAnilist(selectedType);
+    const [mediaPage, lists] = await Promise.all([
+        getMediaPageFromAnilist(selectedType),
+        getMediaListChoices(),
+    ]);
 
     if (!mediaPage) {
         return <p className="p-8">Impossible de charger le catalogue.</p>;
@@ -42,7 +46,11 @@ export default async function CatalogPage({searchParams}: Props) {
 
             <section className="grid gap-6 xl:grid-cols-3">
                 {medias.map((media) => (
-                    <MediaCard key={media.id} media={media}/>
+                    <MediaCard
+                        key={media.id}
+                        media={media}
+                        lists={lists}
+                    />
                 ))}
             </section>
         </main>
