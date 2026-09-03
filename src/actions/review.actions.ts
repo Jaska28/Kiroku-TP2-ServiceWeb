@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/lib/prisma";
+import prisma from "../lib/prisma";
 import { Role } from "@/generated/prisma/enums";
 import { getCurrentUser } from "./user.actions";
 import { revalidatePath } from "next/cache";

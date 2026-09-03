@@ -18,58 +18,14 @@ enum Role {
   ADMIN
 }
 
-enum MediaType {
-  ANIME
-  MANGA
-}
-
-enum MediaFormat {
-  TV
-  TV_SHORT
-  MOVIE
-  SPECIAL
-  OVA
-  ONA
-  MUSIC
-  MANGA
-  NOVEL
-  ONE_SHOT
-}
-
-enum MediaStatus {
-  FINISHED
-  RELEASING
-  NOT_YET_RELEASED
-  CANCELLED
-  HIATUS
-}
-
-enum Genre {
-  ACTION
-  ADVENTURE
-  COMEDY
-  DRAMA
-  FANTASY
-  HORROR
-  MAGICAL_GIRL
-  MECHA
-  MUSIC
-  MYSTERY
-  PSYCHOLOGICAL
-  ROMANCE
-  SCI_FI
-  SLICE_OF_LIFE
-  SPORTS
-  SUPERNATURAL
-  THRILLER
-}
-
 // --- MODELES ---
 model User {
-  id       String @id @default(uuid()) @db.Uuid
-  clerkId  String @unique
-  username String @unique
-  role     Role   @default(USER)
+  userId    String  @id @default(uuid()) @db.Uuid
+  clerkId   String  @unique
+  username  String  @unique
+  firstName String?
+  lastName  String?
+  role      Role    @default(USER)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -78,60 +34,52 @@ model User {
   reviews    Review[]
 }
 
-model MediaList {
-  id          String  @id @default(uuid()) @db.Uuid
-  userId      String  @db.Uuid
-  name        String
-  description String?
-  isPublic    Boolean @default(true)
+model Media {
+  mediaId   String @id @default(uuid()) @db.Uuid
+  anilistId Int    @unique
+  idMal     Int? // Id from MyAnimeList not neccesserally present
+  title     String
+  avgScore  Float? // score calculated by our own app
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user           User            @relation(fields: [userId], references: [id])
+  mediaListItems MediaListItem[]
+}
+
+model MediaList {
+  mediaListId String   @id @default(uuid()) @db.Uuid
+  userId      String   @db.Uuid
+  name        String
+  desc        String?
+  isPublic    Boolean? @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [userId], onDelete: Cascade) // if user is deleted his list are deleted as well
+
   mediaListItems MediaListItem[]
 
-  @@unique([userId, name])
+  @@unique([userId, name]) // prevents duplicate list per users
 }
 
 model MediaListItem {
-  id          String @id @default(uuid()) @db.Uuid
-  mediaListId String @db.Uuid
-  mediaId     String @db.Uuid
+  mediaListItemId String @id @default(uuid()) @db.Uuid
+  mediaListId     String @db.Uuid
+  mediaId         String @db.Uuid
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  mediaList MediaList @relation(fields: [mediaListId], references: [id])
-  media     Media     @relation(fields: [mediaId], references: [id])
+  mediaList MediaList @relation(fields: [mediaListId], references: [mediaListId], onDelete: Cascade) // if list is deleted delete its items
+  media     Media     @relation(fields: [mediaId], references: [mediaId], onDelete: Cascade) // if the media is deleted delete any medialistitem that references it
 
-  @@unique([mediaListId, mediaId]) // prevents duplicates
-}
-
-model Media {
-  id           String      @id @default(uuid()) @db.Uuid
-  anilistId    Int         @unique
-  malId        Int? // Id from MyAnimeList
-  title        String
-  description  String?
-  type         MediaType   @default(ANIME)
-  format       MediaFormat @default(TV)
-  status       MediaStatus @default(RELEASING)
-  bannerImgURL String?
-  avgScore     Float?
-  malAvgScore  Float?
-  releaseYear  Int
-  genre        Genre[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  mediaListItems MediaListItem[]
-  reviews        Review[]
+  @@unique([mediaListId, mediaId]) // prevents duplicates media in lists
 }
 
 model Review {
-  id       String  @id @default(uuid()) @db.Uuid
+  reviewId String  @id @default(uuid()) @db.Uuid
   userId   String  @db.Uuid
   mediaId  String  @db.Uuid
   rating   Float // in between 0 and 10
@@ -140,8 +88,7 @@ model Review {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user  User  @relation(fields: [userId], references: [id])
-  media Media @relation(fields: [mediaId], references: [id])
+  user User @relation(fields: [userId], references: [userId], onDelete: Cascade) // if the user is deleted delete all his reviews
 
-  @@unique([userId, mediaId])
+  @@unique([userId, mediaId]) // only one review per user per media
 }

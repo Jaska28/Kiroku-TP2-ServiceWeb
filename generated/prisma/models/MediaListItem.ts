@@ -25,7 +25,7 @@ export type AggregateMediaListItem = {
 }
 
 export type MediaListItemMinAggregateOutputType = {
-  id: string | null
+  mediaListItemId: string | null
   mediaListId: string | null
   mediaId: string | null
   createdAt: Date | null
@@ -33,7 +33,7 @@ export type MediaListItemMinAggregateOutputType = {
 }
 
 export type MediaListItemMaxAggregateOutputType = {
-  id: string | null
+  mediaListItemId: string | null
   mediaListId: string | null
   mediaId: string | null
   createdAt: Date | null
@@ -41,7 +41,7 @@ export type MediaListItemMaxAggregateOutputType = {
 }
 
 export type MediaListItemCountAggregateOutputType = {
-  id: number
+  mediaListItemId: number
   mediaListId: number
   mediaId: number
   createdAt: number
@@ -51,7 +51,7 @@ export type MediaListItemCountAggregateOutputType = {
 
 
 export type MediaListItemMinAggregateInputType = {
-  id?: true
+  mediaListItemId?: true
   mediaListId?: true
   mediaId?: true
   createdAt?: true
@@ -59,7 +59,7 @@ export type MediaListItemMinAggregateInputType = {
 }
 
 export type MediaListItemMaxAggregateInputType = {
-  id?: true
+  mediaListItemId?: true
   mediaListId?: true
   mediaId?: true
   createdAt?: true
@@ -67,7 +67,7 @@ export type MediaListItemMaxAggregateInputType = {
 }
 
 export type MediaListItemCountAggregateInputType = {
-  id?: true
+  mediaListItemId?: true
   mediaListId?: true
   mediaId?: true
   createdAt?: true
@@ -148,7 +148,7 @@ export type MediaListItemGroupByArgs<ExtArgs extends runtime.Types.Extensions.In
 }
 
 export type MediaListItemGroupByOutputType = {
-  id: string
+  mediaListItemId: string
   mediaListId: string
   mediaId: string
   createdAt: Date
@@ -177,7 +177,7 @@ export type MediaListItemWhereInput = {
   AND?: Prisma.MediaListItemWhereInput | Prisma.MediaListItemWhereInput[]
   OR?: Prisma.MediaListItemWhereInput[]
   NOT?: Prisma.MediaListItemWhereInput | Prisma.MediaListItemWhereInput[]
-  id?: Prisma.UuidFilter<"MediaListItem"> | string
+  mediaListItemId?: Prisma.UuidFilter<"MediaListItem"> | string
   mediaListId?: Prisma.UuidFilter<"MediaListItem"> | string
   mediaId?: Prisma.UuidFilter<"MediaListItem"> | string
   createdAt?: Prisma.DateTimeFilter<"MediaListItem"> | Date | string
@@ -187,7 +187,7 @@ export type MediaListItemWhereInput = {
 }
 
 export type MediaListItemOrderByWithRelationInput = {
-  id?: Prisma.SortOrder
+  mediaListItemId?: Prisma.SortOrder
   mediaListId?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -197,7 +197,7 @@ export type MediaListItemOrderByWithRelationInput = {
 }
 
 export type MediaListItemWhereUniqueInput = Prisma.AtLeast<{
-  id?: string
+  mediaListItemId?: string
   mediaListId_mediaId?: Prisma.MediaListItemMediaListIdMediaIdCompoundUniqueInput
   AND?: Prisma.MediaListItemWhereInput | Prisma.MediaListItemWhereInput[]
   OR?: Prisma.MediaListItemWhereInput[]
@@ -208,10 +208,10 @@ export type MediaListItemWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"MediaListItem"> | Date | string
   mediaList?: Prisma.XOR<Prisma.MediaListScalarRelationFilter, Prisma.MediaListWhereInput>
   media?: Prisma.XOR<Prisma.MediaScalarRelationFilter, Prisma.MediaWhereInput>
-}, "id" | "mediaListId_mediaId">
+}, "mediaListItemId" | "mediaListId_mediaId">
 
 export type MediaListItemOrderByWithAggregationInput = {
-  id?: Prisma.SortOrder
+  mediaListItemId?: Prisma.SortOrder
   mediaListId?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -225,7 +225,7 @@ export type MediaListItemScalarWhereWithAggregatesInput = {
   AND?: Prisma.MediaListItemScalarWhereWithAggregatesInput | Prisma.MediaListItemScalarWhereWithAggregatesInput[]
   OR?: Prisma.MediaListItemScalarWhereWithAggregatesInput[]
   NOT?: Prisma.MediaListItemScalarWhereWithAggregatesInput | Prisma.MediaListItemScalarWhereWithAggregatesInput[]
-  id?: Prisma.UuidWithAggregatesFilter<"MediaListItem"> | string
+  mediaListItemId?: Prisma.UuidWithAggregatesFilter<"MediaListItem"> | string
   mediaListId?: Prisma.UuidWithAggregatesFilter<"MediaListItem"> | string
   mediaId?: Prisma.UuidWithAggregatesFilter<"MediaListItem"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"MediaListItem"> | Date | string
@@ -233,7 +233,7 @@ export type MediaListItemScalarWhereWithAggregatesInput = {
 }
 
 export type MediaListItemCreateInput = {
-  id?: string
+  mediaListItemId?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   mediaList: Prisma.MediaListCreateNestedOneWithoutMediaListItemsInput
@@ -241,7 +241,7 @@ export type MediaListItemCreateInput = {
 }
 
 export type MediaListItemUncheckedCreateInput = {
-  id?: string
+  mediaListItemId?: string
   mediaListId: string
   mediaId: string
   createdAt?: Date | string
@@ -249,7 +249,7 @@ export type MediaListItemUncheckedCreateInput = {
 }
 
 export type MediaListItemUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaListItemId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mediaList?: Prisma.MediaListUpdateOneRequiredWithoutMediaListItemsNestedInput
@@ -257,7 +257,7 @@ export type MediaListItemUpdateInput = {
 }
 
 export type MediaListItemUncheckedUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaListItemId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaListId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -265,7 +265,7 @@ export type MediaListItemUncheckedUpdateInput = {
 }
 
 export type MediaListItemCreateManyInput = {
-  id?: string
+  mediaListItemId?: string
   mediaListId: string
   mediaId: string
   createdAt?: Date | string
@@ -273,13 +273,13 @@ export type MediaListItemCreateManyInput = {
 }
 
 export type MediaListItemUpdateManyMutationInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaListItemId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type MediaListItemUncheckedUpdateManyInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaListItemId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaListId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -302,7 +302,7 @@ export type MediaListItemMediaListIdMediaIdCompoundUniqueInput = {
 }
 
 export type MediaListItemCountOrderByAggregateInput = {
-  id?: Prisma.SortOrder
+  mediaListItemId?: Prisma.SortOrder
   mediaListId?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -310,7 +310,7 @@ export type MediaListItemCountOrderByAggregateInput = {
 }
 
 export type MediaListItemMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
+  mediaListItemId?: Prisma.SortOrder
   mediaListId?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -318,53 +318,11 @@ export type MediaListItemMaxOrderByAggregateInput = {
 }
 
 export type MediaListItemMinOrderByAggregateInput = {
-  id?: Prisma.SortOrder
+  mediaListItemId?: Prisma.SortOrder
   mediaListId?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-}
-
-export type MediaListItemCreateNestedManyWithoutMediaListInput = {
-  create?: Prisma.XOR<Prisma.MediaListItemCreateWithoutMediaListInput, Prisma.MediaListItemUncheckedCreateWithoutMediaListInput> | Prisma.MediaListItemCreateWithoutMediaListInput[] | Prisma.MediaListItemUncheckedCreateWithoutMediaListInput[]
-  connectOrCreate?: Prisma.MediaListItemCreateOrConnectWithoutMediaListInput | Prisma.MediaListItemCreateOrConnectWithoutMediaListInput[]
-  createMany?: Prisma.MediaListItemCreateManyMediaListInputEnvelope
-  connect?: Prisma.MediaListItemWhereUniqueInput | Prisma.MediaListItemWhereUniqueInput[]
-}
-
-export type MediaListItemUncheckedCreateNestedManyWithoutMediaListInput = {
-  create?: Prisma.XOR<Prisma.MediaListItemCreateWithoutMediaListInput, Prisma.MediaListItemUncheckedCreateWithoutMediaListInput> | Prisma.MediaListItemCreateWithoutMediaListInput[] | Prisma.MediaListItemUncheckedCreateWithoutMediaListInput[]
-  connectOrCreate?: Prisma.MediaListItemCreateOrConnectWithoutMediaListInput | Prisma.MediaListItemCreateOrConnectWithoutMediaListInput[]
-  createMany?: Prisma.MediaListItemCreateManyMediaListInputEnvelope
-  connect?: Prisma.MediaListItemWhereUniqueInput | Prisma.MediaListItemWhereUniqueInput[]
-}
-
-export type MediaListItemUpdateManyWithoutMediaListNestedInput = {
-  create?: Prisma.XOR<Prisma.MediaListItemCreateWithoutMediaListInput, Prisma.MediaListItemUncheckedCreateWithoutMediaListInput> | Prisma.MediaListItemCreateWithoutMediaListInput[] | Prisma.MediaListItemUncheckedCreateWithoutMediaListInput[]
-  connectOrCreate?: Prisma.MediaListItemCreateOrConnectWithoutMediaListInput | Prisma.MediaListItemCreateOrConnectWithoutMediaListInput[]
-  upsert?: Prisma.MediaListItemUpsertWithWhereUniqueWithoutMediaListInput | Prisma.MediaListItemUpsertWithWhereUniqueWithoutMediaListInput[]
-  createMany?: Prisma.MediaListItemCreateManyMediaListInputEnvelope
-  set?: Prisma.MediaListItemWhereUniqueInput | Prisma.MediaListItemWhereUniqueInput[]
-  disconnect?: Prisma.MediaListItemWhereUniqueInput | Prisma.MediaListItemWhereUniqueInput[]
-  delete?: Prisma.MediaListItemWhereUniqueInput | Prisma.MediaListItemWhereUniqueInput[]
-  connect?: Prisma.MediaListItemWhereUniqueInput | Prisma.MediaListItemWhereUniqueInput[]
-  update?: Prisma.MediaListItemUpdateWithWhereUniqueWithoutMediaListInput | Prisma.MediaListItemUpdateWithWhereUniqueWithoutMediaListInput[]
-  updateMany?: Prisma.MediaListItemUpdateManyWithWhereWithoutMediaListInput | Prisma.MediaListItemUpdateManyWithWhereWithoutMediaListInput[]
-  deleteMany?: Prisma.MediaListItemScalarWhereInput | Prisma.MediaListItemScalarWhereInput[]
-}
-
-export type MediaListItemUncheckedUpdateManyWithoutMediaListNestedInput = {
-  create?: Prisma.XOR<Prisma.MediaListItemCreateWithoutMediaListInput, Prisma.MediaListItemUncheckedCreateWithoutMediaListInput> | Prisma.MediaListItemCreateWithoutMediaListInput[] | Prisma.MediaListItemUncheckedCreateWithoutMediaListInput[]
-  connectOrCreate?: Prisma.MediaListItemCreateOrConnectWithoutMediaListInput | Prisma.MediaListItemCreateOrConnectWithoutMediaListInput[]
-  upsert?: Prisma.MediaListItemUpsertWithWhereUniqueWithoutMediaListInput | Prisma.MediaListItemUpsertWithWhereUniqueWithoutMediaListInput[]
-  createMany?: Prisma.MediaListItemCreateManyMediaListInputEnvelope
-  set?: Prisma.MediaListItemWhereUniqueInput | Prisma.MediaListItemWhereUniqueInput[]
-  disconnect?: Prisma.MediaListItemWhereUniqueInput | Prisma.MediaListItemWhereUniqueInput[]
-  delete?: Prisma.MediaListItemWhereUniqueInput | Prisma.MediaListItemWhereUniqueInput[]
-  connect?: Prisma.MediaListItemWhereUniqueInput | Prisma.MediaListItemWhereUniqueInput[]
-  update?: Prisma.MediaListItemUpdateWithWhereUniqueWithoutMediaListInput | Prisma.MediaListItemUpdateWithWhereUniqueWithoutMediaListInput[]
-  updateMany?: Prisma.MediaListItemUpdateManyWithWhereWithoutMediaListInput | Prisma.MediaListItemUpdateManyWithWhereWithoutMediaListInput[]
-  deleteMany?: Prisma.MediaListItemScalarWhereInput | Prisma.MediaListItemScalarWhereInput[]
 }
 
 export type MediaListItemCreateNestedManyWithoutMediaInput = {
@@ -409,66 +367,57 @@ export type MediaListItemUncheckedUpdateManyWithoutMediaNestedInput = {
   deleteMany?: Prisma.MediaListItemScalarWhereInput | Prisma.MediaListItemScalarWhereInput[]
 }
 
-export type MediaListItemCreateWithoutMediaListInput = {
-  id?: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  media: Prisma.MediaCreateNestedOneWithoutMediaListItemsInput
+export type MediaListItemCreateNestedManyWithoutMediaListInput = {
+  create?: Prisma.XOR<Prisma.MediaListItemCreateWithoutMediaListInput, Prisma.MediaListItemUncheckedCreateWithoutMediaListInput> | Prisma.MediaListItemCreateWithoutMediaListInput[] | Prisma.MediaListItemUncheckedCreateWithoutMediaListInput[]
+  connectOrCreate?: Prisma.MediaListItemCreateOrConnectWithoutMediaListInput | Prisma.MediaListItemCreateOrConnectWithoutMediaListInput[]
+  createMany?: Prisma.MediaListItemCreateManyMediaListInputEnvelope
+  connect?: Prisma.MediaListItemWhereUniqueInput | Prisma.MediaListItemWhereUniqueInput[]
 }
 
-export type MediaListItemUncheckedCreateWithoutMediaListInput = {
-  id?: string
-  mediaId: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
+export type MediaListItemUncheckedCreateNestedManyWithoutMediaListInput = {
+  create?: Prisma.XOR<Prisma.MediaListItemCreateWithoutMediaListInput, Prisma.MediaListItemUncheckedCreateWithoutMediaListInput> | Prisma.MediaListItemCreateWithoutMediaListInput[] | Prisma.MediaListItemUncheckedCreateWithoutMediaListInput[]
+  connectOrCreate?: Prisma.MediaListItemCreateOrConnectWithoutMediaListInput | Prisma.MediaListItemCreateOrConnectWithoutMediaListInput[]
+  createMany?: Prisma.MediaListItemCreateManyMediaListInputEnvelope
+  connect?: Prisma.MediaListItemWhereUniqueInput | Prisma.MediaListItemWhereUniqueInput[]
 }
 
-export type MediaListItemCreateOrConnectWithoutMediaListInput = {
-  where: Prisma.MediaListItemWhereUniqueInput
-  create: Prisma.XOR<Prisma.MediaListItemCreateWithoutMediaListInput, Prisma.MediaListItemUncheckedCreateWithoutMediaListInput>
+export type MediaListItemUpdateManyWithoutMediaListNestedInput = {
+  create?: Prisma.XOR<Prisma.MediaListItemCreateWithoutMediaListInput, Prisma.MediaListItemUncheckedCreateWithoutMediaListInput> | Prisma.MediaListItemCreateWithoutMediaListInput[] | Prisma.MediaListItemUncheckedCreateWithoutMediaListInput[]
+  connectOrCreate?: Prisma.MediaListItemCreateOrConnectWithoutMediaListInput | Prisma.MediaListItemCreateOrConnectWithoutMediaListInput[]
+  upsert?: Prisma.MediaListItemUpsertWithWhereUniqueWithoutMediaListInput | Prisma.MediaListItemUpsertWithWhereUniqueWithoutMediaListInput[]
+  createMany?: Prisma.MediaListItemCreateManyMediaListInputEnvelope
+  set?: Prisma.MediaListItemWhereUniqueInput | Prisma.MediaListItemWhereUniqueInput[]
+  disconnect?: Prisma.MediaListItemWhereUniqueInput | Prisma.MediaListItemWhereUniqueInput[]
+  delete?: Prisma.MediaListItemWhereUniqueInput | Prisma.MediaListItemWhereUniqueInput[]
+  connect?: Prisma.MediaListItemWhereUniqueInput | Prisma.MediaListItemWhereUniqueInput[]
+  update?: Prisma.MediaListItemUpdateWithWhereUniqueWithoutMediaListInput | Prisma.MediaListItemUpdateWithWhereUniqueWithoutMediaListInput[]
+  updateMany?: Prisma.MediaListItemUpdateManyWithWhereWithoutMediaListInput | Prisma.MediaListItemUpdateManyWithWhereWithoutMediaListInput[]
+  deleteMany?: Prisma.MediaListItemScalarWhereInput | Prisma.MediaListItemScalarWhereInput[]
 }
 
-export type MediaListItemCreateManyMediaListInputEnvelope = {
-  data: Prisma.MediaListItemCreateManyMediaListInput | Prisma.MediaListItemCreateManyMediaListInput[]
-  skipDuplicates?: boolean
-}
-
-export type MediaListItemUpsertWithWhereUniqueWithoutMediaListInput = {
-  where: Prisma.MediaListItemWhereUniqueInput
-  update: Prisma.XOR<Prisma.MediaListItemUpdateWithoutMediaListInput, Prisma.MediaListItemUncheckedUpdateWithoutMediaListInput>
-  create: Prisma.XOR<Prisma.MediaListItemCreateWithoutMediaListInput, Prisma.MediaListItemUncheckedCreateWithoutMediaListInput>
-}
-
-export type MediaListItemUpdateWithWhereUniqueWithoutMediaListInput = {
-  where: Prisma.MediaListItemWhereUniqueInput
-  data: Prisma.XOR<Prisma.MediaListItemUpdateWithoutMediaListInput, Prisma.MediaListItemUncheckedUpdateWithoutMediaListInput>
-}
-
-export type MediaListItemUpdateManyWithWhereWithoutMediaListInput = {
-  where: Prisma.MediaListItemScalarWhereInput
-  data: Prisma.XOR<Prisma.MediaListItemUpdateManyMutationInput, Prisma.MediaListItemUncheckedUpdateManyWithoutMediaListInput>
-}
-
-export type MediaListItemScalarWhereInput = {
-  AND?: Prisma.MediaListItemScalarWhereInput | Prisma.MediaListItemScalarWhereInput[]
-  OR?: Prisma.MediaListItemScalarWhereInput[]
-  NOT?: Prisma.MediaListItemScalarWhereInput | Prisma.MediaListItemScalarWhereInput[]
-  id?: Prisma.UuidFilter<"MediaListItem"> | string
-  mediaListId?: Prisma.UuidFilter<"MediaListItem"> | string
-  mediaId?: Prisma.UuidFilter<"MediaListItem"> | string
-  createdAt?: Prisma.DateTimeFilter<"MediaListItem"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"MediaListItem"> | Date | string
+export type MediaListItemUncheckedUpdateManyWithoutMediaListNestedInput = {
+  create?: Prisma.XOR<Prisma.MediaListItemCreateWithoutMediaListInput, Prisma.MediaListItemUncheckedCreateWithoutMediaListInput> | Prisma.MediaListItemCreateWithoutMediaListInput[] | Prisma.MediaListItemUncheckedCreateWithoutMediaListInput[]
+  connectOrCreate?: Prisma.MediaListItemCreateOrConnectWithoutMediaListInput | Prisma.MediaListItemCreateOrConnectWithoutMediaListInput[]
+  upsert?: Prisma.MediaListItemUpsertWithWhereUniqueWithoutMediaListInput | Prisma.MediaListItemUpsertWithWhereUniqueWithoutMediaListInput[]
+  createMany?: Prisma.MediaListItemCreateManyMediaListInputEnvelope
+  set?: Prisma.MediaListItemWhereUniqueInput | Prisma.MediaListItemWhereUniqueInput[]
+  disconnect?: Prisma.MediaListItemWhereUniqueInput | Prisma.MediaListItemWhereUniqueInput[]
+  delete?: Prisma.MediaListItemWhereUniqueInput | Prisma.MediaListItemWhereUniqueInput[]
+  connect?: Prisma.MediaListItemWhereUniqueInput | Prisma.MediaListItemWhereUniqueInput[]
+  update?: Prisma.MediaListItemUpdateWithWhereUniqueWithoutMediaListInput | Prisma.MediaListItemUpdateWithWhereUniqueWithoutMediaListInput[]
+  updateMany?: Prisma.MediaListItemUpdateManyWithWhereWithoutMediaListInput | Prisma.MediaListItemUpdateManyWithWhereWithoutMediaListInput[]
+  deleteMany?: Prisma.MediaListItemScalarWhereInput | Prisma.MediaListItemScalarWhereInput[]
 }
 
 export type MediaListItemCreateWithoutMediaInput = {
-  id?: string
+  mediaListItemId?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   mediaList: Prisma.MediaListCreateNestedOneWithoutMediaListItemsInput
 }
 
 export type MediaListItemUncheckedCreateWithoutMediaInput = {
-  id?: string
+  mediaListItemId?: string
   mediaListId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -500,58 +449,109 @@ export type MediaListItemUpdateManyWithWhereWithoutMediaInput = {
   data: Prisma.XOR<Prisma.MediaListItemUpdateManyMutationInput, Prisma.MediaListItemUncheckedUpdateManyWithoutMediaInput>
 }
 
-export type MediaListItemCreateManyMediaListInput = {
-  id?: string
+export type MediaListItemScalarWhereInput = {
+  AND?: Prisma.MediaListItemScalarWhereInput | Prisma.MediaListItemScalarWhereInput[]
+  OR?: Prisma.MediaListItemScalarWhereInput[]
+  NOT?: Prisma.MediaListItemScalarWhereInput | Prisma.MediaListItemScalarWhereInput[]
+  mediaListItemId?: Prisma.UuidFilter<"MediaListItem"> | string
+  mediaListId?: Prisma.UuidFilter<"MediaListItem"> | string
+  mediaId?: Prisma.UuidFilter<"MediaListItem"> | string
+  createdAt?: Prisma.DateTimeFilter<"MediaListItem"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"MediaListItem"> | Date | string
+}
+
+export type MediaListItemCreateWithoutMediaListInput = {
+  mediaListItemId?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  media: Prisma.MediaCreateNestedOneWithoutMediaListItemsInput
+}
+
+export type MediaListItemUncheckedCreateWithoutMediaListInput = {
+  mediaListItemId?: string
   mediaId: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
-export type MediaListItemUpdateWithoutMediaListInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  media?: Prisma.MediaUpdateOneRequiredWithoutMediaListItemsNestedInput
+export type MediaListItemCreateOrConnectWithoutMediaListInput = {
+  where: Prisma.MediaListItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.MediaListItemCreateWithoutMediaListInput, Prisma.MediaListItemUncheckedCreateWithoutMediaListInput>
 }
 
-export type MediaListItemUncheckedUpdateWithoutMediaListInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  mediaId?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+export type MediaListItemCreateManyMediaListInputEnvelope = {
+  data: Prisma.MediaListItemCreateManyMediaListInput | Prisma.MediaListItemCreateManyMediaListInput[]
+  skipDuplicates?: boolean
 }
 
-export type MediaListItemUncheckedUpdateManyWithoutMediaListInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  mediaId?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+export type MediaListItemUpsertWithWhereUniqueWithoutMediaListInput = {
+  where: Prisma.MediaListItemWhereUniqueInput
+  update: Prisma.XOR<Prisma.MediaListItemUpdateWithoutMediaListInput, Prisma.MediaListItemUncheckedUpdateWithoutMediaListInput>
+  create: Prisma.XOR<Prisma.MediaListItemCreateWithoutMediaListInput, Prisma.MediaListItemUncheckedCreateWithoutMediaListInput>
+}
+
+export type MediaListItemUpdateWithWhereUniqueWithoutMediaListInput = {
+  where: Prisma.MediaListItemWhereUniqueInput
+  data: Prisma.XOR<Prisma.MediaListItemUpdateWithoutMediaListInput, Prisma.MediaListItemUncheckedUpdateWithoutMediaListInput>
+}
+
+export type MediaListItemUpdateManyWithWhereWithoutMediaListInput = {
+  where: Prisma.MediaListItemScalarWhereInput
+  data: Prisma.XOR<Prisma.MediaListItemUpdateManyMutationInput, Prisma.MediaListItemUncheckedUpdateManyWithoutMediaListInput>
 }
 
 export type MediaListItemCreateManyMediaInput = {
-  id?: string
+  mediaListItemId?: string
   mediaListId: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type MediaListItemUpdateWithoutMediaInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaListItemId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mediaList?: Prisma.MediaListUpdateOneRequiredWithoutMediaListItemsNestedInput
 }
 
 export type MediaListItemUncheckedUpdateWithoutMediaInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaListItemId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaListId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type MediaListItemUncheckedUpdateManyWithoutMediaInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaListItemId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaListId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type MediaListItemCreateManyMediaListInput = {
+  mediaListItemId?: string
+  mediaId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type MediaListItemUpdateWithoutMediaListInput = {
+  mediaListItemId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  media?: Prisma.MediaUpdateOneRequiredWithoutMediaListItemsNestedInput
+}
+
+export type MediaListItemUncheckedUpdateWithoutMediaListInput = {
+  mediaListItemId?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type MediaListItemUncheckedUpdateManyWithoutMediaListInput = {
+  mediaListItemId?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -559,7 +559,7 @@ export type MediaListItemUncheckedUpdateManyWithoutMediaInput = {
 
 
 export type MediaListItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
+  mediaListItemId?: boolean
   mediaListId?: boolean
   mediaId?: boolean
   createdAt?: boolean
@@ -569,7 +569,7 @@ export type MediaListItemSelect<ExtArgs extends runtime.Types.Extensions.Interna
 }, ExtArgs["result"]["mediaListItem"]>
 
 export type MediaListItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
+  mediaListItemId?: boolean
   mediaListId?: boolean
   mediaId?: boolean
   createdAt?: boolean
@@ -579,7 +579,7 @@ export type MediaListItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types
 }, ExtArgs["result"]["mediaListItem"]>
 
 export type MediaListItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
+  mediaListItemId?: boolean
   mediaListId?: boolean
   mediaId?: boolean
   createdAt?: boolean
@@ -589,14 +589,14 @@ export type MediaListItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
 }, ExtArgs["result"]["mediaListItem"]>
 
 export type MediaListItemSelectScalar = {
-  id?: boolean
+  mediaListItemId?: boolean
   mediaListId?: boolean
   mediaId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type MediaListItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "mediaListId" | "mediaId" | "createdAt" | "updatedAt", ExtArgs["result"]["mediaListItem"]>
+export type MediaListItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"mediaListItemId" | "mediaListId" | "mediaId" | "createdAt" | "updatedAt", ExtArgs["result"]["mediaListItem"]>
 export type MediaListItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   mediaList?: boolean | Prisma.MediaListDefaultArgs<ExtArgs>
   media?: boolean | Prisma.MediaDefaultArgs<ExtArgs>
@@ -617,7 +617,7 @@ export type $MediaListItemPayload<ExtArgs extends runtime.Types.Extensions.Inter
     media: Prisma.$MediaPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    id: string
+    mediaListItemId: string
     mediaListId: string
     mediaId: string
     createdAt: Date
@@ -705,8 +705,8 @@ export interface MediaListItemDelegate<ExtArgs extends runtime.Types.Extensions.
    * // Get first 10 MediaListItems
    * const mediaListItems = await prisma.mediaListItem.findMany({ take: 10 })
    * 
-   * // Only select the `id`
-   * const mediaListItemWithIdOnly = await prisma.mediaListItem.findMany({ select: { id: true } })
+   * // Only select the `mediaListItemId`
+   * const mediaListItemWithMediaListItemIdOnly = await prisma.mediaListItem.findMany({ select: { mediaListItemId: true } })
    * 
    */
   findMany<T extends MediaListItemFindManyArgs>(args?: Prisma.SelectSubset<T, MediaListItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MediaListItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
@@ -750,9 +750,9 @@ export interface MediaListItemDelegate<ExtArgs extends runtime.Types.Extensions.
    *   ]
    * })
    * 
-   * // Create many MediaListItems and only return the `id`
-   * const mediaListItemWithIdOnly = await prisma.mediaListItem.createManyAndReturn({
-   *   select: { id: true },
+   * // Create many MediaListItems and only return the `mediaListItemId`
+   * const mediaListItemWithMediaListItemIdOnly = await prisma.mediaListItem.createManyAndReturn({
+   *   select: { mediaListItemId: true },
    *   data: [
    *     // ... provide data here
    *   ]
@@ -841,9 +841,9 @@ export interface MediaListItemDelegate<ExtArgs extends runtime.Types.Extensions.
    *   ]
    * })
    * 
-   * // Update zero or more MediaListItems and only return the `id`
-   * const mediaListItemWithIdOnly = await prisma.mediaListItem.updateManyAndReturn({
-   *   select: { id: true },
+   * // Update zero or more MediaListItems and only return the `mediaListItemId`
+   * const mediaListItemWithMediaListItemIdOnly = await prisma.mediaListItem.updateManyAndReturn({
+   *   select: { mediaListItemId: true },
    *   where: {
    *     // ... provide filter here
    *   },
@@ -1047,7 +1047,7 @@ export interface Prisma__MediaListItemClient<T, Null = never, ExtArgs extends ru
  * Fields of the MediaListItem model
  */
 export interface MediaListItemFieldRefs {
-  readonly id: Prisma.FieldRef<"MediaListItem", 'String'>
+  readonly mediaListItemId: Prisma.FieldRef<"MediaListItem", 'String'>
   readonly mediaListId: Prisma.FieldRef<"MediaListItem", 'String'>
   readonly mediaId: Prisma.FieldRef<"MediaListItem", 'String'>
   readonly createdAt: Prisma.FieldRef<"MediaListItem", 'DateTime'>
