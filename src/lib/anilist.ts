@@ -7,13 +7,16 @@ import {
     MediaType,
 } from "@/generated/prisma/enums";
 
-import type {Prisma} from "@/generated/prisma/client";
 import {MediaCardData} from "@/src/lib/types";
 
 const ANILIST_API = process.env.ANIME_API ?? "https://graphql.anilist.co";
+const ANILIST_GRAPHQL_ENDPOINT = "https://graphql.anilist.co";
 
 export const anilist = axios.create({
-    baseURL: ANILIST_API,
+    baseURL:
+        ANILIST_API.includes("graphql.anilist.co")
+            ? ANILIST_GRAPHQL_ENDPOINT
+            : ANILIST_API,
     timeout: 10_000,
     headers: {
         "Content-Type": "application/json",
@@ -83,6 +86,45 @@ const MEDIA_QUERY = `
   }
 `;
 
+const MEDIA_PAGE_QUERY = `
+  query ($page: Int!, $perPage: Int!, $type: MediaType!) {
+    Page(page: $page, perPage: $perPage) {
+      pageInfo {
+        currentPage
+        hasNextPage
+      }
+      media(type: $type, sort: POPULARITY_DESC) {
+        id
+        idMal
+        title {
+          english
+          romaji
+          native
+        }
+        format
+        status
+        description
+        coverImage {
+          large
+        }
+        genres
+        averageScore
+        startDate {
+          year
+        }
+      }
+    }
+  }
+`;
+
+export type AnilistMediaPage = {
+    media: AnilistMedia[];
+    pageInfo: {
+        currentPage: number;
+        hasNextPage: boolean;
+    };
+};
+
 // Converts anilist genre into a prisma Genre value
 function toGenre(value: string): Genre | null {
     const normalized = value.toUpperCase().replace(/-/g, "_").replace(/ /g, "_");
@@ -99,7 +141,7 @@ function mapGenres(genres: string[]): Genre[] {
     return genres.map(toGenre).filter((genre): genre is Genre => genre !== null);
 }
 
-// converts anilist fromat into prisma MediaFormat enum
+// converts anilist format into prisma MediaFormat enum
 function toMediaFormat(value?: string | null): MediaFormat {
     if (value && value in MediaFormat) {
         return value as MediaFormat;
@@ -121,7 +163,7 @@ function toMediaStatus(value?: string | null): MediaStatus {
  * Retrieves an Anime or Manga from AniList.
  *
  * @param value - The AniList ID or search term.
- * @param searchField - Whether to search by "id" or "title".
+ * @param searchField - Whether to search by "id" or "search".
  * @param type - ANIME or MANGA.
  */
 export async function getMediaFromAnilist(
@@ -157,6 +199,10 @@ export async function getMediaFromAnilist(
         if (axios.isAxiosError(error)) {
             console.error(
                 "Anilist request failed:",
+                {
+                    configuredApi: ANILIST_API,
+                    resolvedBaseUrl: anilist.defaults.baseURL,
+                },
                 error.response?.status,
                 error.response?.data,
             );
@@ -168,9 +214,43 @@ export async function getMediaFromAnilist(
     }
 }
 
+/** Retrieves one page of popular Anime or Manga from AniList. */
+export async function getMediaPageFromAnilist(
+    type: MediaType,
+    page = 1,
+    perPage = 12,
+): Promise<AnilistMediaPage | null> {
+    try {
+        const {data} = await anilist.post("", {
+            query: MEDIA_PAGE_QUERY,
+            variables: {page, perPage, type},
+        });
+
+        const mediaPage = data?.data?.Page as AnilistMediaPage | null;
+
+        if (!mediaPage) {
+            return null;
+        }
+
+        return mediaPage;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            console.error(
+                "AniList page request failed:",
+                error.response?.status,
+                error.response?.data,
+            );
+        } else {
+            console.error("AniList page request failed:", error);
+        }
+
+        return null;
+    }
+}
+
 // Converts anilist media data into suitable data for prisma
 // DOESNT WRITE TO DB
-export async function mediaAnilistToPrisma(media: AnilistMedia, type: MediaType) {
+export function mediaAnilistToPrisma(media: AnilistMedia, type: MediaType) {
     const title =
         media.title.english ??
         media.title.romaji ??
@@ -179,7 +259,7 @@ export async function mediaAnilistToPrisma(media: AnilistMedia, type: MediaType)
 
     return {
         anilistId: media.id,
-        malId: media.idMal ?? null,
+        idMal: media.idMal ?? null,
         title,
         description: media.description ?? null,
         type,

@@ -1,20 +1,28 @@
 import {MediaCard} from "@/src/components/MediaCard";
-import {anilistToMediaCard, getMediaFromAnilist} from "@/src/lib/anilist";
+import {anilistToMediaCard, getMediaPageFromAnilist} from "@/src/lib/anilist";
 import {MediaType} from "@/generated/prisma/enums";
 
 
 export default async function CatalogPage() {
-    const anilistMedia = await getMediaFromAnilist(10, "id", MediaType.ANIME);
+    const mediaPage = await getMediaPageFromAnilist(MediaType.ANIME);
 
-    if (!anilistMedia) {
-        return <p className="p-8">Impossible de charger le média.</p>;
+    if (!mediaPage) {
+        return <p className="p-8">Impossible de charger le catalogue.</p>;
     }
 
-    const media = anilistToMediaCard(anilistMedia, MediaType.ANIME);
+    const medias = mediaPage.media.map((media) =>
+        anilistToMediaCard(media, MediaType.ANIME),
+    );
 
     return (
-        <section className="grid gap-6 p-8 xl:grid-cols-3">
-            <MediaCard media={media}/>
-        </section>
+        <main className="p-8">
+            <h1 className="mb-6 text-3xl font-bold">Catalogue d&apos;animes</h1>
+
+            <section className="grid gap-6 xl:grid-cols-3">
+                {medias.map((media) => (
+                    <MediaCard key={media.id} media={media}/>
+                ))}
+            </section>
+        </main>
     );
 }

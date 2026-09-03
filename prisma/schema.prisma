@@ -111,17 +111,17 @@ model MediaListItem {
 model Media {
   id           String      @id @default(uuid()) @db.Uuid
   anilistId    Int         @unique
-  malId        Int? // Id from MyAnimeList
+  idMal        Int? // Id from MyAnimeList
   title        String
   description  String?
   type         MediaType   @default(ANIME)
   format       MediaFormat @default(TV)
   status       MediaStatus @default(RELEASING)
   bannerImgURL String?
-  avgScore     Float?
+  averageScore Float?
   malAvgScore  Float?
   releaseYear  Int
-  genre        Genre[]
+  genre        String[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

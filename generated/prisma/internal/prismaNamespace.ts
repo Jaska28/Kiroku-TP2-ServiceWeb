@@ -869,14 +869,14 @@ export type MediaListItemScalarFieldEnum = (typeof MediaListItemScalarFieldEnum)
 export const MediaScalarFieldEnum = {
   id: 'id',
   anilistId: 'anilistId',
-  malId: 'malId',
+  idMal: 'idMal',
   title: 'title',
   description: 'description',
   type: 'type',
   format: 'format',
   status: 'status',
   bannerImgURL: 'bannerImgURL',
-  avgScore: 'avgScore',
+  averageScore: 'averageScore',
   malAvgScore: 'malAvgScore',
   releaseYear: 'releaseYear',
   genre: 'genre',
@@ -1046,20 +1046,6 @@ export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
  * Reference to a field of type 'Float[]'
  */
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
-    
-
-
-/**
- * Reference to a field of type 'Genre[]'
- */
-export type ListEnumGenreFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Genre[]'>
-    
-
-
-/**
- * Reference to a field of type 'Genre'
- */
-export type EnumGenreFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Genre'>
     
 
 /**

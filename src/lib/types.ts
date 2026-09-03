@@ -31,17 +31,17 @@ enum Role {
 
 export type Media = {
     id: string;
-    malId: number; // Id from MyAnimeList
+    idMal: number; // Id from MyAnimeList
     title: string;
     description: string;
     type: MediaType;
     format: MediaFormat;
     status: MediaStatus;
-    bannerImgURL: string;
-    avgScore: number;
+    bannerImage: string;
+    averageScore: number; // Our backend avr score
     malAvgScore: number;
-    releaseYear: number;
-    genre: string[];
+    seasonYear: number;
+    genres: string[];
     createAt: Date;
     mediaListItems: MediaListItem[];
     reviews: Review[];
