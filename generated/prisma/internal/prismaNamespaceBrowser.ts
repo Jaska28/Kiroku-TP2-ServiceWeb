@@ -52,9 +52,9 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
+  Media: 'Media',
   MediaList: 'MediaList',
   MediaListItem: 'MediaListItem',
-  Media: 'Media',
   Review: 'Review'
 } as const
 
@@ -75,9 +75,11 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 
 export const UserScalarFieldEnum = {
-  id: 'id',
+  userId: 'userId',
   clerkId: 'clerkId',
   username: 'username',
+  firstName: 'firstName',
+  lastName: 'lastName',
   role: 'role',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -86,11 +88,24 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+export const MediaScalarFieldEnum = {
+  mediaId: 'mediaId',
+  anilistId: 'anilistId',
+  idMal: 'idMal',
+  title: 'title',
+  avgScore: 'avgScore',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MediaScalarFieldEnum = (typeof MediaScalarFieldEnum)[keyof typeof MediaScalarFieldEnum]
+
+
 export const MediaListScalarFieldEnum = {
-  id: 'id',
+  mediaListId: 'mediaListId',
   userId: 'userId',
   name: 'name',
-  description: 'description',
+  desc: 'desc',
   isPublic: 'isPublic',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -100,7 +115,7 @@ export type MediaListScalarFieldEnum = (typeof MediaListScalarFieldEnum)[keyof t
 
 
 export const MediaListItemScalarFieldEnum = {
-  id: 'id',
+  mediaListItemId: 'mediaListItemId',
   mediaListId: 'mediaListId',
   mediaId: 'mediaId',
   createdAt: 'createdAt',
@@ -110,29 +125,8 @@ export const MediaListItemScalarFieldEnum = {
 export type MediaListItemScalarFieldEnum = (typeof MediaListItemScalarFieldEnum)[keyof typeof MediaListItemScalarFieldEnum]
 
 
-export const MediaScalarFieldEnum = {
-  id: 'id',
-  anilistId: 'anilistId',
-  idMal: 'idMal',
-  title: 'title',
-  description: 'description',
-  type: 'type',
-  format: 'format',
-  status: 'status',
-  bannerImgURL: 'bannerImgURL',
-  averageScore: 'averageScore',
-  malAvgScore: 'malAvgScore',
-  releaseYear: 'releaseYear',
-  genre: 'genre',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type MediaScalarFieldEnum = (typeof MediaScalarFieldEnum)[keyof typeof MediaScalarFieldEnum]
-
-
 export const ReviewScalarFieldEnum = {
-  id: 'id',
+  reviewId: 'reviewId',
   userId: 'userId',
   mediaId: 'mediaId',
   rating: 'rating',

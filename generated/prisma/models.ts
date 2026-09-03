@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/User'
+export type * from './models/Media'
 export type * from './models/MediaList'
 export type * from './models/MediaListItem'
-export type * from './models/Media'
 export type * from './models/Review'
 export type * from './commonInputTypes'
