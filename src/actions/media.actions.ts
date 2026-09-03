@@ -7,8 +7,9 @@ import { getMediaFromAnilist, mediaAnilistToPrisma } from "../lib/anilist";
 export async function createMediaFromAnilist(
   value: number | string,
   searchField: "id" | "search",
+  type: string,
 ) {
-  const media = await getMediaFromAnilist(value, searchField);
+  const media = await getMediaFromAnilist(value, searchField, type);
 
   if (!media) {
     return null;
@@ -32,8 +33,8 @@ export async function createMediaFromAnilist(
 }
 
 // Retrieves a media item from anilist and updates the existing db entry
-export async function updateMediaFromAnilist(anilistId: number) {
-  const media = await getMediaFromAnilist(anilistId, "id");
+export async function updateMediaFromAnilist(anilistId: number, type: string) {
+  const media = await getMediaFromAnilist(anilistId, "id", type);
 
   if (!media) {
     return null;

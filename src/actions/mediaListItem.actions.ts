@@ -1,11 +1,15 @@
 "use server";
 
 import prisma from "../lib/prisma";
-import { MediaType, Role } from "@/generated/prisma/enums";
+import { Role } from "@/generated/prisma/enums";
 import { getCurrentUser } from "./user.actions";
 import { getMediaListById } from "./mediaList.actions";
 import { revalidatePath } from "next/cache";
-import {getMediaFromAnilist, mediaAnilistToPrisma} from "@/src/lib/anilist";
+import {
+  getMediaFromAnilist,
+  mediaAnilistToPrisma,
+  mediaTypes,
+} from "@/src/lib/anilist";
 
 const SEED_USER_CLERK_ID = "seed-user-kiroku";
 
@@ -20,9 +24,7 @@ export async function addMediaToListFromForm(
 ): Promise<AddMediaToListState> {
   const mediaListId = String(formData.get("mediaListId") ?? "");
   const anilistId = Number(formData.get("anilistId"));
-  const type = formData.get("mediaType") === "Manga"
-    ? MediaType.MANGA
-    : MediaType.ANIME;
+  const type = String(formData.get("mediaType"));
 
   if (!mediaListId || !Number.isInteger(anilistId) || anilistId <= 0) {
     return {
@@ -40,18 +42,18 @@ export async function addMediaToListFromForm(
     };
   }
 
-  const mediaData = mediaAnilistToPrisma(anilistMedia, type);
+  const mediaData = mediaAnilistToPrisma(anilistMedia);
 
   try {
     const wasCreated = await prisma.$transaction(async (tx) => {
       const mediaList = await tx.mediaList.findFirst({
         where: {
-          id: mediaListId,
+          mediaListId,
           user: {
             clerkId: SEED_USER_CLERK_ID,
           },
         },
-        select: {id: true},
+        select: { mediaListId: true },
       });
 
       if (!mediaList) {
@@ -59,7 +61,7 @@ export async function addMediaToListFromForm(
       }
 
       const media = await tx.media.upsert({
-        where: {anilistId},
+        where: { anilistId },
         update: mediaData,
         create: mediaData,
       });
@@ -68,10 +70,10 @@ export async function addMediaToListFromForm(
         where: {
           mediaListId_mediaId: {
             mediaListId,
-            mediaId: media.id,
+            mediaId: media.mediaId,
           },
         },
-        select: {id: true},
+        select: { mediaListItemId: true },
       });
 
       if (existingItem) {
@@ -81,7 +83,7 @@ export async function addMediaToListFromForm(
       await tx.mediaListItem.create({
         data: {
           mediaListId,
-          mediaId: media.id,
+          mediaId: media.mediaId,
         },
       });
 

@@ -1,28 +1,38 @@
 import axios from "axios";
 
-import {
-    Genre,
-    MediaFormat,
-    MediaStatus,
-    MediaType,
-} from "@/generated/prisma/enums";
-
-import {MediaCardData} from "@/src/lib/types";
+import { MediaCardData } from "@/src/lib/types";
 
 const ANILIST_API = process.env.ANIME_API ?? "https://graphql.anilist.co";
 const ANILIST_GRAPHQL_ENDPOINT = "https://graphql.anilist.co";
 
 export const anilist = axios.create({
-    baseURL:
-        ANILIST_API.includes("graphql.anilist.co")
-            ? ANILIST_GRAPHQL_ENDPOINT
-            : ANILIST_API,
-    timeout: 10_000,
-    headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-    },
+  baseURL: ANILIST_API.includes("graphql.anilist.co")
+    ? ANILIST_GRAPHQL_ENDPOINT
+    : ANILIST_API,
+  timeout: 10_000,
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
 });
+
+// helper function to create a enum-ish with anilist MediaTypes
+async function getAnilistMediaTypes(): Promise<string[]> {
+  const { data } = await anilist.post("", {
+    query: `
+      query {
+      __type(name: "MediaType") {
+        enumValues {
+          name
+          }
+        }
+      }
+    `,
+  });
+
+  return data.data.__type.enumValues.map((val: { name: string }) => val.name);
+}
+export const mediaTypes = await getAnilistMediaTypes();
 
 // Data returned by Anilist
 // represents anilist's API
@@ -34,16 +44,29 @@ export type AnilistMedia = {
     romaji?: string | null;
     native?: string | null;
   };
+  format?: string | null;
+  type?: string | null;
+  status?: string | null;
+  description?: string | null;
+  coverImage?: {
+    large?: string | null;
+  };
+  genres?: string[];
+  averageScore?: number | null;
+  startDate?: {
+    year?: number | null;
+  };
 };
 
 // GraphQl query used to retrieve media from AniList.
 // Supports both: id, title
 // unused variable is ignored by Anilist
 const MEDIA_QUERY = `
-  query ($id: Int, $search: String) {
+  query ($id: Int, $search: String, $type: String) {
     Media(
       id: $id
       search: $search
+      type: $type
     ) {
       id
       idMal
@@ -57,7 +80,7 @@ const MEDIA_QUERY = `
 `;
 
 const MEDIA_PAGE_QUERY = `
-  query ($page: Int!, $perPage: Int!, $type: MediaType!) {
+  query ($page: Int!, $perPage: Int!, $type: String!) {
     Page(page: $page, perPage: $perPage) {
       pageInfo {
         currentPage
@@ -72,6 +95,7 @@ const MEDIA_PAGE_QUERY = `
           native
         }
         format
+        type
         status
         description
         coverImage {
@@ -88,46 +112,12 @@ const MEDIA_PAGE_QUERY = `
 `;
 
 export type AnilistMediaPage = {
-    media: AnilistMedia[];
-    pageInfo: {
-        currentPage: number;
-        hasNextPage: boolean;
-    };
+  media: AnilistMedia[];
+  pageInfo: {
+    currentPage: number;
+    hasNextPage: boolean;
+  };
 };
-
-// Converts anilist genre into a prisma Genre value
-function toGenre(value: string): Genre | null {
-    const normalized = value.toUpperCase().replace(/-/g, "_").replace(/ /g, "_");
-
-    if (normalized in Genre) {
-        return normalized as Genre;
-    }
-
-    return null;
-}
-
-// Converts an array of anilisit genres into prisma genre
-function mapGenres(genres: string[]): Genre[] {
-    return genres.map(toGenre).filter((genre): genre is Genre => genre !== null);
-}
-
-// converts anilist format into prisma MediaFormat enum
-function toMediaFormat(value?: string | null): MediaFormat {
-    if (value && value in MediaFormat) {
-        return value as MediaFormat;
-    }
-
-    return MediaFormat.TV;
-}
-
-// Converts anilist status into prisma MediaStatus enum
-function toMediaStatus(value?: string | null): MediaStatus {
-    if (value && value in MediaStatus) {
-        return value as MediaStatus;
-    }
-
-    return MediaStatus.RELEASING;
-}
 
 /**
  * Retrieves an Anime or Manga from AniList.
@@ -139,15 +129,22 @@ function toMediaStatus(value?: string | null): MediaStatus {
 export async function getMediaFromAnilist(
   value: number | string,
   searchField: "id" | "search",
+  type: string,
 ): Promise<AnilistMedia | null> {
+  if (!mediaTypes.includes(type)) {
+    throw new Error("Type doesnt exist");
+  }
+
   try {
     const variables =
       searchField === "id"
         ? {
             id: Number(value),
+            type,
           }
         : {
             search: String(value),
+            type,
           };
 
     const { data } = await anilist.post("", {
@@ -161,69 +158,61 @@ export async function getMediaFromAnilist(
       return null;
     }
 
-        const {data} = await anilist.post("", {
-            query: MEDIA_QUERY,
-            variables,
-        });
-
-        const media = data?.data?.Media as AnilistMedia | null;
-
-        if (!media) {
-            return null;
-        }
-
-        return media;
-    } catch (error) {
-        if (axios.isAxiosError(error)) {
-            console.error(
-                "Anilist request failed:",
-                {
-                    configuredApi: ANILIST_API,
-                    resolvedBaseUrl: anilist.defaults.baseURL,
-                },
-                error.response?.status,
-                error.response?.data,
-            );
-        } else {
-            console.error("Anilist request failed:", error);
-        }
-
-        return null;
+    return media;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error(
+        "Anilist request failed:",
+        {
+          configuredApi: ANILIST_API,
+          resolvedBaseUrl: anilist.defaults.baseURL,
+        },
+        error.response?.status,
+        error.response?.data,
+      );
+    } else {
+      console.error("Anilist request failed:", error);
     }
+
+    return null;
+  }
 }
 
 /** Retrieves one page of popular Anime or Manga from AniList. */
 export async function getMediaPageFromAnilist(
-    type: MediaType,
-    page = 1,
-    perPage = 12,
+  type: string,
+  page = 1,
+  perPage = 12,
 ): Promise<AnilistMediaPage | null> {
-    try {
-        const {data} = await anilist.post("", {
-            query: MEDIA_PAGE_QUERY,
-            variables: {page, perPage, type},
-        });
+  if (!mediaTypes.includes(type)) {
+    throw new Error("Type doesnt exist");
+  }
+  try {
+    const { data } = await anilist.post("", {
+      query: MEDIA_PAGE_QUERY,
+      variables: { page, perPage, type },
+    });
 
-        const mediaPage = data?.data?.Page as AnilistMediaPage | null;
+    const mediaPage = data?.data?.Page as AnilistMediaPage | null;
 
-        if (!mediaPage) {
-            return null;
-        }
-
-        return mediaPage;
-    } catch (error) {
-        if (axios.isAxiosError(error)) {
-            console.error(
-                "AniList page request failed:",
-                error.response?.status,
-                error.response?.data,
-            );
-        } else {
-            console.error("AniList page request failed:", error);
-        }
-
-        return null;
+    if (!mediaPage) {
+      return null;
     }
+
+    return mediaPage;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error(
+        "AniList page request failed:",
+        error.response?.status,
+        error.response?.data,
+      );
+    } else {
+      console.error("AniList page request failed:", error);
+    }
+
+    return null;
+  }
 }
 
 // Converts anilist media data into suitable data for prisma
@@ -240,25 +229,28 @@ export function mediaAnilistToPrisma(media: AnilistMedia) {
     idMal: media.idMal ?? null,
     title,
   };
+}
 
 export function anilistToMediaCard(
-    media: AnilistMedia,
-    type: MediaType,
-):MediaCardData {
-    return {
-        id: String(media.id),
-        title:
-            media.title.english ??
-            media.title.romaji ??
-            media.title.native ??
-            `AniList #${media.id}`,
-        description: media.description ?? null,
-        imageUrl: media.coverImage?.large ?? "",
-        score:
-            media.averageScore != null
-                ? media.averageScore / 10
-                : null,
-        releaseYear: media.startDate?.year ?? null,
-        genres: media.genres ?? [],
-        type: type === MediaType.ANIME ? "Anime" : "Manga",    };
+  media: AnilistMedia,
+  type: string,
+): MediaCardData {
+  if (!mediaTypes.includes(type)) {
+    throw new Error("Type doesnt exist");
+  }
+
+  return {
+    id: String(media.anilistId),
+    title:
+      media.title.english ??
+      media.title.romaji ??
+      media.title.native ??
+      `AniList #${media.anilistId}`,
+    description: media.description ?? null,
+    imageUrl: media.coverImage?.large ?? "",
+    score: media.averageScore != null ? media.averageScore / 10 : null,
+    releaseYear: media.startDate?.year ?? null,
+    genres: media.genres ?? [],
+    type: type,
+  };
 }
