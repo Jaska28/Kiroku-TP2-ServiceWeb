@@ -11,6 +11,76 @@ import {
 } from "./mediaListItem.actions";
 import { MediaList } from "@/generated/prisma/client";
 
+const SEED_USER_CLERK_ID = "seed-user-kiroku";
+
+export type CreateMediaListFormState = {
+  success: boolean;
+  message: string;
+};
+
+export async function createMediaListFromForm(
+  _previousState: CreateMediaListFormState,
+  formData: FormData,
+): Promise<CreateMediaListFormState> {
+  const name = String(formData.get("name") ?? "").trim();
+  const description =
+    String(formData.get("description") ?? "").trim() || null;
+  const isPublic = formData.get("isPublic") === "on";
+
+  if (!name) {
+    return {
+      success: false,
+      message: "Le nom de la liste est obligatoire.",
+    };
+  }
+
+  try {
+    const user = await prisma.user.findUniqueOrThrow({
+      where: {
+        clerkId: SEED_USER_CLERK_ID,
+      },
+    });
+
+    await prisma.mediaList.create({
+      data: {
+        userId: user.id,
+        name,
+        description,
+        isPublic,
+      },
+    });
+
+    revalidatePath("/my-lists");
+
+    return {
+      success: true,
+      message: "La liste a été créée avec succès.",
+    };
+  } catch {
+    return {
+      success: false,
+      message: "Impossible de créer la liste. Vérifie si ce nom existe déjà.",
+    };
+  }
+}
+
+export async function getMediaListChoices() {
+  return prisma.mediaList.findMany({
+    where: {
+      user: {
+        clerkId: SEED_USER_CLERK_ID,
+      },
+    },
+    select: {
+      id: true,
+      name: true,
+    },
+    orderBy: {
+      name: "asc",
+    },
+  });
+}
+
 export async function createMediaList(
   name: string,
   desc: string | null,
@@ -366,4 +436,25 @@ export async function removeMediaFromMediaList(
   revalidatePath("/medialist");
 
   return results;
+}
+
+
+export async function getDemoUserMediaLists() {
+  return prisma.mediaList.findMany({
+    where: {
+      user: {
+        clerkId: SEED_USER_CLERK_ID,
+      },
+    },
+    include: {
+      mediaListItems: {
+        include: {
+          media: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
 }

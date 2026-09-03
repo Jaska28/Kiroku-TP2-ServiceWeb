@@ -1,17 +1,23 @@
 "use client"
 
-import {Media} from "@/src/lib/types";
+import {MediaCardData} from "@/src/lib/types";
 import {useState} from "react";
 import {MediaRating} from "@/src/components/MediaRating";
 import Link from "next/link";
+import {
+    ListOfMediaLists,
+    type MediaListChoice,
+} from "@/src/components/ListOfMediaLists";
 
 type Props = {
-    media: Media;
+    media: MediaCardData;
+    lists: MediaListChoice[];
 }
 
-export function MediaCard({media}: Props) {
+export function MediaCard({media, lists}: Props) {
 
     const [rating, setRating] = useState(0);
+    const modalId = `add-media-${media.id}`;
 
     return (
         <div className="card card-side bg-base-100 shadow-sm bg-gradient-to-r from-purple-100 to-purple-600">
@@ -22,7 +28,7 @@ export function MediaCard({media}: Props) {
                     className={"block"}
                 >
                     <img
-                        src={media.bannerImgURL}
+                        src={media.imageUrl}
                         alt="Media banner"
                         className={"shadow-xl rounded relative h-80 w-auto"}
                     />
@@ -34,7 +40,7 @@ export function MediaCard({media}: Props) {
 
                 <div className={"flex flex-col gap-2"}>
                     <span className={"text-lg font-bold"}>
-                        Moyenne: {media.avgScore?.toFixed(1) ?? "-"}
+                        Moyenne: {media.score?.toFixed(1) ?? "-"}
                     </span>
                 </div>
 
@@ -45,15 +51,38 @@ export function MediaCard({media}: Props) {
                 />
 
                 <div className={"flex flex row flex-wrap gap-2"}>
-                    {media.genre.map((genre) => (
+                    {media.genres.map((genre) => (
                         <div className="badge badge-info" key={genre}>
                             {genre}
                         </div>
                     ))}
                 </div>
 
-                <button className={"btn btn-accent"}>Ajouter à une liste</button>
+                <label htmlFor={modalId} className="btn btn-accent">
+                    Ajouter à une liste
+                </label>
 
+                <input
+                    id={modalId}
+                    type="checkbox"
+                    className="modal-toggle"
+                />
+
+                <div className="modal" role="dialog">
+                    <div className="modal-box">
+                        <ListOfMediaLists media={media} lists={lists}/>
+
+                        <div className="modal-action">
+                            <label htmlFor={modalId} className="btn">
+                                Fermer
+                            </label>
+                        </div>
+                    </div>
+
+                    <label htmlFor={modalId} className="modal-backdrop">
+                        Fermer
+                    </label>
+                </div>
             </div>
         </div>
     )
