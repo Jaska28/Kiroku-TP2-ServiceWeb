@@ -61,6 +61,23 @@ export async function createMediaListFromForm(
   }
 }
 
+export async function getMediaListChoices() {
+  return prisma.mediaList.findMany({
+    where: {
+      user: {
+        clerkId: SEED_USER_CLERK_ID,
+      },
+    },
+    select: {
+      id: true,
+      name: true,
+    },
+    orderBy: {
+      name: "asc",
+    },
+  });
+}
+
 export async function createMediaList(
   name: string,
   description: string | null,

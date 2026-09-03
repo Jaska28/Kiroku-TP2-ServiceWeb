@@ -4,14 +4,20 @@ import {MediaCardData} from "@/src/lib/types";
 import {useState} from "react";
 import {MediaRating} from "@/src/components/MediaRating";
 import Link from "next/link";
+import {
+    ListOfMediaLists,
+    type MediaListChoice,
+} from "@/src/components/ListOfMediaLists";
 
 type Props = {
     media: MediaCardData;
+    lists: MediaListChoice[];
 }
 
-export function MediaCard({media}: Props) {
+export function MediaCard({media, lists}: Props) {
 
     const [rating, setRating] = useState(0);
+    const modalId = `add-media-${media.id}`;
 
     return (
         <div className="card card-side bg-base-100 shadow-sm bg-gradient-to-r from-purple-100 to-purple-600">
@@ -52,7 +58,31 @@ export function MediaCard({media}: Props) {
                     ))}
                 </div>
 
-                <button className={"btn btn-accent"}>Ajouter à une liste</button>
+                <label htmlFor={modalId} className="btn btn-accent">
+                    Ajouter à une liste
+                </label>
+
+                <input
+                    id={modalId}
+                    type="checkbox"
+                    className="modal-toggle"
+                />
+
+                <div className="modal" role="dialog">
+                    <div className="modal-box">
+                        <ListOfMediaLists media={media} lists={lists}/>
+
+                        <div className="modal-action">
+                            <label htmlFor={modalId} className="btn">
+                                Fermer
+                            </label>
+                        </div>
+                    </div>
+
+                    <label htmlFor={modalId} className="modal-backdrop">
+                        Fermer
+                    </label>
+                </div>
             </div>
         </div>
     )

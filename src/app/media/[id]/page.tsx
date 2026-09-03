@@ -1,30 +1,59 @@
-import prisma from "@/src/lib/prisma";
 import {notFound} from "next/navigation";
+import {MediaType} from "@/generated/prisma/enums";
+import {getMediaFromAnilist} from "@/src/lib/anilist";
 
 type Props = {
     params: Promise<{
         id: string;
     }>;
-}
+    searchParams: Promise<{
+        type?: string;
+    }>;
+};
 
-export default async function MediaPage({params}: Props) {
+export default async function MediaPage(
+    {
+        params,
+        searchParams,
+    }: Props) {
     const {id} = await params;
+    const {type} = await searchParams;
 
-    const media = await prisma.media.findUnique({
-        where: {id},
-    });
+    const anilistId = Number(id);
 
-    if(!media) {
+    if (!Number.isInteger(anilistId)) {
+        notFound();
+    }
+
+    const mediaType =
+        type === "manga"
+            ? MediaType.MANGA
+            : MediaType.ANIME;
+
+    const media = await getMediaFromAnilist(
+        anilistId,
+        "id",
+        mediaType,
+    );
+
+    if (!media) {
         notFound();
     }
 
     return (
-        <main className={"p-8"}>
-            <h1 className={"text-2xl font-bold"}>
-                Page du média
+        <main className="p-8">
+            <h1 className="text-3xl font-bold">
+                {media.title.english ??
+                    media.title.romaji ??
+                    media.title.native}
             </h1>
 
-            <p>ID : {id}</p>
+            <img
+                src={media.coverImage?.large ?? ""}
+                alt=""
+            />
+
+            <p>{media.description}</p>
         </main>
-    )
-};
+    );
+}
