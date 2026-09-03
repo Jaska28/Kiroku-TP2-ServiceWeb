@@ -35,7 +35,7 @@ export type ReviewSumAggregateOutputType = {
 }
 
 export type ReviewMinAggregateOutputType = {
-  id: string | null
+  reviewId: string | null
   userId: string | null
   mediaId: string | null
   rating: number | null
@@ -45,7 +45,7 @@ export type ReviewMinAggregateOutputType = {
 }
 
 export type ReviewMaxAggregateOutputType = {
-  id: string | null
+  reviewId: string | null
   userId: string | null
   mediaId: string | null
   rating: number | null
@@ -55,7 +55,7 @@ export type ReviewMaxAggregateOutputType = {
 }
 
 export type ReviewCountAggregateOutputType = {
-  id: number
+  reviewId: number
   userId: number
   mediaId: number
   rating: number
@@ -75,7 +75,7 @@ export type ReviewSumAggregateInputType = {
 }
 
 export type ReviewMinAggregateInputType = {
-  id?: true
+  reviewId?: true
   userId?: true
   mediaId?: true
   rating?: true
@@ -85,7 +85,7 @@ export type ReviewMinAggregateInputType = {
 }
 
 export type ReviewMaxAggregateInputType = {
-  id?: true
+  reviewId?: true
   userId?: true
   mediaId?: true
   rating?: true
@@ -95,7 +95,7 @@ export type ReviewMaxAggregateInputType = {
 }
 
 export type ReviewCountAggregateInputType = {
-  id?: true
+  reviewId?: true
   userId?: true
   mediaId?: true
   rating?: true
@@ -192,7 +192,7 @@ export type ReviewGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 }
 
 export type ReviewGroupByOutputType = {
-  id: string
+  reviewId: string
   userId: string
   mediaId: string
   rating: number
@@ -225,7 +225,7 @@ export type ReviewWhereInput = {
   AND?: Prisma.ReviewWhereInput | Prisma.ReviewWhereInput[]
   OR?: Prisma.ReviewWhereInput[]
   NOT?: Prisma.ReviewWhereInput | Prisma.ReviewWhereInput[]
-  id?: Prisma.UuidFilter<"Review"> | string
+  reviewId?: Prisma.UuidFilter<"Review"> | string
   userId?: Prisma.UuidFilter<"Review"> | string
   mediaId?: Prisma.UuidFilter<"Review"> | string
   rating?: Prisma.FloatFilter<"Review"> | number
@@ -233,11 +233,10 @@ export type ReviewWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Review"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Review"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  media?: Prisma.XOR<Prisma.MediaScalarRelationFilter, Prisma.MediaWhereInput>
 }
 
 export type ReviewOrderByWithRelationInput = {
-  id?: Prisma.SortOrder
+  reviewId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
   rating?: Prisma.SortOrder
@@ -245,11 +244,10 @@ export type ReviewOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
-  media?: Prisma.MediaOrderByWithRelationInput
 }
 
 export type ReviewWhereUniqueInput = Prisma.AtLeast<{
-  id?: string
+  reviewId?: string
   userId_mediaId?: Prisma.ReviewUserIdMediaIdCompoundUniqueInput
   AND?: Prisma.ReviewWhereInput | Prisma.ReviewWhereInput[]
   OR?: Prisma.ReviewWhereInput[]
@@ -261,11 +259,10 @@ export type ReviewWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Review"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Review"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  media?: Prisma.XOR<Prisma.MediaScalarRelationFilter, Prisma.MediaWhereInput>
-}, "id" | "userId_mediaId">
+}, "reviewId" | "userId_mediaId">
 
 export type ReviewOrderByWithAggregationInput = {
-  id?: Prisma.SortOrder
+  reviewId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
   rating?: Prisma.SortOrder
@@ -283,7 +280,7 @@ export type ReviewScalarWhereWithAggregatesInput = {
   AND?: Prisma.ReviewScalarWhereWithAggregatesInput | Prisma.ReviewScalarWhereWithAggregatesInput[]
   OR?: Prisma.ReviewScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ReviewScalarWhereWithAggregatesInput | Prisma.ReviewScalarWhereWithAggregatesInput[]
-  id?: Prisma.UuidWithAggregatesFilter<"Review"> | string
+  reviewId?: Prisma.UuidWithAggregatesFilter<"Review"> | string
   userId?: Prisma.UuidWithAggregatesFilter<"Review"> | string
   mediaId?: Prisma.UuidWithAggregatesFilter<"Review"> | string
   rating?: Prisma.FloatWithAggregatesFilter<"Review"> | number
@@ -293,17 +290,17 @@ export type ReviewScalarWhereWithAggregatesInput = {
 }
 
 export type ReviewCreateInput = {
-  id?: string
+  reviewId?: string
+  mediaId: string
   rating: number
   comments?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutReviewsInput
-  media: Prisma.MediaCreateNestedOneWithoutReviewsInput
 }
 
 export type ReviewUncheckedCreateInput = {
-  id?: string
+  reviewId?: string
   userId: string
   mediaId: string
   rating: number
@@ -313,17 +310,17 @@ export type ReviewUncheckedCreateInput = {
 }
 
 export type ReviewUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  reviewId?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaId?: Prisma.StringFieldUpdateOperationsInput | string
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
   comments?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutReviewsNestedInput
-  media?: Prisma.MediaUpdateOneRequiredWithoutReviewsNestedInput
 }
 
 export type ReviewUncheckedUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  reviewId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -333,7 +330,7 @@ export type ReviewUncheckedUpdateInput = {
 }
 
 export type ReviewCreateManyInput = {
-  id?: string
+  reviewId?: string
   userId: string
   mediaId: string
   rating: number
@@ -343,7 +340,8 @@ export type ReviewCreateManyInput = {
 }
 
 export type ReviewUpdateManyMutationInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  reviewId?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaId?: Prisma.StringFieldUpdateOperationsInput | string
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
   comments?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -351,7 +349,7 @@ export type ReviewUpdateManyMutationInput = {
 }
 
 export type ReviewUncheckedUpdateManyInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  reviewId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -376,7 +374,7 @@ export type ReviewUserIdMediaIdCompoundUniqueInput = {
 }
 
 export type ReviewCountOrderByAggregateInput = {
-  id?: Prisma.SortOrder
+  reviewId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
   rating?: Prisma.SortOrder
@@ -390,7 +388,7 @@ export type ReviewAvgOrderByAggregateInput = {
 }
 
 export type ReviewMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
+  reviewId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
   rating?: Prisma.SortOrder
@@ -400,7 +398,7 @@ export type ReviewMaxOrderByAggregateInput = {
 }
 
 export type ReviewMinOrderByAggregateInput = {
-  id?: Prisma.SortOrder
+  reviewId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
   rating?: Prisma.SortOrder
@@ -455,48 +453,6 @@ export type ReviewUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.ReviewScalarWhereInput | Prisma.ReviewScalarWhereInput[]
 }
 
-export type ReviewCreateNestedManyWithoutMediaInput = {
-  create?: Prisma.XOR<Prisma.ReviewCreateWithoutMediaInput, Prisma.ReviewUncheckedCreateWithoutMediaInput> | Prisma.ReviewCreateWithoutMediaInput[] | Prisma.ReviewUncheckedCreateWithoutMediaInput[]
-  connectOrCreate?: Prisma.ReviewCreateOrConnectWithoutMediaInput | Prisma.ReviewCreateOrConnectWithoutMediaInput[]
-  createMany?: Prisma.ReviewCreateManyMediaInputEnvelope
-  connect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
-}
-
-export type ReviewUncheckedCreateNestedManyWithoutMediaInput = {
-  create?: Prisma.XOR<Prisma.ReviewCreateWithoutMediaInput, Prisma.ReviewUncheckedCreateWithoutMediaInput> | Prisma.ReviewCreateWithoutMediaInput[] | Prisma.ReviewUncheckedCreateWithoutMediaInput[]
-  connectOrCreate?: Prisma.ReviewCreateOrConnectWithoutMediaInput | Prisma.ReviewCreateOrConnectWithoutMediaInput[]
-  createMany?: Prisma.ReviewCreateManyMediaInputEnvelope
-  connect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
-}
-
-export type ReviewUpdateManyWithoutMediaNestedInput = {
-  create?: Prisma.XOR<Prisma.ReviewCreateWithoutMediaInput, Prisma.ReviewUncheckedCreateWithoutMediaInput> | Prisma.ReviewCreateWithoutMediaInput[] | Prisma.ReviewUncheckedCreateWithoutMediaInput[]
-  connectOrCreate?: Prisma.ReviewCreateOrConnectWithoutMediaInput | Prisma.ReviewCreateOrConnectWithoutMediaInput[]
-  upsert?: Prisma.ReviewUpsertWithWhereUniqueWithoutMediaInput | Prisma.ReviewUpsertWithWhereUniqueWithoutMediaInput[]
-  createMany?: Prisma.ReviewCreateManyMediaInputEnvelope
-  set?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
-  disconnect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
-  delete?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
-  connect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
-  update?: Prisma.ReviewUpdateWithWhereUniqueWithoutMediaInput | Prisma.ReviewUpdateWithWhereUniqueWithoutMediaInput[]
-  updateMany?: Prisma.ReviewUpdateManyWithWhereWithoutMediaInput | Prisma.ReviewUpdateManyWithWhereWithoutMediaInput[]
-  deleteMany?: Prisma.ReviewScalarWhereInput | Prisma.ReviewScalarWhereInput[]
-}
-
-export type ReviewUncheckedUpdateManyWithoutMediaNestedInput = {
-  create?: Prisma.XOR<Prisma.ReviewCreateWithoutMediaInput, Prisma.ReviewUncheckedCreateWithoutMediaInput> | Prisma.ReviewCreateWithoutMediaInput[] | Prisma.ReviewUncheckedCreateWithoutMediaInput[]
-  connectOrCreate?: Prisma.ReviewCreateOrConnectWithoutMediaInput | Prisma.ReviewCreateOrConnectWithoutMediaInput[]
-  upsert?: Prisma.ReviewUpsertWithWhereUniqueWithoutMediaInput | Prisma.ReviewUpsertWithWhereUniqueWithoutMediaInput[]
-  createMany?: Prisma.ReviewCreateManyMediaInputEnvelope
-  set?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
-  disconnect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
-  delete?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
-  connect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
-  update?: Prisma.ReviewUpdateWithWhereUniqueWithoutMediaInput | Prisma.ReviewUpdateWithWhereUniqueWithoutMediaInput[]
-  updateMany?: Prisma.ReviewUpdateManyWithWhereWithoutMediaInput | Prisma.ReviewUpdateManyWithWhereWithoutMediaInput[]
-  deleteMany?: Prisma.ReviewScalarWhereInput | Prisma.ReviewScalarWhereInput[]
-}
-
 export type FloatFieldUpdateOperationsInput = {
   set?: number
   increment?: number
@@ -506,16 +462,16 @@ export type FloatFieldUpdateOperationsInput = {
 }
 
 export type ReviewCreateWithoutUserInput = {
-  id?: string
+  reviewId?: string
+  mediaId: string
   rating: number
   comments?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  media: Prisma.MediaCreateNestedOneWithoutReviewsInput
 }
 
 export type ReviewUncheckedCreateWithoutUserInput = {
-  id?: string
+  reviewId?: string
   mediaId: string
   rating: number
   comments?: string | null
@@ -553,7 +509,7 @@ export type ReviewScalarWhereInput = {
   AND?: Prisma.ReviewScalarWhereInput | Prisma.ReviewScalarWhereInput[]
   OR?: Prisma.ReviewScalarWhereInput[]
   NOT?: Prisma.ReviewScalarWhereInput | Prisma.ReviewScalarWhereInput[]
-  id?: Prisma.UuidFilter<"Review"> | string
+  reviewId?: Prisma.UuidFilter<"Review"> | string
   userId?: Prisma.UuidFilter<"Review"> | string
   mediaId?: Prisma.UuidFilter<"Review"> | string
   rating?: Prisma.FloatFilter<"Review"> | number
@@ -562,52 +518,8 @@ export type ReviewScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Review"> | Date | string
 }
 
-export type ReviewCreateWithoutMediaInput = {
-  id?: string
-  rating: number
-  comments?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutReviewsInput
-}
-
-export type ReviewUncheckedCreateWithoutMediaInput = {
-  id?: string
-  userId: string
-  rating: number
-  comments?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type ReviewCreateOrConnectWithoutMediaInput = {
-  where: Prisma.ReviewWhereUniqueInput
-  create: Prisma.XOR<Prisma.ReviewCreateWithoutMediaInput, Prisma.ReviewUncheckedCreateWithoutMediaInput>
-}
-
-export type ReviewCreateManyMediaInputEnvelope = {
-  data: Prisma.ReviewCreateManyMediaInput | Prisma.ReviewCreateManyMediaInput[]
-  skipDuplicates?: boolean
-}
-
-export type ReviewUpsertWithWhereUniqueWithoutMediaInput = {
-  where: Prisma.ReviewWhereUniqueInput
-  update: Prisma.XOR<Prisma.ReviewUpdateWithoutMediaInput, Prisma.ReviewUncheckedUpdateWithoutMediaInput>
-  create: Prisma.XOR<Prisma.ReviewCreateWithoutMediaInput, Prisma.ReviewUncheckedCreateWithoutMediaInput>
-}
-
-export type ReviewUpdateWithWhereUniqueWithoutMediaInput = {
-  where: Prisma.ReviewWhereUniqueInput
-  data: Prisma.XOR<Prisma.ReviewUpdateWithoutMediaInput, Prisma.ReviewUncheckedUpdateWithoutMediaInput>
-}
-
-export type ReviewUpdateManyWithWhereWithoutMediaInput = {
-  where: Prisma.ReviewScalarWhereInput
-  data: Prisma.XOR<Prisma.ReviewUpdateManyMutationInput, Prisma.ReviewUncheckedUpdateManyWithoutMediaInput>
-}
-
 export type ReviewCreateManyUserInput = {
-  id?: string
+  reviewId?: string
   mediaId: string
   rating: number
   comments?: string | null
@@ -616,16 +528,16 @@ export type ReviewCreateManyUserInput = {
 }
 
 export type ReviewUpdateWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  reviewId?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaId?: Prisma.StringFieldUpdateOperationsInput | string
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
   comments?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  media?: Prisma.MediaUpdateOneRequiredWithoutReviewsNestedInput
 }
 
 export type ReviewUncheckedUpdateWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  reviewId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
   comments?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -634,44 +546,8 @@ export type ReviewUncheckedUpdateWithoutUserInput = {
 }
 
 export type ReviewUncheckedUpdateManyWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  reviewId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
-  rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  comments?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type ReviewCreateManyMediaInput = {
-  id?: string
-  userId: string
-  rating: number
-  comments?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type ReviewUpdateWithoutMediaInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  comments?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutReviewsNestedInput
-}
-
-export type ReviewUncheckedUpdateWithoutMediaInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  rating?: Prisma.FloatFieldUpdateOperationsInput | number
-  comments?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type ReviewUncheckedUpdateManyWithoutMediaInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
   comments?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -681,7 +557,7 @@ export type ReviewUncheckedUpdateManyWithoutMediaInput = {
 
 
 export type ReviewSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
+  reviewId?: boolean
   userId?: boolean
   mediaId?: boolean
   rating?: boolean
@@ -689,11 +565,10 @@ export type ReviewSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  media?: boolean | Prisma.MediaDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["review"]>
 
 export type ReviewSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
+  reviewId?: boolean
   userId?: boolean
   mediaId?: boolean
   rating?: boolean
@@ -701,11 +576,10 @@ export type ReviewSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  media?: boolean | Prisma.MediaDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["review"]>
 
 export type ReviewSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
+  reviewId?: boolean
   userId?: boolean
   mediaId?: boolean
   rating?: boolean
@@ -713,11 +587,10 @@ export type ReviewSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  media?: boolean | Prisma.MediaDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["review"]>
 
 export type ReviewSelectScalar = {
-  id?: boolean
+  reviewId?: boolean
   userId?: boolean
   mediaId?: boolean
   rating?: boolean
@@ -726,28 +599,24 @@ export type ReviewSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ReviewOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "mediaId" | "rating" | "comments" | "createdAt" | "updatedAt", ExtArgs["result"]["review"]>
+export type ReviewOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"reviewId" | "userId" | "mediaId" | "rating" | "comments" | "createdAt" | "updatedAt", ExtArgs["result"]["review"]>
 export type ReviewInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  media?: boolean | Prisma.MediaDefaultArgs<ExtArgs>
 }
 export type ReviewIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  media?: boolean | Prisma.MediaDefaultArgs<ExtArgs>
 }
 export type ReviewIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  media?: boolean | Prisma.MediaDefaultArgs<ExtArgs>
 }
 
 export type $ReviewPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Review"
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
-    media: Prisma.$MediaPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    id: string
+    reviewId: string
     userId: string
     mediaId: string
     rating: number
@@ -837,8 +706,8 @@ export interface ReviewDelegate<ExtArgs extends runtime.Types.Extensions.Interna
    * // Get first 10 Reviews
    * const reviews = await prisma.review.findMany({ take: 10 })
    * 
-   * // Only select the `id`
-   * const reviewWithIdOnly = await prisma.review.findMany({ select: { id: true } })
+   * // Only select the `reviewId`
+   * const reviewWithReviewIdOnly = await prisma.review.findMany({ select: { reviewId: true } })
    * 
    */
   findMany<T extends ReviewFindManyArgs>(args?: Prisma.SelectSubset<T, ReviewFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
@@ -882,9 +751,9 @@ export interface ReviewDelegate<ExtArgs extends runtime.Types.Extensions.Interna
    *   ]
    * })
    * 
-   * // Create many Reviews and only return the `id`
-   * const reviewWithIdOnly = await prisma.review.createManyAndReturn({
-   *   select: { id: true },
+   * // Create many Reviews and only return the `reviewId`
+   * const reviewWithReviewIdOnly = await prisma.review.createManyAndReturn({
+   *   select: { reviewId: true },
    *   data: [
    *     // ... provide data here
    *   ]
@@ -973,9 +842,9 @@ export interface ReviewDelegate<ExtArgs extends runtime.Types.Extensions.Interna
    *   ]
    * })
    * 
-   * // Update zero or more Reviews and only return the `id`
-   * const reviewWithIdOnly = await prisma.review.updateManyAndReturn({
-   *   select: { id: true },
+   * // Update zero or more Reviews and only return the `reviewId`
+   * const reviewWithReviewIdOnly = await prisma.review.updateManyAndReturn({
+   *   select: { reviewId: true },
    *   where: {
    *     // ... provide filter here
    *   },
@@ -1149,7 +1018,6 @@ readonly fields: ReviewFieldRefs;
 export interface Prisma__ReviewClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  media<T extends Prisma.MediaDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MediaDefaultArgs<ExtArgs>>): Prisma.Prisma__MediaClient<runtime.Types.Result.GetResult<Prisma.$MediaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1179,7 +1047,7 @@ export interface Prisma__ReviewClient<T, Null = never, ExtArgs extends runtime.T
  * Fields of the Review model
  */
 export interface ReviewFieldRefs {
-  readonly id: Prisma.FieldRef<"Review", 'String'>
+  readonly reviewId: Prisma.FieldRef<"Review", 'String'>
   readonly userId: Prisma.FieldRef<"Review", 'String'>
   readonly mediaId: Prisma.FieldRef<"Review", 'String'>
   readonly rating: Prisma.FieldRef<"Review", 'Float'>

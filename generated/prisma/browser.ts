@@ -23,6 +23,11 @@ export * from './enums';
  */
 export type User = Prisma.UserModel
 /**
+ * Model Media
+ * 
+ */
+export type Media = Prisma.MediaModel
+/**
  * Model MediaList
  * 
  */
@@ -32,11 +37,6 @@ export type MediaList = Prisma.MediaListModel
  * 
  */
 export type MediaListItem = Prisma.MediaListItemModel
-/**
- * Model Media
- * 
- */
-export type Media = Prisma.MediaModel
 /**
  * Model Review
  * 
