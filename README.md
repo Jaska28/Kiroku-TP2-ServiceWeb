@@ -82,8 +82,8 @@ erDiagram
 
     Media {
         string mediaId
-        string anilistId
-        string? idMal
+        int anilistId
+        int? idMal
         string title
         float? avgScore
 
@@ -116,7 +116,7 @@ erDiagram
         string userId
         string mediaId
         float rating
-        string? comment
+        string? comments
 
         dateTime createdAt
         dateTime updatedAt
