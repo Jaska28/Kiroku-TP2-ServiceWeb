@@ -6,6 +6,7 @@ import {
     type AddMediaToListState,
 } from "@/src/actions/mediaListItem.actions";
 import type {MediaCardData} from "@/src/lib/types";
+import {PopupMessage} from "@/src/components/PopupMessage";
 
 export type MediaListChoice = {
     mediaListId: string;
@@ -59,14 +60,7 @@ export function ListOfMediaLists({media, lists}: Props) {
                 </div>
             )}
 
-            {state.message && (
-                <div
-                    role="alert"
-                    className={`alert ${state.success ? "alert-success" : "alert-error"}`}
-                >
-                    <span>{state.message}</span>
-                </div>
-            )}
+            <PopupMessage message={state.message}/>
         </form>
     );
 }

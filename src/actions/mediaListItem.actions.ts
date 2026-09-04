@@ -15,6 +15,11 @@ export type AddMediaToListState = {
   message: string;
 };
 
+export type DeleteListItemState = {
+  success: boolean;
+  message: string;
+}
+
 export async function addMediaToListFromForm(
   _previousState: AddMediaToListState,
   formData: FormData,
@@ -116,19 +121,26 @@ export async function addMediaToListFromForm(
 }
 
 export async function deleteMediaListItemFromForm(
+  _previousState: DeleteListItemState,
   formData: FormData,
-): Promise<void> {
+): Promise<DeleteListItemState> {
   const mediaListId = String(formData.get("mediaListId") ?? "");
   const mediaId = String(formData.get("mediaId") ?? "");
 
   if (!mediaListId || !mediaId) {
-    throw new Error("La liste ou le média est invalide.");
+    return {
+      success: false,
+      message: "La liste ou le média est invalide.",
+    };
   }
 
   const user = await getCurrentUser();
 
   if (!user) {
-    throw new Error("Connecte-toi pour retirer un média d’une liste.");
+    return {
+      success: false,
+      message: "Connecte-toi pour retirer un média.",
+    };
   }
 
   await prisma.$transaction(async (tx) => {
@@ -156,6 +168,11 @@ export async function deleteMediaListItemFromForm(
 
   revalidatePath("/my-lists");
   revalidatePath(`/lists/${mediaListId}`);
+
+  return {
+    success: true,
+    message: "Le média a été retiré de la liste.",
+  };
 }
 
 export async function createMediaListItem(
@@ -185,7 +202,7 @@ export async function createMediaListItem(
       throw new Error("List doesnt exist");
     }
 
-    if (mediaList.userId !== user.userId || user.role !== Role.ADMIN) {
+    if (mediaList.userId !== user.userId && user.role !== Role.ADMIN) {
       throw new Error("You cant add media to a list you dont own");
     }
 
@@ -240,7 +257,7 @@ export async function deleteMediaListItem(
       throw new Error("List doesnt exist");
     }
 
-    if (mediaList.userId !== user.userId || user.role !== Role.ADMIN) {
+    if (mediaList.userId !== user.userId && user.role !== Role.ADMIN) {
       throw new Error("You cant remove media to a list you dont own");
     }
 

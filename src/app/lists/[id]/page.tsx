@@ -1,7 +1,8 @@
 import Link from "next/link";
 import {notFound} from "next/navigation";
 import {getMediaListDetails} from "@/src/actions/mediaList.actions";
-import {deleteMediaListItemFromForm} from "@/src/actions/mediaListItem.actions";
+import {DeleteMediaListItemForm} from "@/src/components/DeleteMediaListItemForm";
+import {getMediaFromAnilist} from "@/src/lib/anilist";
 
 type Props = {
     params: Promise<{
@@ -17,6 +18,29 @@ export default async function MediaListPage({params}: Props) {
         notFound();
     }
 
+    const mediaItems = await Promise.all(
+        list.mediaListItems.map(async ({media}) => {
+            const anilistMedia = await getMediaFromAnilist(
+                media.anilistId,
+                "id",
+            );
+
+            return {
+                databaseId: media.mediaId,
+                anilistId: media.anilistId,
+                title:
+                    anilistMedia?.title.english ??
+                    anilistMedia?.title.romaji ??
+                    anilistMedia?.title.native ??
+                    media.title,
+                type: anilistMedia?.type ?? null,
+                description: anilistMedia?.description ?? null,
+                imageUrl: anilistMedia?.coverImage?.large ?? null,
+                genres: anilistMedia?.genres ?? [],
+            };
+        }),
+    );
+
     return (
         <main className="p-8">
             <Link href="/my-lists" className="btn btn-ghost btn-sm mb-6">
@@ -27,8 +51,8 @@ export default async function MediaListPage({params}: Props) {
                 <div className="flex flex-wrap items-start justify-between gap-4">
                     <div>
                         <h1 className="text-3xl font-bold">{list.name}</h1>
-                        {list.description && (
-                            <p className="mt-2 opacity-80">{list.description}</p>
+                        {list.desc && (
+                            <p className="mt-2 opacity-80">{list.desc}</p>
                         )}
                     </div>
 
@@ -49,12 +73,12 @@ export default async function MediaListPage({params}: Props) {
                 </div>
             ) : (
                 <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-                    {list.mediaListItems.map(({media}) => (
-                        <article key={media.id} className="card bg-base-100 shadow-sm">
-                            {media.bannerImgURL && (
+                    {mediaItems.map((media) => (
+                        <article key={media.databaseId} className="card bg-base-100 shadow-sm">
+                            {media.imageUrl && (
                                 <figure>
                                     <img
-                                        src={media.bannerImgURL}
+                                        src={media.imageUrl}
                                         alt={`Couverture de ${media.title}`}
                                         className="h-72 w-full object-cover"
                                     />
@@ -64,7 +88,9 @@ export default async function MediaListPage({params}: Props) {
                             <div className="card-body">
                                 <div className="flex items-start justify-between gap-3">
                                     <h2 className="card-title">{media.title}</h2>
-                                    <span className="badge badge-outline">{media.type}</span>
+                                    {media.type && (
+                                        <span className="badge badge-outline">{media.type}</span>
+                                    )}
                                 </div>
 
                                 <p className="line-clamp-3 text-sm opacity-70">
@@ -72,7 +98,7 @@ export default async function MediaListPage({params}: Props) {
                                 </p>
 
                                 <div className="flex flex-wrap gap-2">
-                                    {media.genre.map((genre) => (
+                                    {media.genres.map((genre) => (
                                         <span key={genre} className="badge badge-info badge-sm">
                                             {genre}
                                         </span>
@@ -80,20 +106,20 @@ export default async function MediaListPage({params}: Props) {
                                 </div>
 
                                 <div className="card-actions mt-3 items-center justify-between">
-                                    <Link
-                                        href={`/media/${media.anilistId}?type=${media.type.toLowerCase()}`}
-                                        className="btn btn-primary btn-sm"
-                                    >
-                                        Voir le média
-                                    </Link>
+                                    {media.type && (
+                                        <Link
+                                            href={`/media/${media.anilistId}?type=${media.type.toLowerCase()}`}
+                                            className="btn btn-primary btn-sm"
+                                        >
+                                            Voir le média
+                                        </Link>
+                                    )}
 
-                                    <form action={deleteMediaListItemFromForm}>
-                                        <input type="hidden" name="mediaListId" value={list.id}/>
-                                        <input type="hidden" name="mediaId" value={media.id}/>
-                                        <button type="submit" className="btn btn-error btn-sm">
-                                            Retirer
-                                        </button>
-                                    </form>
+                                    <DeleteMediaListItemForm
+                                        mediaListId={list.mediaListId}
+                                        mediaId={media.databaseId}
+                                        mediaTitle={media.title}
+                                    />
                                 </div>
                             </div>
                         </article>
