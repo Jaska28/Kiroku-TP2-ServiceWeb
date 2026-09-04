@@ -55,10 +55,10 @@ export async function MediaListCard({list}: Props) {
                     {mediaItems.map((media) => (
                         <li
                             key={media.databaseId}
-                            className="flex items-center justify-between rounded-lg bg-base-200 px-3 py-2"
+                            className="grid grid-cols-[minmax(0,1fr)_6rem_auto] items-center gap-3 rounded-lg bg-base-200 px-3 py-2"
                         >
-                            <span className="font-medium">{media.title}</span>
-                            <span className="badge badge-outline badge-sm">{media.type}</span>
+                            <span className="min-w-0 truncate font-medium">{media.title}</span>
+                            <span className="badge badge-outline badge-sm justify-self-center">{media.type}</span>
                             <DeleteMediaListItemForm
                                 mediaListId={list.mediaListId}
                                 mediaId={media.databaseId}
