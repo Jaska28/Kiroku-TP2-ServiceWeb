@@ -16,23 +16,9 @@ export const anilist = axios.create({
   },
 });
 
-// helper function to create a enum-ish with anilist MediaTypes
-async function getAnilistMediaTypes(): Promise<string[]> {
-  const { data } = await anilist.post("", {
-    query: `
-      query {
-      __type(name: "MediaType") {
-        enumValues {
-          name
-          }
-        }
-      }
-    `,
-  });
-
-  return data.data.__type.enumValues.map((val: { name: string }) => val.name);
-}
-export const mediaTypes = await getAnilistMediaTypes();
+// AniList currently exposes these two MediaType values. Keeping them locally
+// avoids making the whole application depend on a schema request at startup.
+export const mediaTypes: string[] = ["ANIME", "MANGA"];
 
 // Data returned by Anilist
 // represents anilist's API

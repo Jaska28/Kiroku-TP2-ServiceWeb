@@ -13,7 +13,7 @@ type MediaListWithItems = Prisma.MediaListGetPayload<{
             };
         };
     };
-}>;
+}> & {canEdit: boolean};
 
 type Props = {
     list: MediaListWithItems;
@@ -87,12 +87,14 @@ export async function MediaListCard({list}: Props) {
                                     ? `★ ${ratings[media.anilistId]}/10`
                                     : "—"}
                             </span>
-                            <DeleteMediaListItemForm
-                                mediaListId={list.mediaListId}
-                                mediaId={media.databaseId}
-                                mediaTitle={media.title}
-                                compact
-                            />
+                            {list.canEdit && (
+                                <DeleteMediaListItemForm
+                                    mediaListId={list.mediaListId}
+                                    mediaId={media.databaseId}
+                                    mediaTitle={media.title}
+                                    compact
+                                />
+                            )}
                         </li>
                     ))}
                 </ul>
@@ -103,10 +105,12 @@ export async function MediaListCard({list}: Props) {
                     <Link href={`/lists/${list.mediaListId}`} className="btn btn-primary btn-sm flex-1">
                         Voir la liste
                     </Link>
-                    <DeleteMediaListForm
-                        mediaListId={list.mediaListId}
-                        listName={list.name}
-                    />
+                    {list.canEdit && (
+                        <DeleteMediaListForm
+                            mediaListId={list.mediaListId}
+                            listName={list.name}
+                        />
+                    )}
                 </div>
             </div>
         </article>

@@ -489,21 +489,27 @@ export async function removeMediaFromMediaList(
 export async function getCurrentUserMediaLists() {
     const user = await getCurrentUser();
 
-    if (!user) return prisma.mediaList.findMany({
+    if (!user) {
+        const publicLists = await prisma.mediaList.findMany({
             where: {
-              isPublic: true
+                isPublic: true,
             },
-        include: {
+            include: {
                 mediaListItems: {
-                    include:{
-                        media:true
-                    }
-                }
-        }
-        }
-    );
+                    include: {
+                        media: true,
+                    },
+                },
+            },
+            orderBy: {
+                createdAt: "desc",
+            },
+        });
 
-    return prisma.mediaList.findMany({
+        return publicLists.map((list) => ({...list, canEdit: false}));
+    }
+
+    const userLists = await prisma.mediaList.findMany({
         where: {
             userId: user.userId,
         },
@@ -518,17 +524,16 @@ export async function getCurrentUserMediaLists() {
             createdAt: "desc",
         },
     });
+
+    return userLists.map((list) => ({...list, canEdit: true}));
 }
 
 export async function getMediaListDetails(mediaListId: string) {
     const user = await getCurrentUser();
 
-    if (!user) return null;
-
-    return prisma.mediaList.findFirst({
+    const mediaList = await prisma.mediaList.findUnique({
         where: {
             mediaListId: mediaListId,
-            userId: user.userId,
         },
         include: {
             mediaListItems: {
@@ -541,4 +546,17 @@ export async function getMediaListDetails(mediaListId: string) {
             },
         },
     });
+
+    if (!mediaList) return null;
+
+    const canEdit = Boolean(
+        user && (mediaList.userId === user.userId || user.role === Role.ADMIN),
+    );
+
+    if (!mediaList.isPublic && !canEdit) return null;
+
+    return {
+        ...mediaList,
+        canEdit,
+    };
 }

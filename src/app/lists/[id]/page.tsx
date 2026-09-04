@@ -64,7 +64,9 @@ export default async function MediaListPage({params}: Props) {
 
                     <div className="flex flex-wrap items-start justify-between gap-5">
                         <div>
-                            <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-primary">Ma liste</p>
+                            <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-primary">
+                                {list.canEdit ? "Ma liste" : "Liste publique"}
+                            </p>
                             <h1 className="text-4xl font-black tracking-tight sm:text-5xl">{list.name}</h1>
                         {list.desc && (
                                 <p className="mt-3 max-w-2xl text-lg leading-7 opacity-60">{list.desc}</p>
@@ -127,7 +129,7 @@ export default async function MediaListPage({params}: Props) {
                                     ))}
                                 </div>
 
-                                {media.type && (
+                                {list.canEdit && media.type && (
                                     <div className="mt-4 rounded-xl bg-base-200/70 p-3">
                                         <p className="mb-1 text-xs font-bold uppercase tracking-wider opacity-50">Ta note</p>
                                         <MediaRatingControl
@@ -148,11 +150,13 @@ export default async function MediaListPage({params}: Props) {
                                         </Link>
                                     )}
 
-                                    <DeleteMediaListItemForm
-                                        mediaListId={list.mediaListId}
-                                        mediaId={media.databaseId}
-                                        mediaTitle={media.title}
-                                    />
+                                    {list.canEdit && (
+                                        <DeleteMediaListItemForm
+                                            mediaListId={list.mediaListId}
+                                            mediaId={media.databaseId}
+                                            mediaTitle={media.title}
+                                        />
+                                    )}
                                 </div>
                             </div>
                         </article>
