@@ -22,7 +22,12 @@
 
 # misc
 .DS_Store
+Thumbs.db
+Desktop.ini
 *.pem
+*.log
+*.tmp
+*.temp
 
 # debug
 npm-debug.log*
@@ -39,6 +44,17 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-/.idea/
 
-/src/generated/prisma
+# editors and local IDE settings
+/.idea/
+/.vscode/
+/.fleet/
+
+# local AI assistant configuration
+/.agents/
+/.claude/
+/.windsurf/
+
+# local caches
+/.cache/
+/.turbo/
