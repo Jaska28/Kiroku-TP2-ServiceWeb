@@ -2,7 +2,7 @@
 
 import { Role } from "@/generated/prisma/enums";
 import prisma from "../lib/prisma";
-import { getCurrentUser } from "./user.actions";
+import { getCurrentUser, syncUser } from "./user.actions";
 import { revalidatePath } from "next/cache";
 import { getMediaById } from "./media.actions";
 import {
@@ -10,8 +10,6 @@ import {
   deleteMediaListItem,
 } from "./mediaListItem.actions";
 import { MediaList } from "@/generated/prisma/client";
-
-const SEED_USER_CLERK_ID = "seed-user-kiroku";
 
 export type CreateMediaListFormState = {
   success: boolean;
@@ -34,11 +32,7 @@ export async function createMediaListFromForm(
   }
 
   try {
-    const user = await prisma.user.findUniqueOrThrow({
-      where: {
-        clerkId: SEED_USER_CLERK_ID,
-      },
-    });
+    const user = await syncUser();
 
     await prisma.mediaList.create({
       data: {
@@ -55,20 +49,23 @@ export async function createMediaListFromForm(
       success: true,
       message: "La liste a été créée avec succès.",
     };
-  } catch {
+  } catch (error) {
+    console.error("Impossible de créer la liste:", error);
     return {
       success: false,
-      message: "Impossible de créer la liste. Vérifie si ce nom existe déjà.",
+      message: "Impossible de créer la liste. Vérifie que tu es connecté et que ce nom n’existe pas déjà.",
     };
   }
 }
 
 export async function getMediaListChoices() {
+  const user = await getCurrentUser();
+
+  if (!user) return [];
+
   return prisma.mediaList.findMany({
     where: {
-      user: {
-        clerkId: SEED_USER_CLERK_ID,
-      },
+      userId: user.userId,
     },
     select: {
       mediaListId: true,
@@ -243,13 +240,17 @@ export async function deleteMediaListFromForm(
     throw new Error("La liste est invalide.");
   }
 
+  const user = await getCurrentUser();
+
+  if (!user) {
+    throw new Error("Connecte-toi pour supprimer une liste.");
+  }
+
   await prisma.$transaction(async (tx) => {
     const mediaList = await tx.mediaList.findFirst({
       where: {
         mediaListId: mediaListId,
-        user: {
-          clerkId: SEED_USER_CLERK_ID,
-        },
+        userId: user.userId,
       },
       select: {mediaListId: true},
     });
@@ -475,11 +476,13 @@ export async function removeMediaFromMediaList(
 }
 
 export async function getDemoUserMediaLists() {
+  const user = await getCurrentUser();
+
+  if (!user) return [];
+
   return prisma.mediaList.findMany({
     where: {
-      user: {
-        clerkId: SEED_USER_CLERK_ID,
-      },
+      userId: user.userId,
     },
     include: {
       mediaListItems: {
@@ -495,12 +498,14 @@ export async function getDemoUserMediaLists() {
 }
 
 export async function getMediaListDetails(mediaListId: string) {
+  const user = await getCurrentUser();
+
+  if (!user) return null;
+
   return prisma.mediaList.findFirst({
     where: {
       mediaListId: mediaListId,
-      user: {
-        clerkId: SEED_USER_CLERK_ID,
-      },
+      userId: user.userId,
     },
     include: {
       mediaListItems: {

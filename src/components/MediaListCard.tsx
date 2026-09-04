@@ -2,6 +2,7 @@ import Link from "next/link";
 import type {Prisma} from "@/generated/prisma/client";
 import {deleteMediaListItemFromForm} from "@/src/actions/mediaListItem.actions";
 import {deleteMediaListFromForm} from "@/src/actions/mediaList.actions";
+import {getMediaFromAnilist} from "@/src/lib/anilist";
 
 type MediaListWithItems = Prisma.MediaListGetPayload<{
     include: {
@@ -17,7 +18,27 @@ type Props = {
     list: MediaListWithItems;
 }
 
-export function MediaListCard({list}: Props) {
+export async function MediaListCard({list}: Props) {
+    const mediaItems = await Promise.all(
+        list.mediaListItems.map(async ({media}) => {
+            const anilistMedia = await getMediaFromAnilist(
+                media.anilistId,
+                "id",
+            );
+
+            return {
+                databaseId: media.mediaId,
+                anilistId: media.anilistId,
+                title:
+                    anilistMedia?.title.english ??
+                    anilistMedia?.title.romaji ??
+                    anilistMedia?.title.native ??
+                    media.title,
+                type: anilistMedia?.type ?? "Inconnu",
+            };
+        }),
+    );
+
     return (
         <article className="card h-full bg-base-100 bg-gradient-to-r from-purple-400 to-purple-700 shadow-sm">
             <div className="card-body ">
@@ -28,19 +49,19 @@ export function MediaListCard({list}: Props) {
                     </span>
                 </div>
 
-                <p className="text-sm opacity-70">{list.description}</p>
+                <p className="text-sm opacity-70">{list.desc}</p>
 
                 <ul className="my-3 space-y-2">
-                    {list.mediaListItems.map(({media}) => (
+                    {mediaItems.map((media) => (
                         <li
-                            key={`${media.type}-${media.id}`}
+                            key={media.databaseId}
                             className="flex items-center justify-between rounded-lg bg-base-200 px-3 py-2"
                         >
                             <span className="font-medium">{media.title}</span>
                             <span className="badge badge-outline badge-sm">{media.type}</span>
                             <form action={deleteMediaListItemFromForm}>
-                                <input type="hidden" name="mediaListId" value={list.id}/>
-                                <input type="hidden" name="mediaId" value={media.id}/>
+                                <input type="hidden" name="mediaListId" value={list.mediaListId}/>
+                                <input type="hidden" name="mediaId" value={media.databaseId}/>
                                 <button
                                     type="submit"
                                     className="btn btn-error btn-square btn-sm"
@@ -63,11 +84,11 @@ export function MediaListCard({list}: Props) {
                         {list.mediaListItems.length} œuvre
                         {list.mediaListItems.length > 1 ? "s" : ""}
                     </span>
-                    <Link href={`/lists/${list.id}`} className="btn btn-primary btn-sm">
+                    <Link href={`/lists/${list.mediaListId}`} className="btn btn-primary btn-sm">
                         Voir la liste
                     </Link>
                     <form action={deleteMediaListFromForm}>
-                        <input type="hidden" name="mediaListId" value={list.id}/>
+                        <input type="hidden" name="mediaListId" value={list.mediaListId}/>
                         <button
                             type="submit"
                             className="btn btn-error btn-sm"

@@ -17,11 +17,13 @@ export async function syncUser() {
 
   if (existingUser) return existingUser;
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const newUser = await prisma.user.create({
     data: {
       clerkId: clerkUser.id,
-      username: clerkUser.username!,
+      username:
+        clerkUser.username ??
+        clerkUser.emailAddresses[0]?.emailAddress ??
+        clerkUser.id,
       firstName: clerkUser.firstName,
       lastName: clerkUser.lastName,
       // this specific line checks if the clerk auth user is the admin account created and if it is it creates that user in the db and gives it the admin Role
@@ -29,6 +31,8 @@ export async function syncUser() {
       role: clerkUser.id === process.env.ADMIN_USR_ID ? Role.ADMIN : Role.USER,
     },
   });
+
+  return newUser;
 }
 
 export async function getCurrentUser() {

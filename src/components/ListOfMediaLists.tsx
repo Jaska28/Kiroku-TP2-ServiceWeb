@@ -8,7 +8,7 @@ import {
 import type {MediaCardData} from "@/src/lib/types";
 
 export type MediaListChoice = {
-    id: string;
+    mediaListId: string;
     name: string;
 };
 
@@ -46,10 +46,10 @@ export function ListOfMediaLists({media, lists}: Props) {
                 <div className="space-y-2">
                     {lists.map((list) => (
                         <button
-                            key={list.id}
+                            key={list.mediaListId}
                             type="submit"
                             name="mediaListId"
-                            value={list.id}
+                            value={list.mediaListId}
                             className="btn btn-outline w-full justify-start"
                             disabled={isPending}
                         >

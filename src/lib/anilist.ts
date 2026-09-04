@@ -75,6 +75,7 @@ const MEDIA_QUERY = `
         romaji
         native
       }
+      type
     }
   }
 `;
@@ -129,9 +130,9 @@ export type AnilistMediaPage = {
 export async function getMediaFromAnilist(
   value: number | string,
   searchField: "id" | "search",
-  type: string,
+  type?: string,
 ): Promise<AnilistMedia | null> {
-  if (!mediaTypes.includes(type)) {
+  if (type && !mediaTypes.includes(type)) {
     throw new Error("Type doesnt exist");
   }
 
