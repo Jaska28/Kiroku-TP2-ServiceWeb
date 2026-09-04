@@ -1,9 +1,9 @@
-import {getDemoUserMediaLists} from "@/src/actions/mediaList.actions";
+import {getCurrentUserMediaLists} from "@/src/actions/mediaList.actions";
 import {MediaListCard} from "@/src/components/MediaListCard";
 import {CreateListForm} from "@/src/components/CreateListForm";
 
 export default async function MyListsPage() {
-    const lists = await getDemoUserMediaLists();
+    const lists = await getCurrentUserMediaLists();
 
     return (
         <main className="p-8">

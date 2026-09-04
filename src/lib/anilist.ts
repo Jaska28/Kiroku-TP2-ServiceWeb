@@ -76,6 +76,15 @@ const MEDIA_QUERY = `
         native
       }
       type
+      description
+      coverImage {
+        large
+      }
+      genres
+      averageScore
+      startDate {
+        year
+      }
     }
   }
 `;
