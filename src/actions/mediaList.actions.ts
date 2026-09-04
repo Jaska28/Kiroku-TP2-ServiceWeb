@@ -493,3 +493,24 @@ export async function getDemoUserMediaLists() {
     },
   });
 }
+
+export async function getMediaListDetails(mediaListId: string) {
+  return prisma.mediaList.findFirst({
+    where: {
+      id: mediaListId,
+      user: {
+        clerkId: SEED_USER_CLERK_ID,
+      },
+    },
+    include: {
+      mediaListItems: {
+        include: {
+          media: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+    },
+  });
+}
