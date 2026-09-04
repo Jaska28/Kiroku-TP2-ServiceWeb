@@ -21,7 +21,7 @@ export function MediaCard({media, lists, initialRating = 0}: Props) {
         <div className="card card-side bg-base-100 shadow-sm bg-gradient-to-r from-purple-100 to-purple-600">
             <figure className={"h-80 w-52 shrink-0"}>
                 <Link
-                    href={`/media/${media.id}`}
+                    href={`/media/${media.id}?type=${media.type.toLowerCase()}`}
                     aria-label={`Voir les détails de ${media.title}`}
                     className={"block"}
                 >
