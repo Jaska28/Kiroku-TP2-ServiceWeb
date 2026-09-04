@@ -8,7 +8,6 @@ import { revalidatePath } from "next/cache";
 import {
   getMediaFromAnilist,
   mediaAnilistToPrisma,
-  mediaTypes,
 } from "@/src/lib/anilist";
 
 const SEED_USER_CLERK_ID = "seed-user-kiroku";
@@ -124,12 +123,12 @@ export async function deleteMediaListItemFromForm(
   await prisma.$transaction(async (tx) => {
     const mediaList = await tx.mediaList.findFirst({
       where: {
-        id: mediaListId,
+        mediaListId: mediaListId,
         user: {
           clerkId: SEED_USER_CLERK_ID,
         },
       },
-      select: {id: true},
+      select: {mediaListId: true},
     });
 
     if (!mediaList) {

@@ -44,7 +44,7 @@ export async function createMediaListFromForm(
       data: {
         userId: user.userId,
         name,
-        description,
+        desc: description,
         isPublic,
       },
     });
@@ -71,7 +71,7 @@ export async function getMediaListChoices() {
       },
     },
     select: {
-      id: true,
+      mediaListId: true,
       name: true,
     },
     orderBy: {
@@ -246,12 +246,12 @@ export async function deleteMediaListFromForm(
   await prisma.$transaction(async (tx) => {
     const mediaList = await tx.mediaList.findFirst({
       where: {
-        id: mediaListId,
+        mediaListId: mediaListId,
         user: {
           clerkId: SEED_USER_CLERK_ID,
         },
       },
-      select: {id: true},
+      select: {mediaListId: true},
     });
 
     if (!mediaList) {
@@ -263,7 +263,7 @@ export async function deleteMediaListFromForm(
     });
 
     await tx.mediaList.delete({
-      where: {id: mediaListId},
+      where: {mediaListId: mediaListId},
     });
   });
 
@@ -301,8 +301,8 @@ export async function getMediaListById(mediaListId: string) {
 }
 
 // returns a paginated list of all users mediaList
-// any user can see mediaLists; therefore no auth needed
-// however only public lists are returned
+// any user can see mediaLists; therefore, no auth needed,
+// however, only public lists are returned
 export async function getAllMediaList(page: number = 1, limit: number = 5) {
   const skip = (page - 1) * limit;
 
@@ -497,7 +497,7 @@ export async function getDemoUserMediaLists() {
 export async function getMediaListDetails(mediaListId: string) {
   return prisma.mediaList.findFirst({
     where: {
-      id: mediaListId,
+      mediaListId: mediaListId,
       user: {
         clerkId: SEED_USER_CLERK_ID,
       },
