@@ -1,22 +1,20 @@
 "use client"
 
 import {MediaCardData} from "@/src/lib/types";
-import {useState} from "react";
-import {MediaRating} from "@/src/components/MediaRating";
 import Link from "next/link";
 import {
     ListOfMediaLists,
     type MediaListChoice,
 } from "@/src/components/ListOfMediaLists";
+import {MediaRatingControl} from "@/src/components/MediaRatingControl";
 
 type Props = {
     media: MediaCardData;
     lists: MediaListChoice[];
+    initialRating?: number;
 }
 
-export function MediaCard({media, lists}: Props) {
-
-    const [rating, setRating] = useState(0);
+export function MediaCard({media, lists, initialRating = 0}: Props) {
     const modalId = `add-media-${media.id}`;
 
     return (
@@ -44,10 +42,10 @@ export function MediaCard({media, lists}: Props) {
                     </span>
                 </div>
 
-                <MediaRating
-                    mediaId={media.id}
-                    value={rating}
-                    onRatingChange={setRating}
+                <MediaRatingControl
+                    anilistId={Number(media.id)}
+                    type={media.type}
+                    initialRating={initialRating}
                 />
 
                 <div className={"flex flex row flex-wrap gap-2"}>

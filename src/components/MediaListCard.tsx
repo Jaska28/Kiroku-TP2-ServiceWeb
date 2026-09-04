@@ -3,6 +3,7 @@ import type {Prisma} from "@/generated/prisma/client";
 import {getMediaFromAnilist} from "@/src/lib/anilist";
 import {DeleteMediaListItemForm} from "@/src/components/DeleteMediaListItemForm";
 import {DeleteMediaListForm} from "@/src/components/DeleteMediaListForm";
+import {getCurrentUserRatings} from "@/src/actions/review.actions";
 
 type MediaListWithItems = Prisma.MediaListGetPayload<{
     include: {
@@ -19,8 +20,8 @@ type Props = {
 }
 
 export async function MediaListCard({list}: Props) {
-    const mediaItems = await Promise.all(
-        list.mediaListItems.map(async ({media}) => {
+    const [mediaItems, ratings] = await Promise.all([
+        Promise.all(list.mediaListItems.map(async ({media}) => {
             const anilistMedia = await getMediaFromAnilist(
                 media.anilistId,
                 "id",
@@ -36,8 +37,11 @@ export async function MediaListCard({list}: Props) {
                     media.title,
                 type: anilistMedia?.type ?? "Inconnu",
             };
-        }),
-    );
+        })),
+        getCurrentUserRatings(
+            list.mediaListItems.map(({media}) => media.anilistId),
+        ),
+    ]);
 
     return (
         <article className="card h-full bg-base-100 bg-gradient-to-r from-purple-400 to-purple-700 shadow-sm">
@@ -55,10 +59,15 @@ export async function MediaListCard({list}: Props) {
                     {mediaItems.map((media) => (
                         <li
                             key={media.databaseId}
-                            className="grid grid-cols-[minmax(0,1fr)_6rem_auto] items-center gap-3 rounded-lg bg-base-200 px-3 py-2"
+                            className="grid grid-cols-[minmax(0,1fr)_6rem_5rem_auto] items-center gap-3 rounded-lg bg-base-200 px-3 py-2"
                         >
                             <span className="min-w-0 truncate font-medium">{media.title}</span>
                             <span className="badge badge-outline badge-sm justify-self-center">{media.type}</span>
+                            <span className="text-center text-sm font-semibold">
+                                {ratings[media.anilistId] != null
+                                    ? `${ratings[media.anilistId]}/10`
+                                    : "Non noté"}
+                            </span>
                             <DeleteMediaListItemForm
                                 mediaListId={list.mediaListId}
                                 mediaId={media.databaseId}
