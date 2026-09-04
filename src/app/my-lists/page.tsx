@@ -12,17 +12,18 @@ export default async function MyListsPage() {
                     <h1 className="text-3xl font-bold">Mes listes</h1>
                     <p className="mt-1 opacity-70">Organise les œuvres que tu veux suivre.</p>
                 </div>
+                <label htmlFor="create-list-modal" className="btn btn-primary">
+                    Créer une liste
+                </label>
+
+                <input
+                    id="create-list-modal"
+                    type="checkbox"
+                    className="modal-toggle"
+                />
             </div>
 
-            <label htmlFor="create-list-modal" className="btn btn-primary">
-                Créer une liste
-            </label>
 
-            <input
-                id="create-list-modal"
-                type="checkbox"
-                className="modal-toggle"
-            />
 
             <div className="modal" role="dialog">
                 <div className="modal-box">
