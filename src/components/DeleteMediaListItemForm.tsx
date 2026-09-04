@@ -45,7 +45,7 @@ export function DeleteMediaListItemForm({
             >
                 {isPending ? "..." : compact ? "×" : "Retirer"}
             </button>
-            <PopupMessage message={state.message}/>
+            <PopupMessage message={state.success ? "" : state.message}/>
         </form>
     );
 }

@@ -4,7 +4,85 @@ import prisma from "../lib/prisma";
 import { Role } from "@/generated/prisma/enums";
 import { getCurrentUser } from "./user.actions";
 import { revalidatePath } from "next/cache";
-import { getMediaById } from "./media.actions";
+import { createMediaFromAnilist, getMediaById } from "./media.actions";
+
+export type SaveRatingResult = {
+  success: boolean;
+  message: string;
+};
+
+export async function getCurrentUserRatings(
+  anilistIds: number[],
+): Promise<Record<number, number>> {
+  const user = await getCurrentUser();
+
+  if (!user || anilistIds.length === 0) {
+    return {};
+  }
+
+  const reviews = await prisma.review.findMany({
+    where: {
+      userId: user.userId,
+      media: {
+        anilistId: { in: anilistIds },
+      },
+    },
+    select: {
+      rating: true,
+      media: {
+        select: { anilistId: true },
+      },
+    },
+  });
+
+  return Object.fromEntries(
+    reviews.map((review) => [review.media.anilistId, review.rating]),
+  );
+}
+
+export async function saveRatingFromCard(
+  anilistId: number,
+  type: string,
+  rating: number,
+): Promise<SaveRatingResult> {
+  if (!Number.isInteger(anilistId) || rating < 0 || rating > 10) {
+    return { success: false, message: "La note est invalide." };
+  }
+
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return { success: false, message: "Connecte-toi pour noter ce média." };
+  }
+
+  const media = await createMediaFromAnilist(anilistId, "id", type);
+
+  if (!media) {
+    return { success: false, message: "Impossible de récupérer ce média." };
+  }
+
+  try {
+    const existingReview = await prisma.review.findUnique({
+      where: {
+        userId_mediaId: {
+          userId: user.userId,
+          mediaId: media.mediaId,
+        },
+      },
+    });
+
+    if (existingReview) {
+      await updateReview(existingReview.reviewId, rating, null);
+    } else {
+      await createReview(media.mediaId, rating, null);
+    }
+
+    return { success: true, message: `Note enregistrée : ${rating}/10.` };
+  } catch (error) {
+    console.error("Impossible d’enregistrer la note:", error);
+    return { success: false, message: "Impossible d’enregistrer la note." };
+  }
+}
 
 export async function createReview(
   mediaId: string,

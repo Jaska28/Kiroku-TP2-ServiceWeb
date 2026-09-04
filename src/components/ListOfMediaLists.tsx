@@ -60,7 +60,7 @@ export function ListOfMediaLists({media, lists}: Props) {
                 </div>
             )}
 
-            <PopupMessage message={state.message}/>
+            <PopupMessage message={state.success ? "" : state.message}/>
         </form>
     );
 }

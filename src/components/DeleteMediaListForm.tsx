@@ -34,7 +34,7 @@ export function DeleteMediaListForm({mediaListId, listName}: Props) {
             >
                 {isPending ? "Suppression..." : "Supprimer"}
             </button>
-            <PopupMessage message={state.message}/>
+            <PopupMessage message={state.success ? "" : state.message}/>
         </form>
     );
 }
