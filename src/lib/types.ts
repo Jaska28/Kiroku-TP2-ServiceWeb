@@ -1,4 +1,4 @@
-enum MediaType {
+export enum MediaType {
   ANIME = "Anime",
   MANGA = "Manga",
 }
