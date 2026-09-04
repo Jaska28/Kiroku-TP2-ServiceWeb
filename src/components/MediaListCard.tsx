@@ -36,6 +36,7 @@ export async function MediaListCard({list}: Props) {
                     anilistMedia?.title.native ??
                     media.title,
                 type: anilistMedia?.type ?? "Inconnu",
+                imageUrl: anilistMedia?.coverImage?.large ?? null,
             };
         })),
         getCurrentUserRatings(
@@ -44,29 +45,47 @@ export async function MediaListCard({list}: Props) {
     ]);
 
     return (
-        <article className="card h-full bg-base-100 bg-gradient-to-r from-purple-400 to-purple-700 shadow-sm">
-            <div className="card-body ">
+        <article className="card h-full overflow-hidden border border-base-300 bg-base-100 shadow-sm transition duration-300 hover:border-primary/25 hover:shadow-lg">
+            <div className="h-1.5 bg-gradient-to-r from-violet-600 to-fuchsia-500"/>
+            <div className="card-body p-6">
                 <div className="flex items-start justify-between gap-4">
-                    <h2 className="card-title">{list.name}</h2>
-                    <span className={`badge ${list.isPublic ? "badge-success" : "badge-ghost"}`}>
+                    <div>
+                        <h2 className="card-title text-2xl">{list.name}</h2>
+                        <p className="mt-1 text-sm opacity-50">{list.mediaListItems.length} œuvre{list.mediaListItems.length !== 1 ? "s" : ""}</p>
+                    </div>
+                    <span className={`badge badge-sm ${list.isPublic ? "badge-success" : "badge-ghost"}`}>
                         {list.isPublic ? "Publique" : "Privée"}
                     </span>
                 </div>
 
-                <p className="text-sm opacity-70">{list.desc}</p>
+                {list.desc && <p className="line-clamp-2 min-h-10 text-sm leading-5 opacity-60">{list.desc}</p>}
 
-                <ul className="my-3 space-y-2">
-                    {mediaItems.map((media) => (
+                {mediaItems.length > 0 && (
+                    <div className="flex -space-x-4 py-2">
+                        {mediaItems.slice(0, 4).map((media) => (
+                            media.imageUrl ? (
+                                <img
+                                    key={media.databaseId}
+                                    src={media.imageUrl}
+                                    alt=""
+                                    className="aspect-[2/3] w-16 rounded-lg border-2 border-base-100 object-cover shadow"
+                                />
+                            ) : null
+                        ))}
+                    </div>
+                )}
+
+                <ul className="space-y-2">
+                    {mediaItems.slice(0, 3).map((media) => (
                         <li
                             key={media.databaseId}
-                            className="grid grid-cols-[minmax(0,1fr)_6rem_5rem_auto] items-center gap-3 rounded-lg bg-base-200 px-3 py-2"
+                            className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-3 rounded-xl bg-base-200/70 px-3 py-2.5"
                         >
                             <span className="min-w-0 truncate font-medium">{media.title}</span>
-                            <span className="badge badge-outline badge-sm justify-self-center">{media.type}</span>
-                            <span className="text-center text-sm font-semibold">
+                            <span className="text-center text-sm font-semibold text-amber-600">
                                 {ratings[media.anilistId] != null
-                                    ? `${ratings[media.anilistId]}/10`
-                                    : "Non noté"}
+                                    ? `★ ${ratings[media.anilistId]}/10`
+                                    : "—"}
                             </span>
                             <DeleteMediaListItemForm
                                 mediaListId={list.mediaListId}
@@ -78,12 +97,10 @@ export async function MediaListCard({list}: Props) {
                     ))}
                 </ul>
 
-                <div className="card-actions items-center justify-between">
-                    <span className="text-sm opacity-60">
-                        {list.mediaListItems.length} œuvre
-                        {list.mediaListItems.length > 1 ? "s" : ""}
-                    </span>
-                    <Link href={`/lists/${list.mediaListId}`} className="btn btn-primary btn-sm">
+                {mediaItems.length > 3 && <p className="text-center text-xs opacity-45">+ {mediaItems.length - 3} autre{mediaItems.length - 3 > 1 ? "s" : ""}</p>}
+
+                <div className="card-actions mt-auto items-center border-t border-base-300 pt-4">
+                    <Link href={`/lists/${list.mediaListId}`} className="btn btn-primary btn-sm flex-1">
                         Voir la liste
                     </Link>
                     <DeleteMediaListForm

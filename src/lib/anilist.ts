@@ -47,10 +47,16 @@ export type AnilistMedia = {
   format?: string | null;
   type?: string | null;
   status?: string | null;
+  episodes?: number | null;
+  chapters?: number | null;
+  volumes?: number | null;
+  duration?: number | null;
+  source?: string | null;
   description?: string | null;
   coverImage?: {
     large?: string | null;
   };
+  bannerImage?: string | null;
   genres?: string[];
   averageScore?: number | null;
   startDate?: {
@@ -76,10 +82,18 @@ const MEDIA_QUERY = `
         native
       }
       type
+      format
+      status
+      episodes
+      chapters
+      volumes
+      duration
+      source
       description
       coverImage {
         large
       }
+      bannerImage
       genres
       averageScore
       startDate {

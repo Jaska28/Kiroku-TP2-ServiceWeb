@@ -34,21 +34,23 @@ export default async function CatalogPage({searchParams}: Props) {
     );
 
     return (
-        <main className="p-8">
-            <div className="mb-6 flex items-center justify-between gap-4">
-                <h1 className="text-3xl font-bold">
-                    Catalogue de {isManga ? "mangas" : "animes"}
-                </h1>
+        <main className="min-h-screen bg-base-200/60">
+            <header className="border-b border-base-300 bg-base-100">
+                <div className="mx-auto max-w-7xl px-6 py-10 lg:px-8">
+                    <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-primary">Explorer</p>
+                    <h1 className="text-4xl font-black tracking-tight sm:text-5xl">Catalogue</h1>
+                    <p className="mt-3 max-w-2xl text-lg opacity-60">
+                        Découvre les œuvres les plus populaires et garde tes favorites à portée de main.
+                    </p>
 
-                <Link
-                    href={isManga ? "/catalog?type=anime" : "/catalog?type=manga"}
-                    className="btn btn-primary"
-                >
-                    Voir les {isManga ? "animes" : "mangas"}
-                </Link>
-            </div>
+                    <div role="tablist" className="tabs tabs-box mt-7 w-fit bg-base-200 p-1">
+                        <Link role="tab" href="/catalog?type=anime" className={`tab px-6 ${!isManga ? "tab-active font-bold" : ""}`}>Animes</Link>
+                        <Link role="tab" href="/catalog?type=manga" className={`tab px-6 ${isManga ? "tab-active font-bold" : ""}`}>Mangas</Link>
+                    </div>
+                </div>
+            </header>
 
-            <section className="grid gap-6 xl:grid-cols-3">
+            <section className="mx-auto grid max-w-7xl gap-6 px-6 py-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 lg:px-8">
                 {medias.map((media) => (
                     <MediaCard
                         key={`${media.type}-${media.id}`}
