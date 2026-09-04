@@ -3,6 +3,7 @@ import {anilistToMediaCard, getMediaPageFromAnilist} from "@/src/lib/anilist";
 import {MediaType} from "../../lib/types";
 import Link from "next/link";
 import {getMediaListChoices} from "@/src/actions/mediaList.actions";
+import {getCurrentUserRatings} from "@/src/actions/review.actions";
 
 type Props = {
     searchParams: Promise<{
@@ -28,6 +29,9 @@ export default async function CatalogPage({searchParams}: Props) {
     const medias = mediaPage.media.map((media) =>
         anilistToMediaCard(media, selectedType),
     );
+    const ratings = await getCurrentUserRatings(
+        medias.map((media) => Number(media.id)),
+    );
 
     return (
         <main className="p-8">
@@ -47,9 +51,10 @@ export default async function CatalogPage({searchParams}: Props) {
             <section className="grid gap-6 xl:grid-cols-3">
                 {medias.map((media) => (
                     <MediaCard
-                        key={media.id}
+                        key={`${media.type}-${media.id}`}
                         media={media}
                         lists={lists}
+                        initialRating={ratings[Number(media.id)] ?? 0}
                     />
                 ))}
             </section>
