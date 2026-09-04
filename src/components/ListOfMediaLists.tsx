@@ -41,7 +41,7 @@ export function ListOfMediaLists({media, lists}: Props) {
 
             {lists.length === 0 ? (
                 <p className="rounded-lg bg-base-200 p-3">
-                    Crée d&apos;abord une liste pour ajouter ce média.
+                    Crée d&#39;abord une liste pour ajouter ce média.
                 </p>
             ) : (
                 <div className="space-y-2">
