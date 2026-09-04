@@ -45,7 +45,7 @@ export default async function MyListsPage() {
 
             <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
                 {lists.map((list) => (
-                    <MediaListCard key={list.id} list={list}/>
+                    <MediaListCard key={list.mediaListId} list={list}/>
                 ))}
             </section>
         </main>

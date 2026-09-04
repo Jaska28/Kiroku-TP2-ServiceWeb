@@ -62,32 +62,33 @@ export type AnilistMedia = {
 // Supports both: id, title
 // unused variable is ignored by Anilist
 const MEDIA_QUERY = `
-  query ($id: Int, $search: String, $type: String) {
+  query ($id: Int, $search: String, $type: MediaType) {
     Media(
       id: $id
       search: $search
       type: $type
     ) {
-      id
+      anilistId:id
       idMal
       title {
         english
         romaji
         native
       }
+      type
     }
   }
 `;
 
 const MEDIA_PAGE_QUERY = `
-  query ($page: Int!, $perPage: Int!, $type: String!) {
+  query ($page: Int!, $perPage: Int!, $type: MediaType) {
     Page(page: $page, perPage: $perPage) {
       pageInfo {
         currentPage
         hasNextPage
       }
       media(type: $type, sort: POPULARITY_DESC) {
-        id
+        anilistId:id
         idMal
         title {
           english
@@ -129,9 +130,9 @@ export type AnilistMediaPage = {
 export async function getMediaFromAnilist(
   value: number | string,
   searchField: "id" | "search",
-  type: string,
+  type?: string,
 ): Promise<AnilistMedia | null> {
-  if (!mediaTypes.includes(type)) {
+  if (type && !mediaTypes.includes(type)) {
     throw new Error("Type doesnt exist");
   }
 

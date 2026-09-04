@@ -1,6 +1,6 @@
 export enum MediaType {
-  ANIME = "Anime",
-  MANGA = "Manga",
+  ANIME = "ANIME",
+  MANGA = "MANGA",
 }
 
 enum MediaFormat {

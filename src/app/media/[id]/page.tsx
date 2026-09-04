@@ -1,5 +1,5 @@
 import {notFound} from "next/navigation";
-import {MediaType} from "@/generated/prisma/enums";
+import {MediaType} from "@/src/lib/types";
 import {getMediaFromAnilist} from "@/src/lib/anilist";
 
 type Props = {

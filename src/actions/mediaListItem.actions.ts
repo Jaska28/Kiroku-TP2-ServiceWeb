@@ -8,10 +8,7 @@ import { revalidatePath } from "next/cache";
 import {
   getMediaFromAnilist,
   mediaAnilistToPrisma,
-  mediaTypes,
 } from "@/src/lib/anilist";
-
-const SEED_USER_CLERK_ID = "seed-user-kiroku";
 
 export type AddMediaToListState = {
   success: boolean;
@@ -33,6 +30,15 @@ export async function addMediaToListFromForm(
     };
   }
 
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return {
+      success: false,
+      message: "Connecte-toi pour ajouter un média à une liste.",
+    };
+  }
+
   const anilistMedia = await getMediaFromAnilist(anilistId, "id", type);
 
   if (!anilistMedia) {
@@ -49,9 +55,7 @@ export async function addMediaToListFromForm(
       const mediaList = await tx.mediaList.findFirst({
         where: {
           mediaListId,
-          user: {
-            clerkId: SEED_USER_CLERK_ID,
-          },
+          userId: user.userId,
         },
         select: { mediaListId: true },
       });
@@ -121,15 +125,19 @@ export async function deleteMediaListItemFromForm(
     throw new Error("La liste ou le média est invalide.");
   }
 
+  const user = await getCurrentUser();
+
+  if (!user) {
+    throw new Error("Connecte-toi pour retirer un média d’une liste.");
+  }
+
   await prisma.$transaction(async (tx) => {
     const mediaList = await tx.mediaList.findFirst({
       where: {
-        id: mediaListId,
-        user: {
-          clerkId: SEED_USER_CLERK_ID,
-        },
+        mediaListId: mediaListId,
+        userId: user.userId,
       },
-      select: {id: true},
+      select: {mediaListId: true},
     });
 
     if (!mediaList) {
