@@ -26,7 +26,7 @@ export default async function MediaPage(
     }
 
     const mediaType =
-        type === "manga"
+        type?.toUpperCase() === MediaType.MANGA
             ? MediaType.MANGA
             : MediaType.ANIME;
 
