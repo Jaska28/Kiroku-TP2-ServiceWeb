@@ -145,6 +145,7 @@ export async function deleteMediaListItemFromForm(
   });
 
   revalidatePath("/my-lists");
+  revalidatePath(`/lists/${mediaListId}`);
 }
 
 export async function createMediaListItem(
