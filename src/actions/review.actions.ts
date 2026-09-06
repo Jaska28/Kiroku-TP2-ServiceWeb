@@ -84,6 +84,44 @@ export async function saveRatingFromCard(
   }
 }
 
+export async function deleteRatingFromCard(
+  anilistId: number,
+): Promise<SaveRatingResult> {
+  if (!Number.isInteger(anilistId) || anilistId <= 0) {
+    return { success: false, message: "Le média est invalide." };
+  }
+
+  try {
+    const user = await getCurrentUser();
+
+    if (!user) {
+      return { success: false, message: "Connecte-toi pour supprimer ta note." };
+    }
+
+    const review = await prisma.review.findFirst({
+      where: {
+        userId: user.userId,
+        media: { anilistId },
+      },
+      select: { reviewId: true },
+    });
+
+    if (review) {
+      await deleteReview(review.reviewId);
+    }
+
+    revalidatePath("/catalog");
+    revalidatePath("/my-lists");
+    revalidatePath("/lists/[id]", "page");
+    revalidatePath("/media/[id]", "page");
+
+    return { success: true, message: "Ta note a été supprimée." };
+  } catch (error) {
+    console.error("Impossible de supprimer la note:", error);
+    return { success: false, message: "Impossible de supprimer ta note." };
+  }
+}
+
 export async function createReview(
   mediaId: string,
   rating: number,

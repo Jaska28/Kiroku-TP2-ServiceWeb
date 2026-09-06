@@ -58,3 +58,6 @@ next-env.d.ts
 # local caches
 /.cache/
 /.turbo/
+
+# personal study notes
+/NOTIONS-JEAN-SIMON.md

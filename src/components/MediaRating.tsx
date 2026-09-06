@@ -2,6 +2,8 @@ type Props = {
     mediaId: string;
     value: number;
     onRatingChange: (rating: number) => void;
+    onCancelRating: () => void;
+    disabled?: boolean;
 }
 
 export function MediaRating(
@@ -9,9 +11,15 @@ export function MediaRating(
         mediaId,
         value,
         onRatingChange,
+        onCancelRating,
+        disabled = false,
     }: Props) {
 //TODO Check to loop the input
     return (
+        <fieldset disabled={disabled} className="flex flex-wrap items-center gap-2">
+        <button type="button" onClick={onCancelRating} className="btn btn-ghost btn-xs">
+            Retirer ma note
+        </button>
         <div className="rating rating-lg rating-half">
             <input type="radio" name={`rating-${mediaId}`} value="0" className="rating-hidden"
                    checked={value === 0} onChange={() => onRatingChange(0)}
@@ -57,5 +65,6 @@ export function MediaRating(
                    className="mask mask-heart mask-half-2 bg-green-400"
                    aria-label="10 sur 10"/>
         </div>
+        </fieldset>
     );
 }

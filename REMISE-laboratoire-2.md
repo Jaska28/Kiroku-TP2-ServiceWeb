@@ -16,7 +16,7 @@ Sujet : _Évaluation d'œuvres_
 
 ## 🔗 Dépôt GitHub
 
-Lien : [https://github.com/UTILISATEUR/NOM-DU-DEPOT](https://github.com/Jaska28/Kiroku-TP2-ServiceWeb)
+Lien : https://github.com/Jaska28/Kiroku-TP2-ServiceWeb
 
 ## ▶️ Lancer le projet
 
