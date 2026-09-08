@@ -5,6 +5,8 @@ import {DeleteMediaListItemForm} from "@/src/components/DeleteMediaListItemForm"
 import {getMediaFromAnilist} from "@/src/lib/anilist";
 import {getCurrentUserRatings} from "@/src/actions/review.actions";
 import {MediaRatingControl} from "@/src/components/MediaRatingControl";
+import {EditMediaListButton} from "@/src/components/EditMediaListButton";
+import {getCurrentUser} from "@/src/actions/user.actions";
 
 type Props = {
     params: Promise<{
@@ -19,6 +21,8 @@ export default async function MediaListPage({params}: Props) {
     if (!list) {
         notFound();
     }
+    const user = await getCurrentUser();
+    const canModify = user?.userId === list.userId;
 
     const [mediaItems, ratings] = await Promise.all([
         Promise.all(list.mediaListItems.map(async ({media}) => {
@@ -68,100 +72,115 @@ export default async function MediaListPage({params}: Props) {
                                 {list.canEdit ? "Ma liste" : "Liste publique"}
                             </p>
                             <h1 className="text-4xl font-black tracking-tight sm:text-5xl">{list.name}</h1>
-                        {list.desc && (
+                            {list.desc && (
                                 <p className="mt-3 max-w-2xl text-lg leading-7 opacity-60">{list.desc}</p>
-                        )}
+                            )}
                             <p className="mt-5 text-sm font-medium opacity-50">
                                 {list.mediaListItems.length} œuvre{list.mediaListItems.length !== 1 ? "s" : ""}
                             </p>
                         </div>
-
+                        <div className="flex w-full flex-wrap items-center gap-3 sm:w-auto sm:flex-col sm:items-end">
                         <span className={`badge badge-lg ${list.isPublic ? "badge-success" : "badge-ghost"}`}>
                             {list.isPublic ? "Publique" : "Privée"}
                         </span>
+                            {canModify && <EditMediaListButton list={{
+                                mediaListId: list.mediaListId,
+                                name: list.name,
+                                desc: list.desc,
+                                isPublic: list.isPublic,
+                            }}/>}
+                        </div>
                     </div>
                 </div>
             </header>
 
             <div className="mx-auto max-w-7xl px-6 py-10 lg:px-8">
                 {list.mediaListItems.length === 0 ? (
-                    <div className="rounded-3xl border border-dashed border-primary/30 bg-base-100 px-6 py-20 text-center">
-                        <div className="mx-auto mb-5 grid size-16 place-items-center rounded-2xl bg-primary/10 text-2xl text-primary">◇</div>
+                    <div
+                        className="rounded-3xl border border-dashed border-primary/30 bg-base-100 px-6 py-20 text-center">
+                        <div
+                            className="mx-auto mb-5 grid size-16 place-items-center rounded-2xl bg-primary/10 text-2xl text-primary">◇
+                        </div>
                         <h2 className="text-2xl font-bold">Cette liste est vide</h2>
                         <p className="mt-2 opacity-60">Parcours le catalogue pour y ajouter une première œuvre.</p>
                         <Link href="/catalog" className="btn btn-primary mt-6">Explorer le catalogue</Link>
                     </div>
                 ) : (
-                <section className="grid gap-6 xl:grid-cols-2">
-                    {mediaItems.map((media) => (
-                        <article key={media.databaseId} className="group overflow-hidden rounded-2xl border border-base-300 bg-base-100 shadow-sm transition duration-300 hover:border-primary/25 hover:shadow-lg sm:grid sm:grid-cols-[160px_1fr]">
-                            {media.imageUrl && (
-                                <figure className="relative overflow-hidden bg-base-300">
-                                    <img
-                                        src={media.imageUrl}
-                                        alt={`Couverture de ${media.title}`}
-                                        className="aspect-[2/3] h-full max-h-80 w-full object-cover transition duration-500 group-hover:scale-105 sm:max-h-none"
-                                    />
-                                    {media.score != null && (
-                                        <span className="badge badge-neutral absolute right-3 top-3 border-0 bg-black/70 font-bold text-amber-300 backdrop-blur">
+                    <section className="grid gap-6 xl:grid-cols-2">
+                        {mediaItems.map((media) => (
+                            <article key={media.databaseId}
+                                     className="group overflow-hidden rounded-2xl border border-base-300 bg-base-100 shadow-sm transition duration-300 hover:border-primary/25 hover:shadow-lg sm:grid sm:grid-cols-[160px_1fr]">
+                                {media.imageUrl && (
+                                    <figure className="relative overflow-hidden bg-base-300">
+                                        <img
+                                            src={media.imageUrl}
+                                            alt={`Couverture de ${media.title}`}
+                                            className="aspect-[2/3] h-full max-h-80 w-full object-cover transition duration-500 group-hover:scale-105 sm:max-h-none"
+                                        />
+                                        {media.score != null && (
+                                            <span
+                                                className="badge badge-neutral absolute right-3 top-3 border-0 bg-black/70 font-bold text-amber-300 backdrop-blur">
                                             ★ {(media.score / 10).toFixed(1)}
                                         </span>
-                                    )}
-                                </figure>
-                            )}
-
-                            <div className="flex min-w-0 flex-col p-5">
-                                <div className="flex flex-wrap items-center gap-2">
-                                    {media.type && <span className="badge badge-primary badge-sm">{media.type}</span>}
-                                    {media.releaseYear && <span className="text-sm opacity-50">{media.releaseYear}</span>}
-                                </div>
-                                <h2 className="mt-3 line-clamp-2 text-xl font-bold leading-7">{media.title}</h2>
-
-                                <p className="mt-3 line-clamp-3 text-sm leading-6 opacity-60">
-                                    {media.description ?? "Aucune description disponible."}
-                                </p>
-
-                                <div className="mt-4 flex flex-wrap gap-2">
-                                    {media.genres.slice(0, 3).map((genre) => (
-                                        <span key={genre} className="badge badge-ghost badge-sm">
-                                            {genre}
-                                        </span>
-                                    ))}
-                                </div>
-
-                                {list.canEdit && media.type && (
-                                    <div className="mt-4 rounded-xl bg-base-200/70 p-3">
-                                        <p className="mb-1 text-xs font-bold uppercase tracking-wider opacity-50">Ta note</p>
-                                        <MediaRatingControl
-                                            anilistId={media.anilistId}
-                                            type={media.type}
-                                            initialRating={ratings[media.anilistId] ?? 0}
-                                        />
-                                    </div>
+                                        )}
+                                    </figure>
                                 )}
 
-                                <div className="mt-auto flex items-center gap-2 border-t border-base-300 pt-4">
-                                    {media.type && (
-                                        <Link
-                                            href={`/media/${media.anilistId}?type=${media.type.toLowerCase()}`}
-                                            className="btn btn-primary btn-sm flex-1"
-                                        >
-                                            Voir les détails
-                                        </Link>
+                                <div className="flex min-w-0 flex-col p-5">
+                                    <div className="flex flex-wrap items-center gap-2">
+                                        {media.type &&
+                                            <span className="badge badge-primary badge-sm">{media.type}</span>}
+                                        {media.releaseYear &&
+                                            <span className="text-sm opacity-50">{media.releaseYear}</span>}
+                                    </div>
+                                    <h2 className="mt-3 line-clamp-2 text-xl font-bold leading-7">{media.title}</h2>
+
+                                    <p className="mt-3 line-clamp-3 text-sm leading-6 opacity-60">
+                                        {media.description ?? "Aucune description disponible."}
+                                    </p>
+
+                                    <div className="mt-4 flex flex-wrap gap-2">
+                                        {media.genres.slice(0, 3).map((genre) => (
+                                            <span key={genre} className="badge badge-ghost badge-sm">
+                                            {genre}
+                                        </span>
+                                        ))}
+                                    </div>
+
+                                    {list.canEdit && media.type && (
+                                        <div className="mt-4 rounded-xl bg-base-200/70 p-3">
+                                            <p className="mb-1 text-xs font-bold uppercase tracking-wider opacity-50">Ta
+                                                note</p>
+                                            <MediaRatingControl
+                                                anilistId={media.anilistId}
+                                                type={media.type}
+                                                initialRating={ratings[media.anilistId] ?? 0}
+                                            />
+                                        </div>
                                     )}
 
-                                    {list.canEdit && (
-                                        <DeleteMediaListItemForm
-                                            mediaListId={list.mediaListId}
-                                            mediaId={media.databaseId}
-                                            mediaTitle={media.title}
-                                        />
-                                    )}
+                                    <div className="mt-auto flex items-center gap-2 border-t border-base-300 pt-4">
+                                        {media.type && (
+                                            <Link
+                                                href={`/media/${media.anilistId}?type=${media.type.toLowerCase()}`}
+                                                className="btn btn-primary btn-sm flex-1"
+                                            >
+                                                Voir les détails
+                                            </Link>
+                                        )}
+
+                                        {list.canEdit && (
+                                            <DeleteMediaListItemForm
+                                                mediaListId={list.mediaListId}
+                                                mediaId={media.databaseId}
+                                                mediaTitle={media.title}
+                                            />
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
-                        </article>
-                    ))}
-                </section>
+                            </article>
+                        ))}
+                    </section>
                 )}
             </div>
         </main>

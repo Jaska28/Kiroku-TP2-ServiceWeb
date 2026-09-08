@@ -63,6 +63,31 @@ export async function createMediaListFromForm(
     }
 }
 
+export async function updateMediaListFromForm(
+    _previousState: CreateMediaListFormState,
+    formData: FormData,
+): Promise<CreateMediaListFormState> {
+    const mediaListId = String(formData.get("mediaListId") ?? "");
+    const name = String(formData.get("name") ?? "").trim();
+    const description = String(formData.get("description") ?? "").trim();
+    const isPublic = formData.get("isPublic") === "on";
+
+    if (!mediaListId || !name) {
+        return {success: false, message: "La liste et son nom sont obligatoires."};
+    }
+
+    try {
+        await updateMediaList(mediaListId, name, description, isPublic);
+        return {success: true, message: "La liste a été modifiée avec succès."};
+    } catch (error) {
+        console.error("Impossible de modifier la liste:", error);
+        return {
+            success: false,
+            message: "Impossible de modifier la liste. Vérifie que tu en es propriétaire et que ce nom n’existe pas déjà.",
+        };
+    }
+}
+
 export async function getMediaListChoices() {
     const user = await getCurrentUser();
 
@@ -162,8 +187,9 @@ export async function updateMediaList(
             }
 
             // if a null value is provided uses the current value instead of setting it to null blindly
-            const nameVal = name === null ? existingList.name : name;
-            const descriptionVal = desc === null ? existingList.desc : desc;
+            const nameVal = name === null ? existingList.name : name.trim();
+            if (!nameVal) throw new Error("Le nom de la liste est obligatoire.");
+            const descriptionVal = desc === null ? existingList.desc : desc.trim() || null;
             const isPublicVal = isPublic === null ? existingList.isPublic : isPublic;
 
             // updates the list
@@ -188,7 +214,9 @@ export async function updateMediaList(
     });
 
     revalidatePath("/");
-    revalidatePath("/MediaList");
+    revalidatePath("/my-lists");
+    revalidatePath("/catalog");
+    revalidatePath(`/lists/${mediaListId}`);
 
     return results;
 }

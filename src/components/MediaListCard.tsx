@@ -4,6 +4,7 @@ import {getMediaFromAnilist} from "@/src/lib/anilist";
 import {DeleteMediaListItemForm} from "@/src/components/DeleteMediaListItemForm";
 import {DeleteMediaListForm} from "@/src/components/DeleteMediaListForm";
 import {getCurrentUserRatings} from "@/src/actions/review.actions";
+import {EditMediaListButton} from "@/src/components/EditMediaListButton";
 
 type MediaListWithItems = Prisma.MediaListGetPayload<{
     include: {
@@ -49,11 +50,11 @@ export async function MediaListCard({list}: Props) {
             <div className="h-1.5 bg-gradient-to-r from-violet-600 to-fuchsia-500"/>
             <div className="card-body p-6">
                 <div className="flex items-start justify-between gap-4">
-                    <div>
+                    <div className="min-w-0">
                         <h2 className="card-title text-2xl">{list.name}</h2>
                         <p className="mt-1 text-sm opacity-50">{list.mediaListItems.length} œuvre{list.mediaListItems.length !== 1 ? "s" : ""}</p>
                     </div>
-                    <span className={`badge badge-sm ${list.isPublic ? "badge-success" : "badge-ghost"}`}>
+                    <span className={`badge badge-sm shrink-0 ${list.isPublic ? "badge-success" : "badge-ghost"}`}>
                         {list.isPublic ? "Publique" : "Privée"}
                     </span>
                 </div>
@@ -105,6 +106,14 @@ export async function MediaListCard({list}: Props) {
                     <Link href={`/lists/${list.mediaListId}`} className="btn btn-primary btn-sm flex-1">
                         Voir la liste
                     </Link>
+                    {list.canEdit && (
+                        <EditMediaListButton list={{
+                            mediaListId: list.mediaListId,
+                            name: list.name,
+                            desc: list.desc,
+                            isPublic: list.isPublic,
+                        }}/>
+                    )}
                     {list.canEdit && (
                         <DeleteMediaListForm
                             mediaListId={list.mediaListId}

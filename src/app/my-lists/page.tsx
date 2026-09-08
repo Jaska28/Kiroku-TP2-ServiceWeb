@@ -1,6 +1,6 @@
 import {getCurrentUserMediaLists} from "@/src/actions/mediaList.actions";
 import {MediaListCard} from "@/src/components/MediaListCard";
-import {CreateListForm} from "@/src/components/CreateListForm";
+import {MediaListForm} from "@/src/components/MediaListForm";
 
 export default async function MyListsPage() {
     const lists = await getCurrentUserMediaLists();
@@ -29,7 +29,7 @@ export default async function MyListsPage() {
 
             <div className="modal" role="dialog">
                 <div className="modal-box">
-                    <CreateListForm/>
+                    <MediaListForm/>
 
                     <div className="modal-action">
                         <label htmlFor="create-list-modal" className="btn">
