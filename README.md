@@ -49,6 +49,8 @@ Changer `ADMIN_USR_ID` ne retire pas le rôle des anciens admins. Le seed ne cr�
 
 ## 3. Générer les exemples
 
+Script : [prisma/seed.ts](prisma/seed.ts).
+
 Pour tester les deux rôles avec ce même compte, ajouter `DEMO_MODE=true` dans
 `.env` et redémarrer `npm run dev`. Le bouton **Test : Admin / User**, à gauche
 de l’avatar, affiche le rôle actuel et permet de basculer vers l’autre rôle.
@@ -75,6 +77,11 @@ npm run db:seed
 
 L’utilisateur fictif `kiroku_demo_fictif` a le rôle `USER` et existe uniquement dans Prisma : il ne peut pas se connecter. `SEED_USER_CLERK_ID` n’est pas nécessaire.
 
+La base modifiée dépend de `DATABASE_URL`, pas de l’ordinateur utilisé. Avec la même
+base Neon que l’équipe, le seed supprime aussi les listes de l’équipe, puis attribue
+`Demo 3` et `Demo 4` au compte indiqué par `ADMIN_USR_ID` dans votre `.env`.
+Avec une base Neon distincte, les données de l’équipe ne sont pas touchées.
+
 Si le seed indique que le compte est absent de Prisma, vérifier `ADMIN_USR_ID`, puis ouvrir **Mes listes** avec ce compte connecté avant de relancer la commande.
 
 ## 4. Tester
@@ -87,13 +94,3 @@ Si le seed indique que le compte est absent de Prisma, vérifier `ADMIN_USR_ID`,
 6. **Comparer les rôles** : créer un deuxième compte Clerk sans changer `ADMIN_USR_ID`. Il peut gérer ses listes, mais ne voit pas de bouton pour supprimer celles des autres. Le serveur vérifie aussi cette permission.
 
 Relancer le seed pour rétablir les exemples si nécessaire.
-
-## Vérifications du code
-
-```bash
-npm run lint
-npx tsc --noEmit
-npm run build
-```
-
-Sous PowerShell, si `npm.ps1` ou `npx.ps1` est bloqué, utiliser `npm.cmd` et `npx.cmd` à leur place.
