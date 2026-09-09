@@ -1,0 +1,96 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// --- ENUMS ---
+
+enum Role {
+  USER
+  ADMIN
+}
+
+// --- MODELES ---
+model User {
+  userId    String  @id @default(uuid()) @db.Uuid
+  clerkId   String  @unique
+  username  String  @unique
+  firstName String?
+  lastName  String?
+  role      Role    @default(USER)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  mediaLists MediaList[]
+  reviews    Review[]
+}
+
+model Media {
+  mediaId   String @id @default(uuid()) @db.Uuid
+  anilistId Int    @unique
+  idMal     Int? // Id from MyAnimeList not necessarily present
+  title     String
+  avgScore  Float? // score calculated by our own app
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  mediaListItems MediaListItem[]
+  reviews        Review[]
+}
+
+model MediaList {
+  mediaListId String   @id @default(uuid()) @db.Uuid
+  userId      String   @db.Uuid
+  name        String
+  desc        String?
+  isPublic    Boolean? @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [userId], onDelete: Cascade) // if user is deleted his list are deleted as well
+
+  mediaListItems MediaListItem[]
+
+  @@unique([userId, name]) // prevents duplicate list per users
+}
+
+model MediaListItem {
+  mediaListItemId String @id @default(uuid()) @db.Uuid
+  mediaListId     String @db.Uuid
+  mediaId         String @db.Uuid
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  mediaList MediaList @relation(fields: [mediaListId], references: [mediaListId], onDelete: Cascade) // if list is deleted delete its items
+  media     Media     @relation(fields: [mediaId], references: [mediaId], onDelete: Cascade) // if the media is deleted delete any medialistitem that references it
+
+  @@unique([mediaListId, mediaId]) // prevents duplicates media in lists
+}
+
+model Review {
+  reviewId String  @id @default(uuid()) @db.Uuid
+  userId   String  @db.Uuid
+  mediaId  String  @db.Uuid
+  rating   Float // in between 0 and 10
+  comments String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User  @relation(fields: [userId], references: [userId], onDelete: Cascade) // if the user is deleted delete all his reviews
+  media Media @relation(fields: [mediaId], references: [mediaId], onDelete: Cascade) // if the media is deleted delete all related reviews
+
+  @@unique([userId, mediaId]) // only one review per user per media
+}

@@ -16,7 +16,7 @@ Sujet : _Évaluation d'œuvres_
 
 ## 🔗 Dépôt GitHub
 
-Lien : [https://github.com/UTILISATEUR/NOM-DU-DEPOT](https://github.com/Jaska28/Kiroku-TP2-ServiceWeb)
+Lien : https://github.com/Jaska28/Kiroku-TP2-ServiceWeb
 
 ## ▶️ Lancer le projet
 
@@ -50,6 +50,7 @@ Variables d'environnement à créer (non committées) : `DATABASE_URL`, `JWT_SEC
 - [ ] Frontend : action protégée (visible seulement si connecté)
 
 ## 📝 Remarques (facultatif)
-
+Jean-Simon: Je me suis mélangé souvent à cause que nous n'utilisions pas tout le temps les mêmes noms d'éléments à notre type.
+J'ai été chercher l'information sur leur apollo et je me suis fier à leurs noms:https://studio.apollographql.com/sandbox/schema/reference/objects/Media
 ...
 
