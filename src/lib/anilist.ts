@@ -13,6 +13,9 @@ export const anilist = axios.create({
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
+    "User-Agent": "Mozilla/5.0",
+    Origin: "https://anilist.co",
+    Referer: "https://anilist.co/",
   },
 });
 

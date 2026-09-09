@@ -3,6 +3,8 @@
 import prisma from "../lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 import { Role } from "@/generated/prisma/enums";
+import {canSwitchDemoRole} from "@/src/lib/demoMode";
+import {revalidatePath} from "next/cache";
 
 export async function syncUser() {
   const clerkUser = await currentUser();
@@ -15,7 +17,16 @@ export async function syncUser() {
     where: { clerkId: clerkUser.id },
   });
 
-  if (existingUser) return existingUser;
+  if (existingUser) {
+    if (clerkUser.id === process.env.ADMIN_USR_ID && existingUser.role !== Role.ADMIN
+        && !canSwitchDemoRole(clerkUser.id)) {
+      return prisma.user.update({
+        where: {userId: existingUser.userId},
+        data: {role: Role.ADMIN},
+      });
+    }
+    return existingUser;
+  }
 
   const newUser = await prisma.user.create({
     data: {
@@ -40,11 +51,30 @@ export async function getCurrentUser() {
 
   if (!clerkUser) return null;
 
-  const existingUser = await prisma.user.findUnique({
-    where: {
-      clerkId: clerkUser.id,
-    },
-  });
+  return syncUser();
+}
 
-  return existingUser;
+export async function switchDemoRole(
+    _previousState: {message: string},
+    formData: FormData,
+): Promise<{message: string}> {
+    const clerkUser = await currentUser();
+    if (!clerkUser || !canSwitchDemoRole(clerkUser.id)) {
+        return {message: "Changement de rôle non autorisé."};
+    }
+
+    const role = formData.get("role");
+    if (role !== Role.USER && role !== Role.ADMIN) {
+        return {message: "Rôle invalide."};
+    }
+
+    try {
+        const user = await syncUser();
+        await prisma.user.update({where: {userId: user.userId}, data: {role}});
+    } catch {
+        return {message: "Impossible de changer le rôle."};
+    }
+
+    revalidatePath("/", "layout");
+    return {message: ""};
 }

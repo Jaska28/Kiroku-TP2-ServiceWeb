@@ -5,6 +5,8 @@ import {DeleteMediaListItemForm} from "@/src/components/DeleteMediaListItemForm"
 import {DeleteMediaListForm} from "@/src/components/DeleteMediaListForm";
 import {getCurrentUserRatings} from "@/src/actions/review.actions";
 import {EditMediaListButton} from "@/src/components/EditMediaListButton";
+import {getListAuthor} from "@/src/lib/listAuthor";
+import {ListAuthor} from "@/src/components/ListAuthor";
 
 type MediaListWithItems = Prisma.MediaListGetPayload<{
     include: {
@@ -14,14 +16,14 @@ type MediaListWithItems = Prisma.MediaListGetPayload<{
             };
         };
     };
-}> & {canEdit: boolean};
+}> & {canEdit: boolean; canDelete: boolean};
 
 type Props = {
     list: MediaListWithItems;
 }
 
 export async function MediaListCard({list}: Props) {
-    const [mediaItems, ratings] = await Promise.all([
+    const [mediaItems, ratings, author] = await Promise.all([
         Promise.all(list.mediaListItems.map(async ({media}) => {
             const anilistMedia = await getMediaFromAnilist(
                 media.anilistId,
@@ -43,6 +45,7 @@ export async function MediaListCard({list}: Props) {
         getCurrentUserRatings(
             list.mediaListItems.map(({media}) => media.anilistId),
         ),
+        getListAuthor(list.userId),
     ]);
 
     return (
@@ -59,6 +62,7 @@ export async function MediaListCard({list}: Props) {
                     </span>
                 </div>
 
+                <ListAuthor name={author.name} imageUrl={author.imageUrl}/>
                 {list.desc && <p className="line-clamp-2 min-h-10 text-sm leading-5 opacity-60">{list.desc}</p>}
 
                 {mediaItems.length > 0 && (
@@ -114,7 +118,7 @@ export async function MediaListCard({list}: Props) {
                             isPublic: list.isPublic,
                         }}/>
                     )}
-                    {list.canEdit && (
+                    {list.canDelete && (
                         <DeleteMediaListForm
                             mediaListId={list.mediaListId}
                             listName={list.name}

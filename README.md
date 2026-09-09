@@ -1,130 +1,99 @@
-# Kiroku
+﻿# Kiroku — Guide de test
 
-## Tech stack
+Application d’évaluation d’œuvres avec Next.js (autorisé par le professeur), Prisma/Neon, Clerk et AniList avec Axios.
 
-- [Next.js](https://nextjs.org/) with the App Router
-- [Tailwind CSS](https://tailwindcss.com/) for utility-first styling
-- [daisyUI](https://daisyui.com/) for accessible UI components
-- [Clerk](https://clerk.com/) for authentication and user management
+## 1. Installer et lancer
 
-## Requirements
+Prérequis : Node.js 24 LTS, npm, une base Neon et les clés d’une application Clerk dont vous pouvez consulter les utilisateurs dans le tableau de bord. Une connexion Internet est nécessaire.
 
-Before starting, make sure you have the following installed:
-
-- Node.js 20 or later
-- npm
-- A Clerk application with a publishable key and secret key
-
-## Environment variables
-
-Create a `.env` file at the root of the project and add your Clerk credentials:
+Créer `.env` à la racine avec votre configuration :
 
 ```env
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_publishable_key
-CLERK_SECRET_KEY=your_secret_key
-
+DATABASE_URL="postgresql://..."
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
 NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
 NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
 NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL=/
 NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL=/
-
-DATABASE_URL="DB_URL"
+ADMIN_USR_ID=
 ```
 
-The `.env` file contains sensitive information and must not be committed to Git.
+Les clés Clerk doivent appartenir à la même application. Ne pas committer `.env`. Utiliser ce même fichier pour le serveur et le seed afin de cibler la même base.
 
-## Run the application locally
-
-Install the dependencies:
+À la racine du dépôt :
 
 ```bash
 npm install
-```
-
-Start the development server:
-
-```bash
+npx prisma generate
+npx prisma migrate deploy
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Ouvrir [http://localhost:3000](http://localhost:3000).
 
-## Available commands
+## 2. Devenir admin
+
+1. S’inscrire dans Kiroku, puis se connecter.
+2. Dans le tableau de bord de l’application Clerk utilisée, ouvrir **Users**, sélectionner votre compte et copier son **User ID** (`user_...`).
+3. Mettre cet identifiant dans `.env` :
+
+   ```env
+   ADMIN_USR_ID=user_votre_identifiant
+   ```
+
+4. Arrêter le serveur avec `Ctrl+C`, puis relancer `npm run dev`.
+5. Ouvrir **Mes listes** avec ce compte connecté. Cela crée ou met à jour l’utilisateur Prisma avec le rôle `ADMIN`. Le titre **Toutes les listes** et le badge **Admin** confirment le rôle.
+
+Changer `ADMIN_USR_ID` ne retire pas le rôle des anciens admins. Le seed ne crée pas votre compte Clerk : effectuer ces étapes avant de le lancer.
+
+## 3. Générer les exemples
+
+Pour tester les deux rôles avec ce même compte, ajouter `DEMO_MODE=true` dans
+`.env` et redémarrer `npm run dev`. Le bouton **Test : Admin / User**, à gauche
+de l’avatar, affiche le rôle actuel et permet de basculer vers l’autre rôle.
+Il change le rôle dans Prisma et actualise les permissions. Il est réservé au
+compte `ADMIN_USR_ID` et fonctionne uniquement en développement.
+En mode démo, le rôle choisi est conservé lors de la synchronisation.
+Pour quitter ce mode, retirer `DEMO_MODE=true` et redémarrer le serveur :
+le compte configuré redevient admin à la prochaine synchronisation.
+
+Dans un deuxième terminal, à la racine du dépôt :
 
 ```bash
-npm run dev    # Start the development server
-npm run build  # Create a production build
-npm run start  # Start the production server
-npm run lint   # Run ESLint
+npm run db:seed
 ```
 
-### ERD Diagram of DB
+**Chaque exécution supprime toutes les listes et leurs éléments, pour tous les utilisateurs**, puis crée les quatre exemples ci-dessous. Les comptes, œuvres et évaluations sont conservés. En cas d’échec, la transaction annule les changements.
 
-```mermaid
-erDiagram
-    User ||--o{ MediaList: "Owns"
-    MediaList ||--o{ MediaListItem: "Has"
-    Media ||--o{ MediaListItem: "is"
-    User ||--o{ Review: "Writes"
-    Media || --o{ Review: "Has"
+| Liste | Propriétaire | Visibilité |
+|---|---|---|
+| Demo 1 | Utilisateur fictif | Publique |
+| Demo 2 | Utilisateur fictif | Publique |
+| Demo 3 | Votre compte (`ADMIN_USR_ID`) | Publique |
+| Demo 4 | Votre compte (`ADMIN_USR_ID`) | Privée |
 
-    User {
-        string userId
-        string clerkId
-        string username
-        string? firstName
-        string? lastName
-        Role role
+L’utilisateur fictif `kiroku_demo_fictif` a le rôle `USER` et existe uniquement dans Prisma : il ne peut pas se connecter. `SEED_USER_CLERK_ID` n’est pas nécessaire.
 
-        dateTime createdAt
-        dateTime updatedAt
-    }
+Si le seed indique que le compte est absent de Prisma, vérifier `ADMIN_USR_ID`, puis ouvrir **Mes listes** avec ce compte connecté avant de relancer la commande.
 
-    Media {
-        string mediaId
-        int anilistId
-        int? idMal
-        string title
-        float? avgScore
+## 4. Tester
 
-        dateTime createdAt
-        dateTime updatedAt
-    }
+1. **Afficher** : actualiser **Mes listes** comme admin; les quatre listes apparaissent avec leur créateur.
+2. **Créer et modifier** : créer une liste, puis modifier son nom, sa description et sa visibilité. Recharger pour vérifier la sauvegarde.
+3. **Gérer les œuvres** : depuis le catalogue, ajouter une œuvre à une liste personnelle, la noter, retirer la note puis noter à nouveau. Retirer ensuite l’œuvre de la liste.
+4. **Supprimer comme admin** : supprimer `Demo 1`, qui appartient à l’utilisateur fictif. L’admin peut supprimer les listes des autres; leur modification reste réservée au propriétaire.
+5. **Vérifier la confidentialité** : copier l’URL de `Demo 4`, se déconnecter et l’ouvrir. La liste privée doit être inaccessible; les listes publiques restent consultables.
+6. **Comparer les rôles** : créer un deuxième compte Clerk sans changer `ADMIN_USR_ID`. Il peut gérer ses listes, mais ne voit pas de bouton pour supprimer celles des autres. Le serveur vérifie aussi cette permission.
 
-    MediaList {
-        string mediaListId
-        string userId
-        string name
-        string? desc
-        boolean? isPublic
+Relancer le seed pour rétablir les exemples si nécessaire.
 
-        dateTime createdAt
-        dateTime updatedAt
-    }
+## Vérifications du code
 
-    MediaListItem {
-        string mediaListItemId
-        string mediaListId
-        string mediaId
-
-        dateTime createdAt
-        dateTime updatedAt
-    }
-
-    Review {
-        string reviewId
-        string userId
-        string mediaId
-        float rating
-        string? comments
-
-        dateTime createdAt
-        dateTime updatedAt
-    }
+```bash
+npm run lint
+npx tsc --noEmit
+npm run build
 ```
 
-### Test users
-
-| username | email          | first_name | last_name | passwd    | comments                  |
-| -------- | -------------- | ---------- | --------- | --------- | ------------------------- |
-| admin    | user@admin.com | User       | Admin     | admin1234 | to test admin role checks |
+Sous PowerShell, si `npm.ps1` ou `npx.ps1` est bloqué, utiliser `npm.cmd` et `npx.cmd` à leur place.

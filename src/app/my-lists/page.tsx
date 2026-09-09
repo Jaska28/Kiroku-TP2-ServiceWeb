@@ -1,9 +1,12 @@
 import {getCurrentUserMediaLists} from "@/src/actions/mediaList.actions";
 import {MediaListCard} from "@/src/components/MediaListCard";
 import {MediaListForm} from "@/src/components/MediaListForm";
+import {getCurrentUser} from "@/src/actions/user.actions";
 
 export default async function MyListsPage() {
     const lists = await getCurrentUserMediaLists();
+    const user = await getCurrentUser();
+    const isAdmin = user?.role === "ADMIN";
 
     return (
         <main className="min-h-screen bg-base-200/60">
@@ -11,7 +14,8 @@ export default async function MyListsPage() {
                 <div className="mx-auto flex max-w-7xl flex-wrap items-end justify-between gap-6 px-6 py-10 lg:px-8">
                     <div>
                         <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-primary">Ta collection</p>
-                        <h1 className="text-4xl font-black tracking-tight sm:text-5xl">Mes listes</h1>
+                        <h1 className="text-4xl font-black tracking-tight sm:text-5xl">{isAdmin ? "Toutes les listes" : "Mes listes"}</h1>
+                        {isAdmin && <span className="badge badge-primary mt-3">Admin</span>}
                         <p className="mt-3 text-lg opacity-60">Organise les œuvres que tu veux suivre.</p>
                     </div>
                     <label htmlFor="create-list-modal" className="btn btn-primary shadow-lg shadow-primary/20">
