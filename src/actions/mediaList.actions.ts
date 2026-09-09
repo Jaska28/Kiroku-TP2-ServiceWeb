@@ -63,6 +63,31 @@ export async function createMediaListFromForm(
     }
 }
 
+export async function updateMediaListFromForm(
+    _previousState: CreateMediaListFormState,
+    formData: FormData,
+): Promise<CreateMediaListFormState> {
+    const mediaListId = String(formData.get("mediaListId") ?? "");
+    const name = String(formData.get("name") ?? "").trim();
+    const description = String(formData.get("description") ?? "").trim();
+    const isPublic = formData.get("isPublic") === "on";
+
+    if (!mediaListId || !name) {
+        return {success: false, message: "La liste et son nom sont obligatoires."};
+    }
+
+    try {
+        await updateMediaList(mediaListId, name, description, isPublic);
+        return {success: true, message: "La liste a été modifiée avec succès."};
+    } catch (error) {
+        console.error("Impossible de modifier la liste:", error);
+        return {
+            success: false,
+            message: "Impossible de modifier la liste. Vérifie que tu en es propriétaire et que ce nom n’existe pas déjà.",
+        };
+    }
+}
+
 export async function getMediaListChoices() {
     const user = await getCurrentUser();
 
@@ -162,8 +187,9 @@ export async function updateMediaList(
             }
 
             // if a null value is provided uses the current value instead of setting it to null blindly
-            const nameVal = name === null ? existingList.name : name;
-            const descriptionVal = desc === null ? existingList.desc : desc;
+            const nameVal = name === null ? existingList.name : name.trim();
+            if (!nameVal) throw new Error("Le nom de la liste est obligatoire.");
+            const descriptionVal = desc === null ? existingList.desc : desc.trim() || null;
             const isPublicVal = isPublic === null ? existingList.isPublic : isPublic;
 
             // updates the list
@@ -188,7 +214,9 @@ export async function updateMediaList(
     });
 
     revalidatePath("/");
-    revalidatePath("/MediaList");
+    revalidatePath("/my-lists");
+    revalidatePath("/catalog");
+    revalidatePath(`/lists/${mediaListId}`);
 
     return results;
 }
@@ -255,27 +283,22 @@ export async function deleteMediaListFromForm(
         };
     }
 
-    await prisma.$transaction(async (tx) => {
-        const mediaList = await tx.mediaList.findFirst({
+    try {
+        // The database cascades deletion to the list items.
+        // Keep the permission check in the deletion query itself.
+        const deleted = await prisma.mediaList.deleteMany({
             where: {
-                mediaListId: mediaListId,
-                userId: user.userId,
+                mediaListId,
+                ...(user.role === Role.ADMIN ? {} : {userId: user.userId}),
             },
-            select: {mediaListId: true},
         });
-
-        if (!mediaList) {
-            throw new Error("La liste est introuvable.");
+        if (deleted.count === 0) {
+            return {success: false, message: "Liste introuvable ou suppression non autorisée."};
         }
-
-        await tx.mediaListItem.deleteMany({
-            where: {mediaListId},
-        });
-
-        await tx.mediaList.delete({
-            where: {mediaListId: mediaListId},
-        });
-    });
+    } catch (error) {
+        console.error("Impossible de supprimer la liste:", error);
+        return {success: false, message: "Impossible de supprimer la liste."};
+    }
 
     revalidatePath("/my-lists");
     revalidatePath("/catalog");
@@ -506,13 +529,11 @@ export async function getCurrentUserMediaLists() {
             },
         });
 
-        return publicLists.map((list) => ({...list, canEdit: false}));
+        return publicLists.map((list) => ({...list, canEdit: false, canDelete: false}));
     }
 
     const userLists = await prisma.mediaList.findMany({
-        where: {
-            userId: user.userId,
-        },
+        where: user.role === Role.ADMIN ? {} : {userId: user.userId},
         include: {
             mediaListItems: {
                 include: {
@@ -525,7 +546,11 @@ export async function getCurrentUserMediaLists() {
         },
     });
 
-    return userLists.map((list) => ({...list, canEdit: true}));
+    return userLists.map((list) => ({
+        ...list,
+        canEdit: list.userId === user.userId,
+        canDelete: list.userId === user.userId || user.role === Role.ADMIN,
+    }));
 }
 
 export async function getMediaListDetails(mediaListId: string) {

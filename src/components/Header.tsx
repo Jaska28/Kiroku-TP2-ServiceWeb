@@ -5,13 +5,19 @@ import {
 } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
+import {currentUser} from "@clerk/nextjs/server";
+import {canSwitchDemoRole} from "@/src/lib/demoMode";
+import {getCurrentUser} from "@/src/actions/user.actions";
+import {DemoRoleButton} from "@/src/components/DemoRoleButton";
 
 const navigation = [
   { href: "/catalog", label: "Catalogue" },
   { href: "/my-lists", label: "Mes listes" },
 ];
 
-export default function Header() {
+export default async function Header() {
+  const clerkUser = await currentUser();
+  const demoUser = clerkUser && canSwitchDemoRole(clerkUser.id) ? await getCurrentUser() : null;
   return (
     <header className="border-b border-violet-800 bg-gradient-to-r from-[#f7efff] via-[#5b21b6] to-[#12043d] text-white shadow-md">
       <div className="navbar min-h-20 w-full px-2 sm:px-4">
@@ -94,6 +100,7 @@ export default function Header() {
               </SignInButton>
             }
           >
+            {demoUser && <DemoRoleButton role={demoUser.role}/>}
             <UserButton />
           </Show>
         </div>
