@@ -66,15 +66,15 @@ La version existante permet de consulter des œuvres, de gérer des listes et de
 
 ## 3. Modèle de paiement
 
-Le membre paie une fois par édition numérique. Il peut acheter un manga, un anime ou les deux selon les éditions offertes. Le paiement à l’unité permet au membre de choisir les éditions qui l’intéressent et de payer uniquement pour celles de son panier. Pour la démonstration, Stripe fonctionne en mode test et la livraison est simulée par l’ajout des éditions achetées à la bibliothèque du compte. Le prix est de 4,99 $ CA avant taxes par édition.
+Le membre paie une fois par édition numérique. Il peut acheter un tome de manga, un épisode d’anime ou les deux selon les éditions offertes. Le paiement à l’unité permet au membre de choisir les éditions qui l’intéressent et de payer uniquement pour celles de son panier. Pour la démonstration, Stripe fonctionne en mode test et la livraison est simulée par l’ajout des éditions achetées à la bibliothèque du compte. Le prix est de 4,99 $ CA avant taxes par tome de manga ou par épisode d’anime.
 
 | Offre | Fonctionnalités | Avant taxes | TPS | TVQ | Total |
 |---|---|---:|---:|---:|---:|
 | Gratuit | Consulter le catalogue et les listes publiques. Avec un compte, gérer ses listes et noter des œuvres. | 0,00 $ | 0,00 $ | 0,00 $ | 0,00 $ |
-| Manga numérique | Ajouter une édition de manga à sa bibliothèque. | 4,99 $ | 0,25 $ | 0,50 $ | 5,74 $ |
-| Anime numérique | Ajouter une édition d’anime à sa bibliothèque. | 4,99 $ | 0,25 $ | 0,50 $ | 5,74 $ |
+| Tome de manga numérique | Ajouter un tome de manga à sa bibliothèque. | 4,99 $ | 0,25 $ | 0,50 $ | 5,74 $ |
+| Épisode d’anime numérique | Ajouter un épisode d’anime à sa bibliothèque. | 4,99 $ | 0,25 $ | 0,50 $ | 5,74 $ |
 
-**Exemple du laboratoire en cents** — Pour 499 cents, la TPS à 5 % donne 24,95 cents, arrondis à 25, et la TVQ à 9,975 % donne 49,77525 cents, arrondis à 50. Le total est de 574 cents. Chaque taxe est calculée sur le sous-total du panier et arrondie séparément (RM-04). Un panier avec un manga et un anime à 499 cents chacun totalise 1 148 cents, dont 50 cents de TPS et 100 cents de TVQ.
+**Exemple du laboratoire en cents** — Pour 499 cents, la TPS à 5 % donne 24,95 cents, arrondis à 25, et la TVQ à 9,975 % donne 49,77525 cents, arrondis à 50. Le total est de 574 cents. Chaque taxe est calculée sur le sous-total du panier et arrondie séparément (RM-04). Un panier avec un tome de manga et un épisode d’anime à 499 cents chacun totalise 1 148 cents, dont 50 cents de TPS et 100 cents de TVQ.
 
 | Parcours | Ce que voit la personne | Réaction du système |
 |---|---|---|
@@ -108,7 +108,7 @@ Pour un paiement par carte, traiter `checkout.session.completed` si le statut du
 | ID | Story | Étant donné… | Quand… | Alors… |
 |---|---|---|---|---|
 | CA-01 | US-04 | une liste privée | un autre membre ouvre son URL | l’accès est refusé. |
-| CA-02 | US-07 | un manga et un anime à 499 cents chacun dans le panier | le membre ouvre le récapitulatif | il voit les deux éditions, un sous-total de 998 cents, 50 cents de TPS, 100 cents de TVQ et un total de 1 148 cents. |
+| CA-02 | US-07 | un tome de manga et un épisode d’anime à 499 cents chacun dans le panier | le membre ouvre le récapitulatif | il voit les deux éditions, un sous-total de 998 cents, 50 cents de TPS, 100 cents de TVQ et un total de 1 148 cents. |
 | CA-03 | US-08 | une commande en attente | Stripe confirme le paiement avec un événement signé et un montant concordant | la commande passe à l’état payé et les éditions achetées apparaissent dans la bibliothèque. |
 | CA-04 | US-08 | une commande en attente | la carte est refusée | un message d’échec apparaît et aucune édition de cette commande n’est ajoutée à la bibliothèque. |
 | CA-05 | US-09 | une commande en attente | le membre revient de Stripe avant le webhook | la page affiche une confirmation en attente. |
@@ -261,13 +261,12 @@ Le [schéma Prisma actuel](../prisma/schema.prisma) comprend `User`, `Media`, `M
 
 ## 9. Planification et rôles
 
-| Jalon | Résultat attendu |
+| Jalon | Travail prévu pour Kiroku |
 |---|---|
-| Semaines 1 et 2 | Valider le public, l’offre, le prix, les stories et les parcours. |
-| Semaine 3 / laboratoire 1 | Finaliser les maquettes, les diagrammes, le schéma, le journal IA et les consignes de l’agent. |
-| Laboratoire 2 | Développer le panier et le modèle des commandes (US-07, US-09). |
-| Laboratoire 3 | Intégrer Stripe en mode test, la confirmation par webhook, la bibliothèque et le remboursement (US-08 à US-10, US-12). |
-| Présentation prévue vers la mi-décembre 2026 (date exacte à confirmer) | Démontrer un achat réussi, un refus, puis l’ajout des éditions à la bibliothèque après confirmation. |
+| Laboratoire 1 · Cahier des charges | Analyser le besoin, définir le prix et le parcours d’achat, puis finaliser les stories, les diagrammes UML et les maquettes. Préparer le schéma des commandes, les consignes de l’agent et le journal IA. |
+| Laboratoire 2 · Back-end et panier | Permettre d’ajouter un tome de manga ou un épisode d’anime au panier et calculer le total avec taxes côté serveur (US-07). |
+| Laboratoire 3 · Intégration Stripe | Intégrer Stripe Checkout en mode test et afficher l’état de la commande après confirmation du paiement (US-08, US-09). |
+| Présentation · Vers la mi-décembre 2026 (date exacte à confirmer) | Démontrer un paiement accepté, un refus et l’affichage des éditions achetées dans la bibliothèque (US-08 à US-10). |
 
 **Répartition de l’équipe** — Jean-Simon Cyr est responsable du front-end. Émile Valade est responsable du back-end. Chaque membre contribue avec son compte Git.
 
