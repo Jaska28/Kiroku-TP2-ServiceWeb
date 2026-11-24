@@ -226,18 +226,18 @@ sequenceDiagram
     end
 ```
 
-## 6. Maquettes [À compléter]
+## 6. Maquettes
 
-Ajouter une image par écran dans `docs/maquettes/` ou insérer le lien Figma de l’équipe.
+Les six maquettes utilisent une œuvre fictive et illustrent le parcours d’achat en mode test. L’accueil reprend la structure de la page actuelle et montre la navigation prévue vers le panier et la bibliothèque.
 
 | Écran | Éléments attendus |
 |---|---|
-| Accueil | Accès au catalogue de mangas et d’animes et aux listes publiques. |
-| Tarifs | Prix des éditions numériques de manga et d’anime. |
-| Panier | Éditions sélectionnées, sous-total avant taxes, TPS, TVQ, total et état panier vide. |
-| Paiement | Aperçu de Stripe Checkout et état carte refusée. |
-| Confirmation | Numéro de commande et états en attente et payé. |
-| Compte et bibliothèque | Historique des commandes et éditions numériques achetées. |
+| [Accueil](maquettes/accueil.png) | Accès au catalogue, aux listes et à la bibliothèque. |
+| [Tarifs](maquettes/tarifs.png) | Fiche d’œuvre avec un tome de manga et un épisode d’anime à 4,99 $ CA chacun avant taxes. |
+| [Panier](maquettes/panier.png) | Deux éditions, sous-total de 9,98 $ CA, TPS de 0,50 $ CA, TVQ de 1,00 $ CA et total de 11,48 $ CA. |
+| [Paiement](maquettes/paiement.png) | Aperçu du paiement hébergé en mode test, avec l’état « Carte refusée ». |
+| [Confirmation](maquettes/confirmation.png) | Numéro de commande, paiement confirmé et indication du message affiché pendant l’attente du webhook. |
+| [Compte et bibliothèque](maquettes/compte.png) | Éditions achetées et historique des commandes. |
 
 ## 7. Schéma de base de données
 

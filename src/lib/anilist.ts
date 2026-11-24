@@ -92,6 +92,7 @@ const MEDIA_QUERY = `
   }
 `;
 
+// ! is when it's necessary
 const MEDIA_PAGE_QUERY = `
   query ($page: Int!, $perPage: Int!, $type: MediaType) {
     Page(page: $page, perPage: $perPage) {
@@ -138,6 +139,7 @@ export type AnilistMediaPage = {
  * @param value - The AniList ID or search term.
  * @param searchField - Whether to search by "id" or "title".
  *
+ * @param type - Manga or anime
  */
 export async function getMediaFromAnilist(
   value: number | string,
@@ -149,6 +151,7 @@ export async function getMediaFromAnilist(
   }
 
   try {
+    // values
     const variables =
       searchField === "id"
         ? {
@@ -159,12 +162,13 @@ export async function getMediaFromAnilist(
             search: String(value),
             type,
           };
-
+    // Should have named data responseBody
     const { data } = await anilist.post("", {
       query: MEDIA_QUERY,
       variables,
     });
 
+    // Best: const media = (data?.data?.Media ?? null) as AnilistMedia | null;
     const media = data?.data?.Media as AnilistMedia | null;
 
     if (!media) {
@@ -206,6 +210,7 @@ export async function getMediaPageFromAnilist(
       variables: { page, perPage, type },
     });
 
+    // Same as getMedia before
     const mediaPage = data?.data?.Page as AnilistMediaPage | null;
 
     if (!mediaPage) {

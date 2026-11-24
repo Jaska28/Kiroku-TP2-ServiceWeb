@@ -94,3 +94,9 @@ Si le seed indique que le compte est absent de Prisma, vérifier `ADMIN_USR_ID`,
 6. **Comparer les rôles** : créer un deuxième compte Clerk sans changer `ADMIN_USR_ID`. Il peut gérer ses listes, mais ne voit pas de bouton pour supprimer celles des autres. Le serveur vérifie aussi cette permission.
 
 Relancer le seed pour rétablir les exemples si nécessaire.
+
+
+## 5. Liens utile
+Root query: https://docs.anilist.co/reference/query
+Informations graphQl = https://docs.anilist.co/guide/graphql/
+Informations sur les tables d'anilist = https://studio.apollographql.com/sandbox/schema/visualization
