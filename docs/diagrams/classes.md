@@ -1,6 +1,6 @@
 # Diagramme de classes — Kiroku
 
-Les classes de catalogue, de listes et de notes proviennent du schéma actuel. Les classes de commande décrivent le modèle cible du laboratoire. La bibliothèque est calculée à partir des lignes des commandes payées du membre.
+Le diagramme présente le catalogue, les listes, les notes et les commandes du schéma Prisma. La bibliothèque est calculée à partir des lignes des commandes payées du membre.
 
 ```mermaid
 classDiagram
@@ -30,7 +30,14 @@ classDiagram
     class Product {
         String productId
         String name
+        EditionType editionType
+        Int editionNumber
         Int priceCents
+    }
+    class EditionType {
+        <<enumeration>>
+        MANGA_VOLUME
+        ANIME_EPISODE
     }
     class Order {
         String orderId
@@ -42,6 +49,8 @@ classDiagram
         Int totalCents
         String stripeCheckoutSessionId
         String stripePaymentIntentId
+        DateTime createdAt
+        DateTime paidAt
     }
     class OrderStatus {
         <<enumeration>>
@@ -59,6 +68,7 @@ classDiagram
         String refundId
         String stripeRefundId
         Int amountCents
+        DateTime refundedAt
     }
     class WebhookEvent {
         String id
@@ -76,6 +86,7 @@ classDiagram
     Order "1" -- "1..*" OrderItem : contient
     Product "1" -- "0..*" OrderItem : correspond à
     Order "1" -- "0..1" Refund : remboursement intégral
+    Product ..> EditionType : utilise
     Order ..> OrderStatus : utilise
     WebhookEvent ..> Order : traite un changement
 ```

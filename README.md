@@ -25,10 +25,11 @@ Les clés Clerk doivent appartenir à la même application. Ne pas committer `.e
 
 ```bash
 npm install
-npx prisma generate
 npx prisma migrate deploy
 npm run dev
 ```
+
+`npm install` génère le client Prisma dans `generated/prisma/`. Après une modification du schéma, relancer `npx prisma generate`.
 
 Ouvrir [http://localhost:3000](http://localhost:3000).
 

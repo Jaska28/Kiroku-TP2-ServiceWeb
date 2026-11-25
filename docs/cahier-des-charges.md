@@ -129,6 +129,8 @@ Pour un paiement par carte, traiter `checkout.session.completed` si le statut du
 
 #### Diagramme de cas d’utilisation
 
+[Fichier Mermaid](diagrams/cas-utilisation.md)
+
 ```mermaid
 flowchart LR
     V[Visiteur]
@@ -187,7 +189,9 @@ flowchart LR
 
 ### Diagramme de classes
 
-Le diagramme présente le catalogue actuel et le modèle cible des achats.
+[Fichier Mermaid](diagrams/classes.md)
+
+Le diagramme présente le catalogue et le modèle des achats.
 
 ```mermaid
 classDiagram
@@ -217,7 +221,14 @@ classDiagram
     class Product {
         String productId
         String name
+        EditionType editionType
+        Int editionNumber
         Int priceCents
+    }
+    class EditionType {
+        <<enumeration>>
+        MANGA_VOLUME
+        ANIME_EPISODE
     }
     class Order {
         String orderId
@@ -229,6 +240,8 @@ classDiagram
         Int totalCents
         String stripeCheckoutSessionId
         String stripePaymentIntentId
+        DateTime createdAt
+        DateTime paidAt
     }
     class OrderStatus {
         <<enumeration>>
@@ -246,6 +259,7 @@ classDiagram
         String refundId
         String stripeRefundId
         Int amountCents
+        DateTime refundedAt
     }
     class WebhookEvent {
         String id
@@ -263,11 +277,14 @@ classDiagram
     Order "1" -- "1..*" OrderItem : contient
     Product "1" -- "0..*" OrderItem : correspond à
     Order "1" -- "0..1" Refund : remboursement intégral
+    Product ..> EditionType : utilise
     Order ..> OrderStatus : utilise
     WebhookEvent ..> Order : traite un changement
 ```
 
 ### Séquence du paiement
+
+[Fichier Mermaid](diagrams/sequence-paiement.md)
 
 ```mermaid
 sequenceDiagram
@@ -348,7 +365,7 @@ Numéro de commande, paiement confirmé et indication du message affiché pendan
 
 ### Schéma Prisma actuel
 
-Le [fichier Prisma](../prisma/schema.prisma) définit les comptes, les œuvres, les listes et les évaluations.
+Le [fichier Prisma](../prisma/schema.prisma) définit les comptes, le catalogue, les listes, les évaluations et les achats.
 
 ```prisma
 // This is your Prisma schema file,
@@ -385,6 +402,7 @@ model User {
 
   mediaLists MediaList[]
   reviews    Review[]
+  orders     Order[]
 }
 
 model Media {
@@ -399,6 +417,7 @@ model Media {
 
   mediaListItems MediaListItem[]
   reviews        Review[]
+  products       Product[]
 }
 
 model MediaList {
@@ -447,11 +466,88 @@ model Review {
 
   @@unique([userId, mediaId]) // only one review per user per media
 }
+
+enum EditionType {
+  MANGA_VOLUME
+  ANIME_EPISODE
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  EXPIRED
+  REFUNDED
+}
+
+model Product {
+  productId     String      @id @default(uuid()) @db.Uuid
+  mediaId       String      @db.Uuid
+  name          String
+  editionType   EditionType
+  editionNumber Int
+  priceCents    Int         @default(499)
+
+  media      Media       @relation(fields: [mediaId], references: [mediaId], onDelete: Restrict)
+  orderItems OrderItem[]
+
+  @@unique([mediaId, editionType, editionNumber])
+}
+
+model Order {
+  orderId                 String      @id @default(uuid()) @db.Uuid
+  userId                  String      @db.Uuid
+  status                  OrderStatus @default(PENDING)
+  currency                String      @default("cad") @db.Char(3)
+  subtotalCents           Int
+  gstCents                Int
+  qstCents                Int
+  totalCents              Int
+  stripeCheckoutSessionId String?     @unique
+  stripePaymentIntentId   String?     @unique
+  createdAt               DateTime    @default(now())
+  paidAt                  DateTime?
+
+  user   User        @relation(fields: [userId], references: [userId], onDelete: Restrict)
+  items  OrderItem[]
+  refund Refund?
+
+  @@index([userId, status])
+}
+
+model OrderItem {
+  orderItemId    String @id @default(uuid()) @db.Uuid
+  orderId        String @db.Uuid
+  productId      String @db.Uuid
+  productName    String
+  unitPriceCents Int
+
+  order   Order   @relation(fields: [orderId], references: [orderId], onDelete: Restrict)
+  product Product @relation(fields: [productId], references: [productId], onDelete: Restrict)
+
+  @@unique([orderId, productId])
+  @@index([productId])
+}
+
+model Refund {
+  refundId       String   @id @default(uuid()) @db.Uuid
+  orderId        String   @unique @db.Uuid
+  stripeRefundId String   @unique
+  amountCents    Int
+  refundedAt     DateTime @default(now())
+
+  order Order @relation(fields: [orderId], references: [orderId], onDelete: Restrict)
+}
+
+model WebhookEvent {
+  id          String   @id
+  type        String
+  processedAt DateTime @default(now())
+}
 ```
 
-### Modèle transactionnel prévu
+### Modèle transactionnel
 
-Le diagramme de la section 5 prévoit cinq entités transactionnelles. `Product` associe une édition vendue à une œuvre. `Order` et `OrderItem` conservent la commande et ses éditions. `Refund` enregistre le remboursement intégral et `WebhookEvent` permet de dédupliquer les notifications Stripe. La bibliothèque affiche les éditions issues des commandes payées du membre. Ces entités seront ajoutées au schéma Prisma dans une migration transactionnelle.
+Le diagramme de la section 5 prévoit cinq entités transactionnelles. `Product` associe une édition vendue à une œuvre. `Order` et `OrderItem` conservent la commande et ses éditions. `Refund` enregistre le remboursement intégral et `WebhookEvent` permet de dédupliquer les notifications Stripe. La bibliothèque affiche les éditions issues des commandes payées du membre. La [migration transactionnelle](../prisma/migrations/20261124180000_add_transactional_purchases/migration.sql) ajoute ces entités au schéma existant.
 
 - Prix et taxes en `Int`, avec le suffixe `Cents`. Nom et prix copiés dans la ligne de commande.
 - Statuts sous forme d’enums, identifiants Stripe uniques et identifiant d’événement fourni par Stripe.

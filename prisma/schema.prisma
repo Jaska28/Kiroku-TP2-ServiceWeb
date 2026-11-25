@@ -32,6 +32,7 @@ model User {
 
   mediaLists MediaList[]
   reviews    Review[]
+  orders     Order[]
 }
 
 model Media {
@@ -46,6 +47,7 @@ model Media {
 
   mediaListItems MediaListItem[]
   reviews        Review[]
+  products       Product[]
 }
 
 model MediaList {
@@ -93,4 +95,81 @@ model Review {
   media Media @relation(fields: [mediaId], references: [mediaId], onDelete: Cascade) // if the media is deleted delete all related reviews
 
   @@unique([userId, mediaId]) // only one review per user per media
+}
+
+enum EditionType {
+  MANGA_VOLUME
+  ANIME_EPISODE
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  EXPIRED
+  REFUNDED
+}
+
+model Product {
+  productId     String      @id @default(uuid()) @db.Uuid
+  mediaId       String      @db.Uuid
+  name          String
+  editionType   EditionType
+  editionNumber Int
+  priceCents    Int         @default(499)
+
+  media      Media       @relation(fields: [mediaId], references: [mediaId], onDelete: Restrict)
+  orderItems OrderItem[]
+
+  @@unique([mediaId, editionType, editionNumber])
+}
+
+model Order {
+  orderId                 String      @id @default(uuid()) @db.Uuid
+  userId                  String      @db.Uuid
+  status                  OrderStatus @default(PENDING)
+  currency                String      @default("cad") @db.Char(3)
+  subtotalCents           Int
+  gstCents                Int
+  qstCents                Int
+  totalCents              Int
+  stripeCheckoutSessionId String?     @unique
+  stripePaymentIntentId   String?     @unique
+  createdAt               DateTime    @default(now())
+  paidAt                  DateTime?
+
+  user   User        @relation(fields: [userId], references: [userId], onDelete: Restrict)
+  items  OrderItem[]
+  refund Refund?
+
+  @@index([userId, status])
+}
+
+model OrderItem {
+  orderItemId    String @id @default(uuid()) @db.Uuid
+  orderId        String @db.Uuid
+  productId      String @db.Uuid
+  productName    String
+  unitPriceCents Int
+
+  order   Order   @relation(fields: [orderId], references: [orderId], onDelete: Restrict)
+  product Product @relation(fields: [productId], references: [productId], onDelete: Restrict)
+
+  @@unique([orderId, productId])
+  @@index([productId])
+}
+
+model Refund {
+  refundId       String   @id @default(uuid()) @db.Uuid
+  orderId        String   @unique @db.Uuid
+  stripeRefundId String   @unique
+  amountCents    Int
+  refundedAt     DateTime @default(now())
+
+  order Order @relation(fields: [orderId], references: [orderId], onDelete: Restrict)
+}
+
+model WebhookEvent {
+  id          String   @id
+  type        String
+  processedAt DateTime @default(now())
 }
