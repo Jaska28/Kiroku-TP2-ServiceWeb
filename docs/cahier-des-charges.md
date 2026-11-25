@@ -90,20 +90,20 @@ Pour un paiement par carte, traiter `checkout.session.completed` si le statut du
 
 ### Backlog et critères d’acceptation
 
-| ID | MoSCoW | Story |
-|---|---|---|
-| US-01 | Must | En tant que visiteur, je veux consulter le catalogue afin de découvrir des œuvres. |
-| US-02 | Must | En tant que visiteur, je veux créer un compte afin de gérer mes listes personnelles. |
-| US-03 | Must | En tant que membre, je veux créer et modifier une liste afin de classer mes recommandations. |
-| US-04 | Must | En tant que membre, je veux choisir la visibilité de ma liste afin de décider si elle peut être partagée. |
-| US-05 | Must | En tant que membre, je veux ajouter et retirer des œuvres afin de garder mes listes à jour. |
-| US-06 | Should | En tant que membre, je veux noter une œuvre afin de conserver mon appréciation. |
-| US-07 | Must | En tant que membre, je veux ajouter des éditions à mon panier et voir le total avec taxes afin de connaître le coût avant de payer. |
-| US-08 | Must | En tant que membre, je veux payer sur Stripe afin d’acheter les éditions numériques de mon panier. |
-| US-09 | Must | En tant que membre, je veux voir l’état de ma commande afin de savoir si mon achat est confirmé. |
-| US-10 | Must | En tant que membre, je veux consulter ma bibliothèque afin de retrouver les éditions numériques que j’ai achetées. |
-| US-11 | Should | En tant qu’administrateur, je veux supprimer une liste signalée afin de retirer un contenu inapproprié. |
-| US-12 | Must | En tant que membre, je veux pouvoir demander un remboursement dans les 14 jours suivant mon achat afin de récupérer le montant total de ma commande. |
+| ID | MoSCoW | Story | État et responsables |
+|---|---|---|---|
+| US-01 | Must | En tant que visiteur, je veux consulter le catalogue afin de découvrir des œuvres. | Déjà réalisée |
+| US-02 | Must | En tant que visiteur, je veux créer un compte afin de gérer mes listes personnelles. | Déjà réalisée |
+| US-03 | Must | En tant que membre, je veux créer et modifier une liste afin de classer mes recommandations. | Déjà réalisée |
+| US-04 | Must | En tant que membre, je veux choisir la visibilité de ma liste afin de décider si elle peut être partagée. | Déjà réalisée |
+| US-05 | Must | En tant que membre, je veux ajouter et retirer des œuvres afin de garder mes listes à jour. | Déjà réalisée |
+| US-06 | Should | En tant que membre, je veux noter une œuvre afin de conserver mon appréciation. | Déjà réalisée |
+| US-07 | Must | En tant que membre, je veux ajouter des éditions à mon panier et voir le total avec taxes afin de connaître le coût avant de payer. | À faire · Jean-Simon (panier), Émile (calcul des taxes côté serveur) |
+| US-08 | Must | En tant que membre, je veux payer sur Stripe afin d’acheter les éditions numériques de mon panier. | À faire · Émile (Stripe Checkout et webhook), Jean-Simon (bouton de paiement) |
+| US-09 | Must | En tant que membre, je veux voir l’état de ma commande afin de savoir si mon achat est confirmé. | À faire · Jean-Simon (écran de confirmation), Émile (état de la commande) |
+| US-10 | Must | En tant que membre, je veux consulter ma bibliothèque afin de retrouver les éditions numériques que j’ai achetées. | À faire · Jean-Simon (bibliothèque), Émile (accès aux achats du compte) |
+| US-11 | Should | En tant qu’administrateur, je veux supprimer une liste signalée afin de retirer un contenu inapproprié. | Suppression déjà réalisée · Émile et Jean-Simon si un mécanisme de signalement est ajouté |
+| US-12 | Must | En tant que membre, je veux pouvoir demander un remboursement dans les 14 jours suivant mon achat afin de récupérer le montant total de ma commande. | À faire · Jean-Simon (interface de demande), Émile (admissibilité et remboursement Stripe) |
 
 | ID | Story | Étant donné… | Quand… | Alors… |
 |---|---|---|---|---|
@@ -572,7 +572,7 @@ Le diagramme de la section 5 prévoit cinq entités transactionnelles. `Product`
 | Laboratoire 3 · Intégration Stripe | Intégrer Stripe Checkout en mode test et afficher l’état de la commande après confirmation du paiement (US-08, US-09). |
 | Présentation · Vers la mi-décembre 2026 (date exacte à confirmer) | Démontrer un paiement accepté, un refus et l’affichage des éditions achetées dans la bibliothèque (US-08 à US-10). |
 
-**Répartition de l’équipe** — Jean-Simon Cyr est responsable du front-end. Émile Valade est responsable du back-end. Chaque membre contribue avec son compte Git.
+**Répartition de l’équipe** — Jean-Simon Cyr est responsable du front-end. Émile Valade est responsable du back-end. Le tableau des stories de la section 4 détaille leur répartition pour le travail restant. Chaque membre contribue avec son compte Git.
 
 ## 10. Technologie choisie
 
