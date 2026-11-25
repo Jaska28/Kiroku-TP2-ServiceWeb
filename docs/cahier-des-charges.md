@@ -60,7 +60,7 @@ La version existante permet de consulter des œuvres, de gérer des listes et de
 | Prix | Fonctionnalités de base gratuites et achat unique par édition numérique. |
 | Place | Application Web accessible sur ordinateur et téléphone. |
 | Promotion | Présenter le parcours allant d’une fiche d’œuvre à la bibliothèque lors de la démonstration. |
-| Personnes | Les deux membres de l’équipe assurent le développement. [À compléter] Responsable du soutien. |
+| Personnes | Jean-Simon Cyr est responsable du front-end et Émile Valade du back-end. |
 | Processus | Choisir une édition numérique, l’ajouter au panier et la retrouver dans sa bibliothèque après paiement. |
 | Preuve physique | Prix affiché sur la fiche, récapitulatif avant paiement et confirmation de commande dans le compte. |
 
@@ -187,7 +187,85 @@ flowchart LR
 
 ### Diagramme de classes
 
-Le [diagramme de classes](classes.md) présente les relations du catalogue actuel et le modèle cible des achats, avec les multiplicités, les attributs typés et les montants en cents.
+Le diagramme présente le catalogue actuel et le modèle cible des achats.
+
+```mermaid
+classDiagram
+    class User {
+        String userId
+        String clerkId
+        String username
+        Role role
+    }
+    class Media {
+        String mediaId
+        Int anilistId
+        String title
+    }
+    class MediaList {
+        String mediaListId
+        String name
+        Boolean isPublic
+    }
+    class MediaListItem {
+        String mediaListItemId
+    }
+    class Review {
+        String reviewId
+        Float rating
+    }
+    class Product {
+        String productId
+        String name
+        Int priceCents
+    }
+    class Order {
+        String orderId
+        OrderStatus status
+        String currency
+        Int subtotalCents
+        Int gstCents
+        Int qstCents
+        Int totalCents
+        String stripeCheckoutSessionId
+        String stripePaymentIntentId
+    }
+    class OrderStatus {
+        <<enumeration>>
+        PENDING
+        PAID
+        EXPIRED
+        REFUNDED
+    }
+    class OrderItem {
+        String orderItemId
+        String productName
+        Int unitPriceCents
+    }
+    class Refund {
+        String refundId
+        String stripeRefundId
+        Int amountCents
+    }
+    class WebhookEvent {
+        String id
+        String type
+        DateTime processedAt
+    }
+
+    User "1" -- "0..*" MediaList : possède
+    MediaList "1" -- "0..*" MediaListItem : contient
+    Media "1" -- "0..*" MediaListItem : figure dans
+    User "1" -- "0..*" Review : rédige
+    Media "1" -- "0..*" Review : reçoit
+    Media "1" -- "0..*" Product : éditions
+    User "1" -- "0..*" Order : passe
+    Order "1" -- "1..*" OrderItem : contient
+    Product "1" -- "0..*" OrderItem : correspond à
+    Order "1" -- "0..1" Refund : remboursement intégral
+    Order ..> OrderStatus : utilise
+    WebhookEvent ..> Order : traite un changement
+```
 
 ### Séquence du paiement
 
@@ -230,20 +308,150 @@ sequenceDiagram
 
 Les six maquettes utilisent une œuvre fictive et illustrent le parcours d’achat en mode test. L’accueil reprend la structure de la page actuelle et montre la navigation prévue vers le panier et la bibliothèque.
 
-| Écran | Éléments attendus |
-|---|---|
-| [Accueil](maquettes/accueil.png) | Accès au catalogue, aux listes et à la bibliothèque. |
-| [Tarifs](maquettes/tarifs.png) | Fiche d’œuvre avec un tome de manga et un épisode d’anime à 4,99 $ CA chacun avant taxes. |
-| [Panier](maquettes/panier.png) | Deux éditions, sous-total de 9,98 $ CA, TPS de 0,50 $ CA, TVQ de 1,00 $ CA et total de 11,48 $ CA. |
-| [Paiement](maquettes/paiement.png) | Aperçu du paiement hébergé en mode test, avec l’état « Carte refusée ». |
-| [Confirmation](maquettes/confirmation.png) | Numéro de commande, paiement confirmé et indication du message affiché pendant l’attente du webhook. |
-| [Compte et bibliothèque](maquettes/compte.png) | Éditions achetées et historique des commandes. |
+### Accueil
+
+Accès au catalogue, aux listes et à la bibliothèque.
+
+![Accueil de Kiroku](maquettes/accueil.png)
+
+### Tarifs
+
+Fiche d’œuvre avec un tome de manga et un épisode d’anime à 4,99 $ CA chacun avant taxes.
+
+![Tarifs de Kiroku](maquettes/tarifs.png)
+
+### Panier
+
+Deux éditions, sous-total de 9,98 $ CA, TPS de 0,50 $ CA, TVQ de 1,00 $ CA et total de 11,48 $ CA.
+
+![Panier de Kiroku](maquettes/panier.png)
+
+### Paiement
+
+Aperçu du paiement hébergé en mode test, avec l’état « Carte refusée ».
+
+![Paiement de Kiroku](maquettes/paiement.png)
+
+### Confirmation
+
+Numéro de commande, paiement confirmé et indication du message affiché pendant l’attente du webhook.
+
+![Confirmation de Kiroku](maquettes/confirmation.png)
+
+### Compte et bibliothèque
+
+Éditions achetées et historique des commandes.
+
+![Compte et bibliothèque de Kiroku](maquettes/compte.png)
 
 ## 7. Schéma de base de données
 
-Le [schéma Prisma actuel](../prisma/schema.prisma) comprend `User`, `Media`, `MediaList`, `MediaListItem` et `Review`. Pour le paiement, les entités candidates sont `Product`, `Order`, `OrderItem`, `Refund` et `WebhookEvent`. Chaque produit correspond à une édition numérique liée à une œuvre. Les commandes payées alimentent la bibliothèque du compte.
+### Schéma Prisma actuel
 
-**[À compléter]** Faire correspondre le schéma Prisma et sa migration au diagramme de classes de la section 5.
+Le [fichier Prisma](../prisma/schema.prisma) définit les comptes, les œuvres, les listes et les évaluations.
+
+```prisma
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// --- ENUMS ---
+
+enum Role {
+  USER
+  ADMIN
+}
+
+// --- MODELES ---
+model User {
+  userId    String  @id @default(uuid()) @db.Uuid
+  clerkId   String  @unique
+  username  String  @unique
+  firstName String?
+  lastName  String?
+  role      Role    @default(USER)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  mediaLists MediaList[]
+  reviews    Review[]
+}
+
+model Media {
+  mediaId   String @id @default(uuid()) @db.Uuid
+  anilistId Int    @unique
+  idMal     Int? // Id from MyAnimeList not necessarily present
+  title     String
+  avgScore  Float? // score calculated by our own app
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  mediaListItems MediaListItem[]
+  reviews        Review[]
+}
+
+model MediaList {
+  mediaListId String   @id @default(uuid()) @db.Uuid
+  userId      String   @db.Uuid
+  name        String
+  desc        String?
+  isPublic    Boolean? @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [userId], onDelete: Cascade) // if user is deleted his list are deleted as well
+
+  mediaListItems MediaListItem[]
+
+  @@unique([userId, name]) // prevents duplicate list per users
+}
+
+model MediaListItem {
+  mediaListItemId String @id @default(uuid()) @db.Uuid
+  mediaListId     String @db.Uuid
+  mediaId         String @db.Uuid
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  mediaList MediaList @relation(fields: [mediaListId], references: [mediaListId], onDelete: Cascade) // if list is deleted delete its items
+  media     Media     @relation(fields: [mediaId], references: [mediaId], onDelete: Cascade) // if the media is deleted delete any medialistitem that references it
+
+  @@unique([mediaListId, mediaId]) // prevents duplicates media in lists
+}
+
+model Review {
+  reviewId String  @id @default(uuid()) @db.Uuid
+  userId   String  @db.Uuid
+  mediaId  String  @db.Uuid
+  rating   Float // in between 0 and 10
+  comments String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User  @relation(fields: [userId], references: [userId], onDelete: Cascade) // if the user is deleted delete all his reviews
+  media Media @relation(fields: [mediaId], references: [mediaId], onDelete: Cascade) // if the media is deleted delete all related reviews
+
+  @@unique([userId, mediaId]) // only one review per user per media
+}
+```
+
+### Modèle transactionnel prévu
+
+Le diagramme de la section 5 prévoit cinq entités transactionnelles. `Product` associe une édition vendue à une œuvre. `Order` et `OrderItem` conservent la commande et ses éditions. `Refund` enregistre le remboursement intégral et `WebhookEvent` permet de dédupliquer les notifications Stripe. La bibliothèque affiche les éditions issues des commandes payées du membre. Ces entités seront ajoutées au schéma Prisma dans une migration transactionnelle.
 
 - Prix et taxes en `Int`, avec le suffixe `Cents`. Nom et prix copiés dans la ligne de commande.
 - Statuts sous forme d’enums, identifiants Stripe uniques et identifiant d’événement fourni par Stripe.
@@ -282,7 +490,7 @@ Le [schéma Prisma actuel](../prisma/schema.prisma) comprend `User`, `Media`, `M
 
 ## 11. Journal d’utilisation de l’IA et configuration de l’agent
 
-- Le [journal IA](journal-ia.md) consigne trois usages réels. L’attribution des entrées aux membres reste à confirmer.
+- Le [journal IA](journal-ia.md) consigne trois usages réels.
 - Les [consignes de l’agent](../CLAUDE.md) décrivent le projet, les commandes et les règles métier. La [configuration Claude](../.claude/settings.json) interdit la lecture de `.env`.
 
 ## 12. Rédaction et traçabilité
