@@ -1,7 +1,7 @@
 # Cahier des charges — Kiroku
 
 - **Applications Web transactionnelles (420-951-MA), groupe 25604**
-- **Laboratoire 1 · Version 0.1 · Brouillon de travail**
+- **Laboratoire 1 · Cahier des charges**
 - **Option A - Continuité du projet de Services Web**
 - **Équipe - Jean-Simon Cyr et Émile Valade**
 
@@ -561,7 +561,15 @@ Le diagramme de la section 5 prévoit cinq entités transactionnelles. `Product`
 | ENF-01 | La saisie des données de carte se fait sur Stripe Checkout. Vérifier qu’aucune donnée de carte ne figure dans la base ni dans les journaux Kiroku. |
 | ENF-02 | Les secrets sont stockés dans les variables d’environnement. Une notification à signature invalide doit être rejetée sans modifier la commande. |
 | ENF-03 | Objectif de validation. Sur la version de démonstration, ouvrir le catalogue dix fois avec le cache du navigateur désactivé. Mesurer du début de la navigation à l’apparition des premières fiches. Cible de moins de 2 secondes pour au moins 9 essais sur 10. Consigner l’appareil, le réseau et les résultats. |
-| ENF-04 | Le compte Kiroku conserve l’identifiant Clerk, le nom d’utilisateur, le rôle et, s’ils sont fournis, le prénom et le nom. Le modèle cible ajoute les éditions achetées, les montants, les statuts de commande et les identifiants Stripe. Vérifier ces données dans le schéma avant la remise. [À compléter] Confirmer le consentement applicable, les durées de conservation, le responsable et les régions d’hébergement. Si les données sont hébergées hors Québec, prévoir l’évaluation demandée par le laboratoire avant la mise en production. |
+| ENF-04 | Protéger les renseignements liés aux comptes et aux achats. Vérifier que l’avis de confidentialité est présenté avant l’inscription et que chaque membre peut consulter uniquement ses propres commandes et achats. Les modalités figurent ci-dessous. |
+
+### ENF-04 — Confidentialité et hébergement
+
+- **Données et finalités** — Kiroku conserve l’identifiant Clerk, le nom d’utilisateur, le rôle et, s’ils sont fournis, le prénom et le nom. Ces données servent à gérer le compte et ses accès. Les éditions achetées, les montants, les statuts et les identifiants Stripe servent à confirmer les commandes, à alimenter la bibliothèque et à traiter les remboursements. Stripe Checkout recueille les données de carte en mode test.
+- **Information et consentement** — Présenter avant l’inscription un avis qui explique les données recueillies, les fins, les services utilisés et les transferts hors Québec. Lorsqu’un usage facultatif nécessite un consentement, le demander séparément pour cette fin et permettre son retrait.
+- **Conservation** — Conserver les comptes et les commandes de test jusqu’à la fin de la correction du laboratoire, puis supprimer ces données dans les 30 jours suivant la correction finale.
+- **Responsable** — Pour le laboratoire, Émile Valade, responsable du back-end, répond aux demandes de confidentialité et veille à la suppression des données de test dans le délai prévu.
+- **Hébergement** — La base PostgreSQL de Kiroku est hébergée sur Neon, dans la région AWS `us-east-2` aux États-Unis. Clerk assure l’authentification et Stripe le paiement. Avant une mise en production avec des renseignements personnels, documenter leurs lieux de traitement et réaliser une évaluation des facteurs relatifs à la vie privée avant toute communication hors Québec. [Commission d’accès à l’information du Québec](https://www.cai.gouv.qc.ca/protection-renseignements-personnels/information-entreprises-privees/utilisation-communication-renseignements-personnels)
 
 ## 9. Planification et rôles
 
